@@ -4,6 +4,7 @@ namespace madebyraygun\componentlibrary;
 
 use Craft;
 use craft\base\PluginTrait;
+use craft\web\twig\variables\CraftVariable;
 use yii\base\Event;
 use craft\base\Plugin as BasePlugin;
 use craft\base\Model;
@@ -11,6 +12,8 @@ use craft\web\View;
 use craft\web\Application;
 use craft\web\UrlManager;
 use craft\events\RegisterUrlRulesEvent;
+use nystudio107\pluginvite\services\VitePluginService;
+use madebyraygun\componentlibrary\variables\ViteVariables;
 use madebyraygun\componentlibrary\web\twig\TemplateLoader;
 use madebyraygun\componentlibrary\models\Settings;
 use madebyraygun\componentlibrary\services\ComponentProvider;
@@ -35,7 +38,20 @@ class Plugin extends BasePlugin
     {
         return [
             'components' => [
-                'componentProvider' => ComponentProvider::class
+                'componentProvider' => ComponentProvider::class,
+                'vite' => [
+                    'class' => VitePluginService::class,
+                    'checkDevServer' => true,
+                    'useDevServer' => true,
+                    'manifestPath' => Craft::getAlias('@webroot') . '/dist/.vite/manifest.json',
+                    'devServerPublic' => Craft::getAlias('@web') . ':8080',
+                    'devServerInternal' => 'http://localhost:8080',
+                    'serverPublic' => Craft::getAlias('@web') . '/dist/',
+                    // 'includeReactRefreshShim' => false,
+                    // 'errorEntry' => 'js/main.js',
+                    'cacheKeySuffix' => '',
+
+                ]
             ],
         ];
     }
@@ -69,6 +85,18 @@ class Plugin extends BasePlugin
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['component-library/preview'] = 'component-library/preview';
                 $event->rules['component-library'] = 'component-library/browser';
+            }
+        );
+
+        Event::on(
+            CraftVariable::class,
+            CraftVariable::EVENT_INIT,
+            function(Event $event) {
+                $variable = $event->sender;
+                $variable->set('library', [
+                    'class' => ViteVariables::class,
+                    'viteService' => $this->vite
+                ]);
             }
         );
 
