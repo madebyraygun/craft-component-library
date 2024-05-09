@@ -3,12 +3,32 @@
 **/
 .sidebar {
   border-right: 1px solid var(--bg-color);
-  /* padding: 1rem; */
 }
 
 .sidebar__details {
   user-select: none;
   cursor: pointer;
+  position: relative;
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-inline: 1rem;
+  /* padding-block: 0.25rem; */
+}
+
+.list__item {
+  position: relative;
+}
+
+.list__empty {
+  color: var(--tree-file-text-color);
+  opacity: 0.5;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding-inline: 1rem;
 }
 
 .sidebar__details summary {
@@ -16,6 +36,7 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  padding-block: 0.25rem;
 }
 
 .material-symbols-outlined {
@@ -53,29 +74,31 @@
 }
 
 .sidebar__details summary:hover {
-  background: red;
+  border-radius: 0.25rem;
+  background: var(--tree-dir-hover-bg-color);
+  color: var(--tree-dir-hover-text-color);
 }
 
-.sidebar__list {
-  list-style: none;
-  padding: 0;
-  padding-inline: 1rem;
-  padding-block: 0.25rem;
+.sidebar__details[open]::after {
+  content: '';
+  display: block;
+  position: absolute;
+  background-color: var(--tree-tracks-color);
+  height: calc(100% - 26px);
+  width: 1px;
+  left: 9px;
+  top: 24px;
 }
 
-.list__item a {
+.list__item--file a {
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--tree-file-text-color);
   padding-inline: 0.6rem;
   display: flex;
   align-items: center;
   gap: 0.2rem;
 }
 
-.list__empty {
-  color: var(--text-color);
-  opacity: 0.5;
-  font-style: italic;
-  font-size: 0.9rem;
-  padding-inline: 1rem;
+.list__item--file a:hover {
+  color: var(--tree-file-hover-text-color);
 }

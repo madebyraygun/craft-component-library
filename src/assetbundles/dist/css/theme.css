@@ -3,4 +3,9 @@
   --text-color: #fff;
   --tree-icon-folder-color: #c5c5c5;
   --tree-icon-file-color: #c5c5c5;
+  --tree-tracks-color: #f0eeee17;
+  --tree-dir-hover-bg-color: #424242;
+  --tree-dir-hover-text-color: #fff;
+  --tree-file-text-color: #c5c5c5;
+  --tree-file-hover-text-color: #fff;
 }
