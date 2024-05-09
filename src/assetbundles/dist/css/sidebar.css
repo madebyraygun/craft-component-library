@@ -1,6 +1,9 @@
+/**
+  https://primer.style/components/tree-view
+**/
 .sidebar {
   border-right: 1px solid var(--bg-color);
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .sidebar__details {
@@ -8,8 +11,45 @@
   cursor: pointer;
 }
 
-.sidebar__details[open] summary {
+.sidebar__details summary {
   list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.material-symbols-outlined {
+  transition: all 0.15s ease-in-out;
+  font-size: 1.2rem;
+}
+
+.sidebar__details .icon-folder::after {
+  content: 'folder';
+}
+
+.sidebar__details[open] > summary > .icon-folder::after {
+  content: 'folder_open';
+}
+
+.icon-folder {
+  color: var(--tree-icon-folder-color);
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.icon-file {
+  color: var(--tree-icon-file-color);
+}
+
+.sidebar__details > summary > .icon-arrow-right, .sidebar__details > summary > .icon-folder {
+  transform: rotate(0deg);
+}
+
+.sidebar__details[open] > summary > .icon-arrow-right {
+  transform: rotate(90deg);
 }
 
 .sidebar__details summary:hover {
@@ -19,8 +59,17 @@
 .sidebar__list {
   list-style: none;
   padding: 0;
-  /* padding-block: 0.5rem; */
-  /* padding-inline: 1rem; */
+  padding-inline: 1rem;
+  padding-block: 0.25rem;
+}
+
+.list__item a {
+  text-decoration: none;
+  color: var(--text-color);
+  padding-inline: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .list__empty {
@@ -28,4 +77,5 @@
   opacity: 0.5;
   font-style: italic;
   font-size: 0.9rem;
+  padding-inline: 1rem;
 }

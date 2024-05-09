@@ -12,8 +12,8 @@ class Library
         $settings = Plugin::$plugin->getSettings();
         $nodes = self::scanPath($settings->root);
         return [
-            'name' => 'Library',
-            'nodes' => $nodes
+            'name' => 'Components',
+            'nodes' => $nodes,
         ];
     }
 
@@ -51,6 +51,7 @@ class Library
             $previewUrl = self::getComponentPreviewUrl($handlePath);
             $result[] = [
                 'name' => basename($file),
+                'extension' => pathinfo($file, PATHINFO_EXTENSION),
                 'path' => $file,
                 'handle' => $handlePath,
                 'preview_url' => $previewUrl,

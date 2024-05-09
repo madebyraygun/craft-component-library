@@ -2,6 +2,7 @@
 
 namespace madebyraygun\componentlibrary\controllers;
 
+use Craft;
 use craft\web\Controller;
 use craft\web\Response;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;

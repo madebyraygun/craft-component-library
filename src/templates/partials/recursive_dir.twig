@@ -1,18 +1,20 @@
 <details open class="sidebar__details">
   <summary>
-    <span class="material-symbols-outlined">
-      expand_more
-    </span>
+    <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
+    <span class="material-symbols-outlined icon-folder"></span>
     {{name}}
   </summary>
   <ul class="sidebar__list">
     {% if not nodes %}
-      <li class="list__empty">Empty</li>
+      <li class="list__item list__empty">Empty</li>
     {% endif %}
     {% for node in nodes %}
-      <li class="list__item">
+      <li class="list__item list__item--{{node.type}}">
         {% if node.type == 'file' %}
-          <a href="{{node.preview_url}}">{{ node.handle }}</a>
+          <a href="{{node.preview_url}}">
+            <span class="material-symbols-outlined icon-file">draft</span>
+            {{ node.name }}
+          </a>
         {% endif %}
         {% if node.type == 'directory' %}
           {% include 'component-library/partials/recursive_dir.twig' with node %}
