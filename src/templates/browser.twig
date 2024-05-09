@@ -1,2 +1,17 @@
-<h1>Component Browser</h1>
-{% include 'component-library/partials/recursive_dir.twig' with { nodes: library.nodes } %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Component Browser</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <nav class="sidebar">
+        {% include 'component-library/partials/recursive_dir.twig' with library %}
+      </nav>
+      <main>
+        <div class="preview"></div>
+      </main>
+    </div>
+  </body>
+</html>

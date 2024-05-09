@@ -1,0 +1,31 @@
+.sidebar {
+  border-right: 1px solid var(--bg-color);
+  padding: 1rem;
+}
+
+.sidebar__details {
+  user-select: none;
+  cursor: pointer;
+}
+
+.sidebar__details[open] summary {
+  list-style-type: none;
+}
+
+.sidebar__details summary:hover {
+  background: red;
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  /* padding-block: 0.5rem; */
+  /* padding-inline: 1rem; */
+}
+
+.list__empty {
+  color: var(--text-color);
+  opacity: 0.5;
+  font-style: italic;
+  font-size: 0.9rem;
+}
