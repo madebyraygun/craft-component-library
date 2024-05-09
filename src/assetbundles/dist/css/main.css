@@ -1,0 +1,22 @@
+@import "theme.css";
+@import "sidebar.css";
+@import "preview.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  height: 100vh;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.container {
+  display: flex;
+  height: 100%;
+}
