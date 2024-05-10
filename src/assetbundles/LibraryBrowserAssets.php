@@ -17,6 +17,7 @@ class LibraryBrowserAssets extends AssetBundle
 
         $this->js = [
             'js/index.js',
+            'js/sidebar-tree.js'
         ];
 
         parent::init();

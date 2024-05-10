@@ -1,8 +1,15 @@
-<details open class="sidebar__details">
+<details open class="sidebar__details sidebar__details--expanded" style="--level: {{level}}">
   <summary>
-    <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
-    <span class="material-symbols-outlined icon-folder"></span>
-    {{name}}
+    <div class="summary__wrapper">
+      <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
+      <span class="material-symbols-outlined icon-folder"></span>
+      {{name}}
+    </div>
+    {% if level == 0 %}
+    <button class="colapse-expand-button">
+      <span class="material-symbols-outlined icon-collapse-expand"></span>
+    </button>
+    {% endif %}
   </summary>
   <ul class="sidebar__list">
     {% if not nodes %}

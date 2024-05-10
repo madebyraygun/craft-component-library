@@ -14,10 +14,11 @@ class Library
         return [
             'name' => 'Components',
             'nodes' => $nodes,
+            'level' => 0,
         ];
     }
 
-    public static function scanPath($path)
+    public static function scanPath($path, $level = 1)
     {
         $directories = FileHelper::findDirectories($path, [
             'recursive' => false
@@ -40,8 +41,9 @@ class Library
             $result[] = [
                 'name' => basename($directory),
                 'path' => $directory,
+                'level' => $level,
                 'type' => 'directory',
-                'nodes' => self::scanPath($directory)
+                'nodes' => self::scanPath($directory, $level + 1)
             ];
         }
 
