@@ -4,9 +4,10 @@
   --tree-icon-folder-color: #c5c5c5;
   --tree-icon-file-color: #c5c5c5;
   --tree-tracks-color: #f0eeee17;
-  --tree-dir-hover-bg-color: #424242;
+  --tree-dir-hover-bg-color: #3a3a3a;
   --tree-dir-hover-text-color: #fff;
   --tree-file-text-color: #c5c5c5;
+  --tree-file-hover-bg-color: #3a3a3a;
   --tree-file-hover-text-color: #fff;
   --tree-vertical-items-gap: 0.1rem;
 }
