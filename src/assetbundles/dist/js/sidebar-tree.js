@@ -32,7 +32,7 @@ class SidebarTree extends EventDispatcher {
   }
 
   bindCollapseExpandButton() {
-    const btn = this.root.querySelector('.colapse-expand-button');
+    const btn = this.root.querySelector('.collapse-expand-button');
     const detailsEl = btn.closest('details.sidebar__details');
     detailsEl.addEventListener('toggle', () => {
         const isExpanded = this.isFullyExpanded(detailsEl);
@@ -72,6 +72,6 @@ class SidebarTree extends EventDispatcher {
 }
 
 (function() {
-  const sidebar = document.querySelectorAll('.sidebar');
+  const sidebar = document.querySelectorAll('nav > details');
   Array.from(sidebar).forEach(sidebar => new SidebarTree(sidebar));
 })();
