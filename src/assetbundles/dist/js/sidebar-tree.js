@@ -1,42 +1,73 @@
-class SidebarTree {
+class SidebarTree extends EventDispatcher {
   constructor(rootElement) {
-      this.root = rootElement;
-      this.bindAllButtons();
+    super();
+    this.root = rootElement;
+    this.directories = this.root.querySelectorAll('.list__item--directory');
+    this.files = this.root.querySelectorAll('.list__item--file');
+    this.bind();
   }
 
-  bindAllButtons() {
-      const buttons = this.root.querySelectorAll('.colapse-expand-button');
-      buttons.forEach(btn => this.bindCollapseExpandButton(btn));
+  bind() {
+    this.bindNodeEvents();
+    this.bindCollapseExpandButton();
   }
 
-  bindCollapseExpandButton(btn) {
-      const detailsEl = btn.closest('details.sidebar__details');
-      detailsEl.addEventListener('toggle', () => {
-          const isExpanded = this.isFullyExpanded(detailsEl);
-          this.updateExpandCollapseIcon(detailsEl, isExpanded);
-      }, { capture: true });
-
-      btn.addEventListener('click', () => {
-          const isExpanded = this.isFullyExpanded(detailsEl);
-          this.collapseAllInside(detailsEl, !isExpanded);
+  bindNodeEvents() {
+    this.directories.forEach(directory => {
+      directory.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // this.selectNode(null, 'file');
+        this.selectNode(directory, 'directory');
       });
+    });
+
+    this.files.forEach(file => {
+      file.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        this.selectNode(file, 'file');
+        this.selectNode(null, 'directory');
+      }, { capture: true });
+    });
+  }
+
+  bindCollapseExpandButton() {
+    const btn = this.root.querySelector('.colapse-expand-button');
+    const detailsEl = btn.closest('details.sidebar__details');
+    detailsEl.addEventListener('toggle', () => {
+        const isExpanded = this.isFullyExpanded(detailsEl);
+        this.updateExpandCollapseIcon(detailsEl, isExpanded);
+    }, { capture: true });
+
+    btn.addEventListener('click', () => {
+        const isExpanded = this.isFullyExpanded(detailsEl);
+        this.collapseAllInside(detailsEl, !isExpanded);
+    });
   }
 
   collapseAllInside(detailsEl, expand) {
-      const detailsElements = detailsEl.querySelectorAll('details');
-      detailsElements.forEach(detailsElement => {
-          detailsElement.open = expand;
-      });
+    const detailsElements = detailsEl.querySelectorAll('details');
+    detailsElements.forEach(detailsElement => {
+        detailsElement.open = expand;
+    });
+  }
+
+  selectNode(itemElement, type = 'directory') {
+    const nodes = type === 'directory' ? this.directories : this.files;
+    nodes.forEach(dir => dir.classList.remove('list__item--selected'));
+    if (itemElement) {
+      itemElement.classList.add('list__item--selected');
+    }
   }
 
   isFullyExpanded(detailsEl) {
-      const elements = detailsEl.querySelectorAll('details');
-      return Array.from(elements).every(el => el.open);
+    const elements = detailsEl.querySelectorAll('details');
+    return Array.from(elements).every(el => el.open);
   }
 
   updateExpandCollapseIcon(btnEl, isExpanded) {
-      btnEl.classList.toggle('sidebar__details--expanded', isExpanded);
-      btnEl.classList.toggle('sidebar__details--collapsed', !isExpanded);
+    btnEl.classList.toggle('sidebar__details--expanded', isExpanded);
+    btnEl.classList.toggle('sidebar__details--collapsed', !isExpanded);
   }
 }
 

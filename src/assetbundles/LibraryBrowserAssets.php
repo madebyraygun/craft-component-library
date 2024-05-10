@@ -16,7 +16,7 @@ class LibraryBrowserAssets extends AssetBundle
         ];
 
         $this->js = [
-            'js/index.js',
+            'js/base/event-dispatcher.js',
             'js/sidebar-tree.js'
         ];
 
