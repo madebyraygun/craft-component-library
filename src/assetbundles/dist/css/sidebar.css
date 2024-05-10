@@ -1,107 +1,12 @@
-/**
-  https://primer.style/components/tree-view
-**/
+/* Base elements and their states */
 .sidebar {
   border-right: 1px solid var(--bg-color);
-}
-
-.colapse-expand-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.icon-collapse-expand::after {
-  font-size: 1rem;
-  color: var(--tree-file-text-color);
-}
-
-.icon-collapse-expand:hover::after {
-  color: var(--tree-file-hover-text-color);
-}
-
-.sidebar__details--expanded .icon-collapse-expand::after {
-  content: 'collapse_all'
-}
-
-.sidebar__details--collapsed .icon-collapse-expand::after {
-  content: 'expand_all'
 }
 
 .sidebar__details {
   user-select: none;
   cursor: pointer;
   position: relative;
-}
-
-.sidebar__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  padding-inline: 1rem 0;
-  /* padding-block: 0.25rem; */
-}
-
-.list__item {
-  position: relative;
-}
-
-.list__empty {
-  color: var(--tree-file-text-color);
-  opacity: 0.5;
-  font-style: italic;
-  font-size: 0.9rem;
-  padding-inline: 1rem;
-}
-
-.sidebar__details summary,
-.sidebar__details summary .summary__wrapper {
-  list-style-type: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.35rem;
-  padding-block: 0.15rem;
-}
-
-.material-symbols-outlined {
-  transition: all 0.15s ease-in-out;
-  font-size: 1.2rem;
-}
-
-.sidebar__details .icon-folder::after {
-  content: 'folder';
-}
-
-.sidebar__details[open] > summary > .icon-folder::after {
-  content: 'folder_open';
-}
-
-.icon-folder {
-  color: var(--tree-icon-folder-color);
-  font-variation-settings:
-  'FILL' 1,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
-
-.icon-file {
-  color: var(--tree-icon-file-color);
-}
-
-.sidebar__details > summary > .icon-arrow-right, .sidebar__details > summary > .icon-folder {
-  transform: rotate(0deg);
-}
-
-.sidebar__details[open] > summary > .icon-arrow-right {
-  transform: rotate(90deg);
-}
-
-.sidebar__details summary:hover {
-  border-radius: 0.25rem;
-  background: var(--tree-dir-hover-bg-color);
-  color: var(--tree-dir-hover-text-color);
 }
 
 .sidebar__details[open]::after {
@@ -115,15 +20,122 @@
   top: 24px;
 }
 
+.sidebar__details.level-0 > summary {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  font-weight: 800;
+}
+
+.sidebar__details.level-0 > summary .icon-folder {
+  display: none;
+}
+
+.sidebar__details--collapsed .icon-collapse-expand::after {
+  content: 'expand_all';
+}
+
+.sidebar__details--expanded .icon-collapse-expand::after {
+  content: 'collapse_all';
+}
+
+.sidebar__details summary,
+.sidebar__details summary .summary__wrapper {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 0.35rem;
+  padding-block: var(--tree-vertical-items-gap);
+}
+
+.sidebar__details summary:hover {
+  border-radius: 0.25rem;
+  background: var(--tree-dir-hover-bg-color);
+  color: var(--tree-dir-hover-text-color);
+}
+
+.sidebar__details > summary > .icon-arrow-right,
+.sidebar__details > summary .icon-folder {
+  transform: rotate(0deg);
+}
+
+.sidebar__details[open] > summary .icon-arrow-right {
+  transform: rotate(90deg);
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-inline: 1rem 0;
+}
+
+.list__item {
+  position: relative;
+}
+
 .list__item--file a {
   text-decoration: none;
   color: var(--tree-file-text-color);
   padding-inline: 0.6rem;
   display: flex;
   align-items: center;
-  gap: 0.2rem;
+  column-gap: 0.2rem;
+  padding-block: var(--tree-vertical-items-gap);
 }
 
 .list__item--file a:hover {
   color: var(--tree-file-hover-text-color);
+}
+
+.list__empty {
+  color: var(--tree-file-text-color);
+  opacity: 0.5;
+  font-style: italic;
+  font-size: 0.9rem;
+  padding-inline: 1rem;
+}
+
+/* Buttons and icons */
+.colapse-expand-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.sidebar__details[open] .colapse-expand-button {
+  visibility: visible;
+}
+
+.sidebar__details[open] > summary .icon-folder::after {
+  content: 'folder_open';
+}
+
+.icon-collapse-expand::after {
+  font-size: 1rem;
+  color: var(--tree-file-text-color);
+}
+
+.icon-collapse-expand:hover::after {
+  color: var(--tree-file-hover-text-color);
+}
+
+.icon-folder {
+  color: var(--tree-icon-folder-color);
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.icon-folder::after {
+  content: 'folder';
+}
+
+.icon-file {
+  color: var(--tree-icon-file-color);
+}
+
+.material-symbols-outlined {
+  transition: all 0.15s ease-in-out;
+  font-size: 1.2rem;
 }

@@ -8,4 +8,5 @@
   --tree-dir-hover-text-color: #fff;
   --tree-file-text-color: #c5c5c5;
   --tree-file-hover-text-color: #fff;
+  --tree-vertical-items-gap: 0.1rem;
 }
