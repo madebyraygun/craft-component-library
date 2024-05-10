@@ -79,8 +79,7 @@
         color: var(--tree-dir-text-color);
       }
 
-      .icon-arrow-right,
-      .icon-folder {
+      .icon-arrow-right {
         transform: rotate(0deg);
       }
 
