@@ -1,3 +1,7 @@
+/**
+ * Uses https://github.com/nathancahill/split/tree/master/packages/splitjs
+ */
+
 export class Splitter {
   constructor() {
     Split([

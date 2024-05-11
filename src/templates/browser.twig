@@ -10,11 +10,13 @@
   <body>
     <div class="container">
       <nav id="split-sidebar" class="sidebar">
-        {% include 'component-library/partials/recursive_dir.twig' with library %}
-        {% include 'component-library/partials/recursive_dir.twig' with library %}
+        {% include 'component-library/partials/fileTree.twig' with library %}
+        {% include 'component-library/partials/fileTree.twig' with library %}
       </nav>
       <main id="split-content">
-        <div id="split-preview" class="preview"></div>
+        <div id="split-preview" class="preview">
+          <iframe id="preview-iframe" marginwidth="0" frameborder="0" scrolling="yes" src="https://library-core.ddev.site/component-library/preview?name=@elements/image"></iframe>
+        </div>
         <div id="split-toolbar" class="toolbar"></div>
       </main>
     </div>

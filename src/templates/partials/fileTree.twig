@@ -26,7 +26,7 @@
           </a>
         {% endif %}
         {% if node.type == 'directory' %}
-          {% include 'component-library/partials/recursive_dir.twig' with node %}
+          {% include 'component-library/partials/fileTree.twig' with node %}
         {% endif %}
       </li>
     {% endfor %}
