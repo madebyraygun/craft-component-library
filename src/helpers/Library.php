@@ -3,6 +3,7 @@
 namespace madebyraygun\componentlibrary\helpers;
 
 use craft\helpers\FileHelper;
+use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\Plugin;
 
 class Library
@@ -67,9 +68,8 @@ class Library
 
     public static function getComponentPreviewUrl($handle)
     {
-        $site = \Craft::$app->sites->getCurrentSite();
-        $siteUrl = $site->getBaseUrl();
-        return $siteUrl . '/component-library/preview?name=' . $handle;
+        $siteUrl = UrlHelper::siteUrl('/component-library/preview');
+        return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
     }
 
     public static function getComponentPath($path)
