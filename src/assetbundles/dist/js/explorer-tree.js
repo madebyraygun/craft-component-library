@@ -1,8 +1,8 @@
 import { EventDispatcher } from './base/event-dispatcher.js';
 
-export class SidebarTree extends EventDispatcher {
+export class ExplorerTree extends EventDispatcher {
   constructor(rootElement) {
-    super();
+    super(rootElement);
     this.root = rootElement;
     this.directories = this.root.querySelectorAll('.list__item--directory');
     this.files = this.root.querySelectorAll('.list__item--file');
@@ -27,6 +27,12 @@ export class SidebarTree extends EventDispatcher {
       file.addEventListener('click', (e) => {
         e.stopPropagation();
         e.preventDefault();
+        this.dispatchEvent('nodenavigation', {
+          bubbles: true,
+          detail: {
+            url: file.querySelector('a').href
+          }
+        });
         this.selectNode(file, 'file');
         this.selectNode(null, 'directory');
       }, { capture: true });
