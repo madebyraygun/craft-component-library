@@ -1,6 +1,7 @@
 :root {
   --bg-color: #2f2f2f;
   --text-color: #fff;
+  --tree-bg-color: #2f2f2f;
   --tree-icon-folder-color: #c5c5c5;
   --tree-icon-file-color: #c5c5c5;
   --tree-tracks-color: #f0eeee17;

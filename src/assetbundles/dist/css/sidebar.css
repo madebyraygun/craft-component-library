@@ -1,11 +1,17 @@
 .sidebar {
   border-right: 1px solid var(--bg-color);
+  background-color: var(--tree-bg-color);
+
   .sidebar__details {
     user-select: none;
     cursor: pointer;
     position: relative;
 
     &.level-0 > summary {
+      position: sticky;
+      background-color: var(--tree-bg-color);
+      z-index: 1;
+      top: 0;
       text-transform: uppercase;
       font-size: 0.7rem;
       letter-spacing: 3px;
