@@ -1,4 +1,3 @@
 .preview {
-  background: gray;
-
+  background: var(--render-bg-color);
 }

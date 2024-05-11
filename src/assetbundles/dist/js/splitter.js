@@ -1,18 +1,23 @@
-console.log('splitter!');
-(function() {
-  Split([
-    '#split-sidebar',
-    '#split-preview',
-  ], {
-    sizes: [20, 80],
-    minSize: 200,
-    gutterSize: 20,
-  })
-  Split([
-    '#split-render',
-    '#split-toolbar',
-  ], {
-    sizes: [60, 40],
-    gutterSize: 20,
-  })
-})()
+export class Splitter {
+  constructor() {
+    Split([
+      '#split-sidebar',
+      '#split-content',
+    ], {
+      direction: 'horizontal',
+      sizes: [20, 80],
+      minSize: 300,
+      gutterSize: 8,
+      cursor: 'col-resize',
+    })
+    Split([
+      '#split-preview',
+      '#split-toolbar',
+    ], {
+
+      direction: 'vertical',
+      sizes: [60, 40],
+      gutterSize: 8,
+    })
+  }
+}

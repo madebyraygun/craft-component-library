@@ -1,22 +1,6 @@
+@import "reset.css";
+@import "global.css";
 @import "theme.css";
 @import "sidebar.css";
 @import "preview.css";
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  background: var(--bg-color);
-  color: var(--text-color);
-  font-size: 0.9rem;
-  font-family: "Nunito Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
-}
-
-.container {
-  display: grid;
-  height: 100%;
-}
+@import "toolbar.css";

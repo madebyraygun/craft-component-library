@@ -1,7 +1,9 @@
 :root {
   --bg-color: #2f2f2f;
   --text-color: #fff;
-  --tree-bg-color: #2f2f2f;
+  --split-gutter-color: #272626;
+  --split-border-color: #1f1f1f;
+  --tree-bg-color: #2c2b31;
   --tree-icon-folder-color: #c5c5c5;
   --tree-icon-file-color: #c5c5c5;
   --tree-tracks-color: #f0eeee17;
@@ -16,4 +18,6 @@
   --tree-file-hover-bg-color: #3a3a3a;
   --tree-file-hover-text-color: #fff;
   --tree-vertical-items-gap: 0.1rem;
+  --toolbar-bg-color: #2c2b31;
+  --render-bg-color: #2c2b31;
 }
