@@ -1,4 +1,4 @@
-class EventDispatcher {
+export class EventDispatcher {
   constructor() {
     this.eventTarget = new EventTarget();
   }

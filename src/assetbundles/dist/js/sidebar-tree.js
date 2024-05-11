@@ -1,4 +1,6 @@
-class SidebarTree extends EventDispatcher {
+import { EventDispatcher } from './base/event-dispatcher.js';
+
+export class SidebarTree extends EventDispatcher {
   constructor(rootElement) {
     super();
     this.root = rootElement;
@@ -70,8 +72,3 @@ class SidebarTree extends EventDispatcher {
     btnEl.classList.toggle('sidebar__details--collapsed', !isExpanded);
   }
 }
-
-(function() {
-  const sidebar = document.querySelectorAll('nav > details');
-  Array.from(sidebar).forEach(sidebar => new SidebarTree(sidebar));
-})();
