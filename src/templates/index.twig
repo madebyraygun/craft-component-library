@@ -17,7 +17,15 @@
         <div id="split-preview" class="preview">
           <iframe id="preview-iframe" marginwidth="0" frameborder="0" scrolling="yes" src="https://library-core.ddev.site/component-library/welcome"></iframe>
         </div>
-        <div id="split-toolbar" class="toolbar"></div>
+        <div id="split-toolbar" class="toolbar">
+          {% include 'component-library/partials/tabs.twig' with {
+            tabs: [
+              { id: 'view', label: 'View' },
+              { id: 'context', label: 'Context' },
+              { id: 'info', label: 'Info' },
+            ]
+          } %}
+        </div>
       </main>
     </div>
   </body>

@@ -1,5 +1,8 @@
 @import "reset.css";
 @import "global.css";
+
+@import "tabs.css";
+
 @import "theme.css";
 @import "sidebar.css";
 @import "preview.css";
