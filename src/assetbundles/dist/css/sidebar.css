@@ -1,6 +1,7 @@
 .sidebar {
   max-height: 100%;
   overflow: auto;
+  font-size: 0.85rem;
   border-right: 1px solid var(--bg-color);
   background-color: var(--tree-bg-color);
 
@@ -88,6 +89,7 @@
       }
 
       .icon-arrow-right {
+        color: var(--tree-dir-arrow-color);
         transform: rotate(0deg);
       }
 
