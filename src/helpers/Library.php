@@ -58,14 +58,16 @@ class Library
         // Add files
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
-            $previewUrl = self::getLandingPreviewUrl($handlePath);
+            $pagePreview = self::getPagePreviewUrl($handlePath);
+            $isolatedPreview = self::getIsolatedPreviewUrl($handlePath);
             $result[] = [
                 'name' => basename($file),
                 'extension' => pathinfo($file, PATHINFO_EXTENSION),
                 'current' => $file === $currentPath,
                 'path' => $file,
                 'handle' => $handlePath,
-                'preview_url' => $previewUrl,
+                'page_url' => $pagePreview,
+                'isolated_url' => $isolatedPreview,
                 'type' => 'file',
                 'nodes' => []
             ];
@@ -85,13 +87,13 @@ class Library
         return false;
     }
 
-    public static function getComponentPreviewUrl(string $handle): string
+    public static function getPagePreviewUrl(string $handle): string
     {
         $siteUrl = UrlHelper::siteUrl('/component-library');
         return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
     }
 
-    public static function getLandingPreviewUrl(string $handle): string
+    public static function getIsolatedPreviewUrl(string $handle): string
     {
         $template = empty($handle) ? 'welcome' : 'preview';
         if (!Component::componentExists($handle)) {

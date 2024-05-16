@@ -29,12 +29,12 @@ class BrowserController extends Controller
 
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
-        $previewUrl = Library::getLandingPreviewUrl($name);
+        $iframeUrl = Library::getIsolatedPreviewUrl($name);
         $library = Library::scanLibraryPath();
         return $this->renderTemplate('component-library/index', [
             'library' => $library,
-            'previewUrl' => $previewUrl,
             'context' => $context,
+            'iframeUrl' => $iframeUrl,
             'distUrl' => $distUrl,
         ]);
     }
