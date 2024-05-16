@@ -14,4 +14,10 @@ export class Toolbar {
     this.toolbar = document.querySelector('.toolbar');
     hljs.highlightAll();
   }
+
+  bind() {
+    document.addEventListener('nodenavigation', (e) => {
+      console.log(e.detail)
+    }, true)
+  }
 }

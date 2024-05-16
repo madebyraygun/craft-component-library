@@ -18,9 +18,10 @@
       </li>
     {% endif %}
     {% for node in nodes %}
-      <li class="list__item list__item--{{node.type}}">
+      {% set selected_class = node.current|default ? 'list__item--selected' : '' %}
+      <li class="list__item list__item--{{node.type}} {{selected_class}}">
         {% if node.type == 'file' %}
-          <a class="child-spacer" href="{{node.preview_url}}">
+          <a class="child-spacer" href="{{node.preview_url|raw}}">
             <span class="material-symbols-outlined icon-file">draft</span>
             {{ node.name }}
           </a>

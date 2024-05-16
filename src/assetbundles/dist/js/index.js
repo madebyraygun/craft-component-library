@@ -8,3 +8,5 @@ const sidebar = document.querySelectorAll('nav > details');
 Array.from(sidebar).forEach(sidebar => new ExplorerTree(sidebar));
 const preview = new Preview();
 const toolbar = new Toolbar();
+
+document.querySelector('.container').classList.remove('js-loading');

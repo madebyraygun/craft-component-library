@@ -11,6 +11,12 @@ body {
 .container {
   display: flex;
   height: 100%;
+  transition: opacity 0.075s;
+  opacity: 1;
+  &.js-loading {
+    visibility: hidden;
+    opacity: 0;
+  }
 }
 
 main {

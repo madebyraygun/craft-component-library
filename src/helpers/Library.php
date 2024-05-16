@@ -5,13 +5,17 @@ namespace madebyraygun\componentlibrary\helpers;
 use craft\helpers\FileHelper;
 use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\Plugin;
+use madebyraygun\componentlibrary\helpers\Component;
+use Craft;
 
 class Library
 {
     public static function scanLibraryPath(): array
     {
         $settings = Plugin::$plugin->getSettings();
-        $nodes = self::scanPath($settings->root);
+        $name = Craft::$app->request->getParam('name');
+        $parts = Component::parseComponentParts($name);
+        $nodes = self::scanPath($settings->root, $parts->templatePath);
         return [
             'name' => 'Components',
             'nodes' => $nodes,
@@ -19,7 +23,7 @@ class Library
         ];
     }
 
-    public static function scanPath($path, $level = 1)
+    public static function scanPath(string $path, string $currentPath = '', int $level = 1): array
     {
         $directories = FileHelper::findDirectories($path, [
             'recursive' => false
@@ -44,17 +48,18 @@ class Library
                 'path' => $directory,
                 'level' => $level,
                 'type' => 'directory',
-                'nodes' => self::scanPath($directory, $level + 1)
+                'nodes' => self::scanPath($directory, $currentPath, $level + 1)
             ];
         }
 
         // Add files
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
-            $previewUrl = self::getComponentPreviewUrl($handlePath);
+            $previewUrl = self::getLandingPreviewUrl($handlePath);
             $result[] = [
                 'name' => basename($file),
                 'extension' => pathinfo($file, PATHINFO_EXTENSION),
+                'current' => $file === $currentPath,
                 'path' => $file,
                 'handle' => $handlePath,
                 'preview_url' => $previewUrl,
@@ -66,13 +71,23 @@ class Library
         return $result;
     }
 
-    public static function getComponentPreviewUrl($handle)
+    public static function getComponentPreviewUrl(string $handle): string
     {
-        $siteUrl = UrlHelper::siteUrl('/component-library/preview');
+        $siteUrl = UrlHelper::siteUrl('/component-library');
         return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
     }
 
-    public static function getComponentPath($path)
+    public static function getLandingPreviewUrl(string $handle): string
+    {
+        $template = empty($handle) ? 'welcome' : 'preview';
+        if (!Component::componentExists($handle)) {
+            $template = 'not-found';
+        }
+        $siteUrl = UrlHelper::siteUrl('/component-library/' . $template);
+        return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
+    }
+
+    public static function getComponentPath(string $path): string
     {
         $settings = Plugin::$plugin->getSettings();
         $root = $settings->root;
