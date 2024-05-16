@@ -6,6 +6,7 @@
   }
 
   .tabs__container {
+    overflow: auto;
     grid-template-rows: auto 1fr;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
@@ -53,5 +54,6 @@
     background: var(--tabs-pane-bg-color);
     display: none;
     grid-column: 1/-1;
+    overflow: auto;
   }
 }

@@ -1,0 +1,10 @@
+<div class="switch switch--small">
+<label class="switch__wrapper">
+  <input type='checkbox' class='switch__input' />
+  <span class='switch__track'>
+    <span class='switch__handle'></span>
+  </span>
+  {% set align_class = label_align|default ? 'switch__label--' ~ label_align : ''  %}
+  <span class='switch__label {{align_class}}'>{{label|default('')}}</span>
+</label>
+</div>

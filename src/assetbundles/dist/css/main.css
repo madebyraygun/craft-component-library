@@ -1,9 +1,10 @@
 @import "reset.css";
 @import "global.css";
-
-@import "tabs.css";
-
 @import "theme.css";
+
+@import "controls/switch.css";
+@import "controls/tabs.css";
+
 @import "sidebar.css";
 @import "preview.css";
 @import "toolbar.css";

@@ -8,7 +8,16 @@
     {% endfor %}
     {% for tab in tabs %}
       <section class="tabs__pane tabs__pane-{{loop.index}}">
-        <p>{{loop.index}} Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        {% include 'component-library/controls/switch.twig' with {
+          label: 'compiled',
+          label_align: 'left'
+        } %}
+        <div class="code">
+          <pre>
+            <code class="language-html">
+            </code>
+          </pre>
+        </div>
       </section>
     {% endfor %}
   </div>

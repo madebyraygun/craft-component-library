@@ -30,3 +30,9 @@ main {
     border-right: 1px solid var(--split-border-color);
   }
 }
+
+.hljs {
+  font-family: 'Fira Code', monospace;
+  background: transparent;
+  padding: 0 !important;
+}

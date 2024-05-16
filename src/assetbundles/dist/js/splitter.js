@@ -1,3 +1,4 @@
+import 'https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js';
 /**
  * Uses https://github.com/nathancahill/split/tree/master/packages/splitjs
  */

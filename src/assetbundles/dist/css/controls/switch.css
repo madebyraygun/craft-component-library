@@ -1,0 +1,75 @@
+.switch {
+  .switch__wrapper {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  &.switch--small {
+    font-size: 0.85rem;
+    .switch__track {
+      width: 32px;
+      height: 16px;
+      border-radius: 8px;
+    }
+    .switch__handle {
+      width: 16px;
+      height: 16px;
+    }
+
+    .switch__input {
+      &:checked ~ .switch__track {
+        .switch__handle {
+          left: 16px;
+        }
+      }
+    }
+  }
+
+  .switch__label {
+    user-select: none;
+    color: var(--switch-text-color);
+    &.switch__label--left {
+      order: -1;
+    }
+    &:hover {
+      color: var(--switch-hover-text-color);
+    }
+  }
+
+  .switch__track {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    background-color: var(--switch-track-bg-color);
+    border-radius: 24px;
+    transition: background-color 0.3s;
+    &:hover {
+      background-color: var(--switch-track-bg-color);
+    }
+  }
+
+  .switch__input {
+    display: none;
+    &:checked ~ .switch__track {
+      background-color: #4CAF50;
+      .switch__handle {
+        left: 20px;
+      }
+    }
+  }
+
+  .switch__handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: left 0.2s;
+  }
+}

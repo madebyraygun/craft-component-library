@@ -33,4 +33,12 @@
   --tabs-label-active-border-color: transparent;
   --tabs-pane-bg-color: #2a2d2e;
 
+  --switch-text-color: #fff;
+  --switch-off-text-color: #fff;
+  --switch-hover-text-color: #4d0505;
+  --switch-track-bg-color: #2a372a;
+  --switch-track-hover-bg-color: #4CAF50;
+  --switch-handle-bg-color: #fff;
+  --switch-handle-shadow-color: #4CAF50;
+  --switch-handle-hover-bg-color: #fff;
 }
