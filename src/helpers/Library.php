@@ -43,12 +43,15 @@ class Library
 
         // Scan directories
         foreach ($directories as $directory) {
+            $nodes = self::scanPath($directory, $currentPath, $level + 1);
+            $hasActiveChild = self::hasActiveChild($nodes);
             $result[] = [
                 'name' => basename($directory),
                 'path' => $directory,
                 'level' => $level,
                 'type' => 'directory',
-                'nodes' => self::scanPath($directory, $currentPath, $level + 1)
+                'expanded' => $hasActiveChild,
+                'nodes' => $nodes
             ];
         }
 
@@ -69,6 +72,17 @@ class Library
         }
 
         return $result;
+    }
+
+    public static function hasActiveChild(array $nodes): bool
+    {
+        foreach ($nodes as $node) {
+            $isCurrent = $node['current'] ?? false;
+            if ($isCurrent || self::hasActiveChild($node['nodes'])) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function getComponentPreviewUrl(string $handle): string

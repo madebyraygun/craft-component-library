@@ -1,4 +1,5 @@
-<details open class="explorer-tree explorer-tree--expanded level-{{level}}" style="--level:{{level}}">
+{% set open_attr = level == 0 or expanded ? 'open' : '' %}
+<details {{open_attr}} class="explorer-tree explorer-tree--expanded level-{{level}}" style="--level:{{level}}">
   <summary>
     <div class="summary__wrapper parent-spacer">
       <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
