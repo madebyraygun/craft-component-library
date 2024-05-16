@@ -56,4 +56,10 @@
     grid-column: 1/-1;
     overflow: auto;
   }
+
+  .tabs__pane-control {
+    display: flex;
+    padding: 0.5rem;
+    justify-content: flex-end;
+  }
 }

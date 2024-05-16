@@ -8,10 +8,16 @@
     {% endfor %}
     {% for tab in tabs %}
       <section class="tabs__pane tabs__pane-{{loop.index}}">
-        {% include 'component-library/controls/switch.twig' with {
-          label: 'compiled',
-          label_align: 'left'
-        } %}
+        <div class="tabs__pane-control">
+          {% if tab.switch|default %}
+            {% include 'component-library/controls/switch.twig' with {
+              label: tab.switch.label|default('Label'),
+              align: 'left',
+              small: true,
+              checked: true
+            } %}
+          {% endif %}
+        </div>
         <div class="code">
           <pre>
             <code class="language-html">
