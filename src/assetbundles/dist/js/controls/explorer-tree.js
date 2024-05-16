@@ -1,4 +1,4 @@
-import { EventDispatcher } from './base/event-dispatcher.js';
+import { EventDispatcher } from '../base/event-dispatcher.js';
 
 export class ExplorerTree extends EventDispatcher {
   constructor(rootElement) {
@@ -40,21 +40,20 @@ export class ExplorerTree extends EventDispatcher {
   }
 
   bindCollapseExpandButton() {
-    const btn = this.root.querySelector('.collapse-expand-button');
-    const detailsEl = btn.closest('details.sidebar__details');
-    detailsEl.addEventListener('toggle', () => {
-        const isExpanded = this.isFullyExpanded(detailsEl);
-        this.updateExpandCollapseIcon(detailsEl, isExpanded);
+    this.root.addEventListener('toggle', () => {
+        const isExpanded = this.isFullyExpanded();
+        this.updateExpandCollapseIcon(isExpanded);
     }, { capture: true });
 
+    const btn = this.root.querySelector('button.collapse-expand-button');
     btn.addEventListener('click', () => {
-        const isExpanded = this.isFullyExpanded(detailsEl);
-        this.collapseAllInside(detailsEl, !isExpanded);
+        const isExpanded = this.isFullyExpanded();
+        this.toggleExpand(!isExpanded);
     });
   }
 
-  collapseAllInside(detailsEl, expand) {
-    const detailsElements = detailsEl.querySelectorAll('details');
+  toggleExpand(expand) {
+    const detailsElements = this.root.querySelectorAll('details.explorer-tree');
     detailsElements.forEach(detailsElement => {
         detailsElement.open = expand;
     });
@@ -68,13 +67,13 @@ export class ExplorerTree extends EventDispatcher {
     }
   }
 
-  isFullyExpanded(detailsEl) {
-    const elements = detailsEl.querySelectorAll('details');
+  isFullyExpanded() {
+    const elements = this.root.querySelectorAll('details.explorer-tree');
     return Array.from(elements).every(el => el.open);
   }
 
-  updateExpandCollapseIcon(btnEl, isExpanded) {
-    btnEl.classList.toggle('sidebar__details--expanded', isExpanded);
-    btnEl.classList.toggle('sidebar__details--collapsed', !isExpanded);
+  updateExpandCollapseIcon(isExpanded) {
+    this.root.classList.toggle('explorer-tree--expanded', isExpanded);
+    this.root.classList.toggle('explorer-tree--collapsed', !isExpanded);
   }
 }

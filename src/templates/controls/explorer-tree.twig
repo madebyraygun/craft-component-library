@@ -1,4 +1,4 @@
-<details open class="sidebar__details sidebar__details--expanded level-{{level}}" style="--level:{{level}}">
+<details open class="explorer-tree explorer-tree--expanded level-{{level}}" style="--level:{{level}}">
   <summary>
     <div class="summary__wrapper parent-spacer">
       <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
@@ -11,7 +11,7 @@
     </button>
     {% endif %}
   </summary>
-  <ul class="sidebar__list">
+  <ul class="explorer-tree__list">
     {% if not nodes %}
       <li class="list__item list__empty">
         <span class="child-spacer">empty</span>
@@ -27,7 +27,7 @@
           </a>
         {% endif %}
         {% if node.type == 'directory' %}
-          {% include 'component-library/controls/fileTree.twig' with node %}
+          {% include 'component-library/controls/explorer-tree.twig' with node %}
         {% endif %}
       </li>
     {% endfor %}
