@@ -1,16 +1,20 @@
-<script type="application/json">{{ toolbar | default([]) | json_encode() }}</script>
+{# <script type="application/json">{{ toolbar | default([]) | json_encode() }}</script> #}
 {% include 'component-library/controls/tabs.twig' with {
   tabs: [
     {
       id: 'view',
       label: 'View',
-      switch: { label: 'Compiled View' }
+      content: include('component-library/_partials/toolbar_view.twig')
     },
     {
       id: 'context',
       label: 'Context',
-      switch: { label: 'Compiled Context' }
+      content: include('component-library/_partials/toolbar_context.twig')
     },
-    { id: 'info', label: 'Info' },
+    {
+      id: 'info',
+      label: 'Info',
+      content: include('component-library/_partials/toolbar_info.twig')
+    },
   ]
 } %}

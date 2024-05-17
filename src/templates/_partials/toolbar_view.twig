@@ -1,0 +1,18 @@
+<div class="toobar__compile-control">
+  {% include 'component-library/controls/switch.twig' with {
+    label: 'Compiled View',
+    align: 'left',
+    small: true,
+    checked: true
+  } %}
+</div>
+<div class="code">
+  <pre>
+    <code class="language-html">
+      {{ tab.compiledCode|default(distUrl) }}
+    </code>
+    <code class="language-php">
+      {{ tab.compiledCode|default('') }}
+    </code>
+  </pre>
+</div>

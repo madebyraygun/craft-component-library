@@ -22,9 +22,9 @@ class BrowserController extends Controller
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         $libraryUrl = UrlHelper::siteUrl('/component-library');
-        $library = Library::scanLibraryPath();
+        $sidebarContext = Library::scanLibraryPath();
         return $this->renderTemplate('component-library/index', [
-            'library' => $library,
+            'sidebar' => $sidebarContext,
             'toolbar' => $toobarContext,
             'iframeUrl' => $iframeUrl,
             'libraryUrl' => $libraryUrl,
