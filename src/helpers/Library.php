@@ -4,6 +4,7 @@ namespace madebyraygun\componentlibrary\helpers;
 
 use craft\helpers\FileHelper;
 use craft\helpers\UrlHelper;
+use craft\helpers\Json;
 use madebyraygun\componentlibrary\Plugin;
 use madebyraygun\componentlibrary\helpers\Component;
 use Craft;
@@ -124,7 +125,7 @@ class Library
         $contextPath = $parts->configPath;
         if ($compiled) {
             $ctx = Context::getComponentContext($path);
-            return json_encode($ctx, JSON_PRETTY_PRINT);
+            return Json::encode($ctx, JSON_PRETTY_PRINT);
         }
         return file_get_contents($contextPath);
     }
