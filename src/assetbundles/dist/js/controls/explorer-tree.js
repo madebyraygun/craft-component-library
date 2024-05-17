@@ -1,8 +1,8 @@
-import { EventDispatcher } from '../base/event-dispatcher.js';
+import { LibraryComponent } from '../base/library-component.js';
 
-export class ExplorerTree extends EventDispatcher {
+export class ExplorerTree extends LibraryComponent {
   constructor(rootElement) {
-    super(rootElement);
+    super();
     this.root = rootElement;
     this.directories = this.root.querySelectorAll('.list__item--directory');
     this.files = this.root.querySelectorAll('.list__item--file');
@@ -25,14 +25,6 @@ export class ExplorerTree extends EventDispatcher {
 
     this.files.forEach(file => {
       file.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        this.dispatchEvent('nodenavigation', {
-          bubbles: true,
-          detail: {
-            url: file.querySelector('a').href
-          }
-        });
         this.selectNode(file, 'file');
         this.selectNode(null, 'directory');
       }, { capture: true });
