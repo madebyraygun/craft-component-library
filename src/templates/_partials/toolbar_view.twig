@@ -1,14 +1,15 @@
 <div class="toobar__compile-control">
   {% include 'component-library/controls/switch.twig' with {
+    class: 'code-switch',
     label: 'Compiled View',
     align: 'left',
     small: true,
     checked: false
   } %}
 </div>
-<div class="code">
+<div class="toolbar__code">
   <pre>
-    <code class="language-html">{{ toolbar.contents.compiled_component|default('Empty') }}</code>
-    <code class="language-twig">{{ toolbar.contents.raw_component|default('Empty') }}</code>
+    <code class="compiled language-html">{{ toolbar.contents.compiled_component|default('Empty') }}</code>
+    <code class="raw language-twig">{{ toolbar.contents.raw_component|default('Empty') }}</code>
   </pre>
 </div>

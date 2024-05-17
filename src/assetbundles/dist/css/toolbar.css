@@ -2,8 +2,29 @@
   background: var(--toolbar-bg-color);
 
   .toobar__compile-control {
+    top: 0;
+    position: sticky;
     display: flex;
     padding: 0.5rem;
     justify-content: flex-end;
+  }
+
+  .toolbar__code {
+    &.toolbar__code--compile-enabled {
+      code.raw {
+        display: none;
+      }
+      code.compiled {
+        display: block;
+      }
+    }
+
+    code.raw {
+      display: block;
+    }
+
+    code.compiled {
+      display: none;
+    }
   }
 }

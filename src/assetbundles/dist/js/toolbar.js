@@ -7,23 +7,42 @@ import * as prettier from 'https://unpkg.com/prettier@3.2.5/standalone.mjs';
 import pluginBabel from 'https://unpkg.com/prettier@3.2.5/plugins/babel.mjs';
 import pluginHtml from 'https://unpkg.com/prettier@3.2.5/plugins/html.mjs';
 import pluginEstree from 'https://unpkg.com/prettier@3.2.5/plugins/estree.mjs';
+import { LibraryComponent } from './base/library-component.js';
 
-hljs.registerLanguage('twig', twig);
-hljs.registerLanguage('xml', xml);
-hljs.registerLanguage('php', php);
-hljs.registerLanguage('javascript', javascript);
-
-export class Toolbar {
+export class Toolbar extends LibraryComponent {
   constructor() {
+    super();
     this.toolbar = document.querySelector('.toolbar');
-    this.initializeCodeHighlighting();
+    this.bindCodeHighlighting();
+    this.bindCodeSwitches();
+  }
+
+  bindCodeSwitches() {
+    const switches = this.toolbar.querySelectorAll('.code-switch');
+    switches.forEach(el => {
+      this.updateCodeMode(el);
+      el.addEventListener('change', (e) => {
+        this.updateCodeMode(e.target.closest('.code-switch'))
+      }, true)
+    })
+  }
+
+  updateCodeMode(switchElement) {
+    const checked = switchElement.querySelector('input').checked;
+    const pane = switchElement.closest('.tabs__pane');
+    const code = pane.querySelector('.toolbar__code');
+    code.classList.toggle('toolbar__code--compile-enabled', checked);
   }
 
   // format code blocks with prettier and highlight.js
-  initializeCodeHighlighting() {
-    const codeElements = this.toolbar.querySelectorAll('pre code[class^="language-"]');
+  bindCodeHighlighting() {
+    hljs.registerLanguage('twig', twig);
+    hljs.registerLanguage('xml', xml);
+    hljs.registerLanguage('php', php);
+    hljs.registerLanguage('javascript', javascript);
+    const codeElements = this.toolbar.querySelectorAll('pre code');
     codeElements.forEach(async (el) => {
-      const lang = el.className.match(/language-(\w+)/)[1];
+      const lang = el.className.match(/.*language-(\w+)/)[1];
       el.textContent = await this.formatCode(el.textContent, lang)
       hljs.highlightElement(el, { language: lang });
     })
@@ -43,12 +62,10 @@ export class Toolbar {
     return (await prettier.format(str, {
       parser: config[lang].parser || lang,
       plugins: [pluginBabel, pluginEstree, pluginHtml],
-    })).replace(/;\s$/, '')
+    })).replace(/;\s$/, '');
   }
 
   bind() {
-    document.addEventListener('nodenavigation', (e) => {
-      console.log(e.detail)
-    }, true)
+
   }
 }
