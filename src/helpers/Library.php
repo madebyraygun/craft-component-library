@@ -165,7 +165,7 @@ class Library
                 'compiled_context' => Library::getContextContents($name, true),
                 'compiled_component' => Library::getComponentContents($name, true),
                 'raw_context' => Library::getContextContents($name, false),
-                'raw_component' => Library::getComponentContents($name, true),
+                'raw_component' => Library::getComponentContents($name, false),
             ]
         ];
     }

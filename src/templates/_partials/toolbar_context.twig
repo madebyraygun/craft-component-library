@@ -1,0 +1,14 @@
+<div class="toobar__compile-control">
+  {% include 'component-library/controls/switch.twig' with {
+    label: 'Context View',
+    align: 'left',
+    small: true,
+    checked: true
+  } %}
+</div>
+<div class="code">
+  <pre>
+    <code class="language-json">{{ toolbar.contents.compiled_context|default('Empty') }}</code>
+    <code class="language-php">{{ toolbar.contents.raw_context|default('Empty') }}</code>
+  </pre>
+</div>

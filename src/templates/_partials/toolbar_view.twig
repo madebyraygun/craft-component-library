@@ -8,11 +8,7 @@
 </div>
 <div class="code">
   <pre>
-    <code class="language-html">
-      {{ tab.compiledCode|default(distUrl) }}
-    </code>
-    <code class="language-php">
-      {{ tab.compiledCode|default('') }}
-    </code>
+    <code class="language-html">{{ toolbar.contents.compiled_component|default('Empty') }}</code>
+    <code class="language-twig">{{ toolbar.contents.raw_component|default('Empty') }}</code>
   </pre>
 </div>

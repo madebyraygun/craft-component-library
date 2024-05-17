@@ -1,3 +1,9 @@
 .toolbar {
   background: var(--toolbar-bg-color);
+
+  .toobar__compile-control {
+    display: flex;
+    padding: 0.5rem;
+    justify-content: flex-end;
+  }
 }
