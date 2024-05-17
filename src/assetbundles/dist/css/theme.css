@@ -20,6 +20,8 @@
   --tree-file-hover-text-color: #fff;
   --tree-vertical-items-gap: 0.1rem;
   --toolbar-bg-color: #1e1e1e;
+  --toolbar-code-bg-color: #26292a;
+  --toolbar-code-border-color: #1f2122;
   --render-bg-color: #1e1e1e;
 
   --tabs-label-bg-color: #1e1e1e;

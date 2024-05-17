@@ -8,8 +8,10 @@
   } %}
 </div>
 <div class="toolbar__code">
+  {% apply spaceless %}
   <pre>
     <code class="compiled language-html">{{ toolbar.contents.compiled_component|default('Empty') }}</code>
     <code class="raw language-twig">{{ toolbar.contents.raw_component|default('Empty') }}</code>
   </pre>
+  {% endapply %}
 </div>

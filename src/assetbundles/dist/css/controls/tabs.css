@@ -50,7 +50,7 @@
   }
 
   .tabs__pane {
-    padding: 0.25rem;
+    padding: 1rem;
     background: var(--tabs-pane-bg-color);
     display: none;
     grid-column: 1/-1;

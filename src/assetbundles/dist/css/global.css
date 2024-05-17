@@ -36,10 +36,3 @@ main {
     border-right: 1px solid var(--split-border-color);
   }
 }
-
-.hljs {
-  font-family: 'Fira Code', monospace;
-  font-size: 0.8rem;
-  background: transparent;
-  padding: 0 !important;
-}

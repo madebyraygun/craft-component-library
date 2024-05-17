@@ -5,11 +5,15 @@
     top: 0;
     position: sticky;
     display: flex;
-    padding: 0.5rem;
+    padding-inline: 0.5rem;
     justify-content: flex-end;
   }
 
   .toolbar__code {
+    margin-top: 1rem;
+    background: var(--toolbar-code-bg-color);
+    border: 1px dashed var(--toolbar-code-border-color);
+    padding: 0.5rem;
     &.toolbar__code--compile-enabled {
       code.raw {
         display: none;
@@ -17,6 +21,17 @@
       code.compiled {
         display: block;
       }
+    }
+
+    pre {
+      margin: 0;
+    }
+
+    code.hljs {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      background: transparent;
+      padding: 0 !important;
     }
 
     code.raw {
