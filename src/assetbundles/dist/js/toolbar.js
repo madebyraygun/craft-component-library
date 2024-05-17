@@ -9,6 +9,8 @@ import pluginHtml from 'https://unpkg.com/prettier@3.2.5/plugins/html.mjs';
 import pluginEstree from 'https://unpkg.com/prettier@3.2.5/plugins/estree.mjs';
 import { LibraryComponent } from './base/library-component.js';
 
+// Maybe use: https://github.com/wcoder/highlightjs-line-numbers.js
+
 export class Toolbar extends LibraryComponent {
   constructor() {
     super();

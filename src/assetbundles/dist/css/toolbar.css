@@ -42,4 +42,28 @@
       display: none;
     }
   }
+
+  .toolbar__table {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr minmax(1rem, 100%);
+    align-items: baseline;
+    justify-items: start;
+
+    .toolbar__caption {
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--toolbar-text-color);
+    }
+
+    .toolbar__value {
+      color: var(--toolbar-text-color);
+      background: var(--toolbar-code-bg-color);
+      border: 1px dashed var(--toolbar-code-border-color);
+      padding: 0.25rem 1rem;
+      font-size: 0.8rem;
+      font-family: 'Fira Code', monospace;
+    }
+  }
 }

@@ -1,8 +1,11 @@
 :root {
+  /* General */
   --bg-color: #2f2f2f;
   --text-color: #fff;
   --split-gutter-color: #272626;
   --split-border-color: #1f1f1f;
+  --render-bg-color: #1e1e1e;
+  /* Tree Explorer */
   --tree-bg-color: #252526;
   --tree-icon-folder-color: #c5c5c5;
   --tree-icon-file-color: #c5c5c5;
@@ -19,11 +22,12 @@
   --tree-file-hover-bg-color: #2a2d2e;
   --tree-file-hover-text-color: #fff;
   --tree-vertical-items-gap: 0.1rem;
+  /* Toolbar */
   --toolbar-bg-color: #1e1e1e;
   --toolbar-code-bg-color: #26292a;
   --toolbar-code-border-color: #1f2122;
-  --render-bg-color: #1e1e1e;
-
+  --toolbar-text-color: #cdcdcd;
+  /* Tabs */
   --tabs-label-bg-color: #1e1e1e;
   --tabs-label-text-color: #9d9d9d;
   --tabs-label-border-color: transparent;
@@ -34,7 +38,7 @@
   --tabs-label-active-text-color: #fff;
   --tabs-label-active-border-color: transparent;
   --tabs-pane-bg-color: #2a2d2e;
-
+  /* Switch */
   --switch-text-color: #cdcdcd;
   --switch-text-hover-color: #ffffff;
   --switch-handle-bg-color: #cdcdcd;
