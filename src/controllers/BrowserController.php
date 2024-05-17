@@ -35,7 +35,9 @@ class BrowserController extends Controller
     public function actionToolbar(): Response
     {
         $name = Craft::$app->request->getParam('name');
-        return $this->asJson(Library::getUiToolbarContext($name ?? ''));
+        return $this->renderTemplate('component-library/_partials/toolbar', [
+            'toolbar' => Library::getUiToolbarContext($name ?? ''),
+        ]);
     }
 
     public function actionNotFound(): Response

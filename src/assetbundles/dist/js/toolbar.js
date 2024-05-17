@@ -17,6 +17,22 @@ export class Toolbar extends LibraryComponent {
     this.toolbar = document.querySelector('.toolbar');
     this.bindCodeHighlighting();
     this.bindCodeSwitches();
+    this.bindNavigationEvents();
+  }
+
+  bindNavigationEvents() {
+    this.app.router.addEventListener('component-swap', (e) => {
+      this.swapComponentView(e.detail.target.dataset.toolbarUrl);
+    })
+  }
+
+  async swapComponentView(url) {
+    console.log('call')
+    const response = await fetch(url);
+    const html = await response.text();
+    this.toolbar.innerHTML = html;
+    this.bindCodeHighlighting();
+    this.bindCodeSwitches();
   }
 
   bindCodeSwitches() {

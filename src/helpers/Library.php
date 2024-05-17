@@ -66,16 +66,18 @@ class Library
         // Add files
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
-            $pagePreview = self::getPagePreviewUrl($handlePath);
-            $isolatedPreview = self::getIsolatedPreviewUrl($handlePath);
+            $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
+            $toolbarUrl = self::getToolbarUrl($handlePath);
+            $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
             $result[] = [
                 'name' => basename($file),
                 'extension' => pathinfo($file, PATHINFO_EXTENSION),
                 'current' => $file === $currentPath,
                 'path' => $file,
                 'handle' => $handlePath,
-                'page_url' => $pagePreview,
-                'isolated_url' => $isolatedPreview,
+                'page_url' => $pagePreviewUrl,
+                'toolbar_url' => $toolbarUrl,
+                'isolated_url' => $isolatedPreviewUrl,
                 'type' => 'file',
                 'nodes' => []
             ];
@@ -98,6 +100,12 @@ class Library
     public static function getPagePreviewUrl(string $handle): string
     {
         $siteUrl = UrlHelper::siteUrl('/component-library');
+        return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
+    }
+
+    public static function getToolbarUrl(string $handle): string
+    {
+        $siteUrl = UrlHelper::siteUrl('/component-library/browser/toolbar');
         return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
     }
 
@@ -141,8 +149,6 @@ class Library
     }
 
     public static function getUiToolbarContext(string $name): array {
-
-
         if (empty($name)) {
             return [
                 'error' => 'No name parameter provided'

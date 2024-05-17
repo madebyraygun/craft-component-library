@@ -22,7 +22,13 @@
       {% set selected_class = node.current|default ? 'list__item--selected' : '' %}
       <li class="list__item list__item--{{node.type}} {{selected_class}}">
         {% if node.type == 'file' %}
-          <a class="child-spacer" data-router-event="component-swap" data-preview-url="{{node.isolated_url}}" href="{{node.page_url}}">
+          <a
+            class="child-spacer"
+            data-router-event="component-swap"
+            data-preview-url="{{node.isolated_url}}"
+            data-toolbar-url="{{node.toolbar_url}}"
+            href="{{node.page_url}}"
+          >
             <span class="material-symbols-outlined icon-file">draft</span>
             {{ node.name }}
           </a>
