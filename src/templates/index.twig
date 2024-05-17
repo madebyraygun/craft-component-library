@@ -1,42 +1,16 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Library</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&family=Inter:wght@100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16/ia-dark.min.css">
-  </head>
-  <body data-base-url={{libraryUrl}}>
-    <div class="container js-loading">
-      <nav id="split-sidebar" class="sidebar">
-        {% include 'component-library/controls/explorer-tree.twig' with library %}
-      </nav>
-      <main id="split-content">
-        <div id="split-preview" class="preview">
-            <iframe id="preview-iframe" marginwidth="0" frameborder="0" scrolling="yes" src="{{iframeUrl}}"></iframe>
-        </div>
-        <div id="split-toolbar" class="toolbar">
-          {% include 'component-library/controls/tabs.twig' with {
-            tabs: [
-              {
-                id: 'view',
-                label: 'View',
-                switch: { label: 'Compiled View' }
-              },
-              {
-                id: 'context',
-                label: 'Context',
-                switch: { label: 'Compiled Context' }
-              },
-              { id: 'info', label: 'Info' },
-            ]
-          } %}
-        </div>
-      </main>
-    </div>
-    <script type="module" src="{{distUrl}}/js/index.js"></script>
-  </body>
-</html>
+{% extends "component-library/_layouts/_library" %}
+{% block body %}
+  <div class="container js-loading">
+    <nav id="split-sidebar" class="sidebar">
+      {% include 'component-library/_partials/sidebar' with library %}
+    </nav>
+    <main id="split-content">
+      <div id="split-preview" class="preview">
+        {% include 'component-library/_partials/preview' with library %}
+      </div>
+      <div id="split-toolbar" class="toolbar">
+        {% include 'component-library/_partials/toolbar' with toolbar %}
+      </div>
+    </main>
+  </div>
+{% endblock %}

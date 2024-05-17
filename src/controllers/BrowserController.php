@@ -17,28 +17,25 @@ class BrowserController extends Controller
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
-        $context = null;
-        if (!empty($name)) {
-            $context = [
-                'name' => $name,
-                'exists' => Component::componentExists($name),
-                'component' => Component::parseComponentParts($name),
-                'context' => Context::parseConfigParts($name),
-            ];
-        }
-
+        $toobarContext = Library::getUiToolbarContext($name ?? '');
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
-        $iframeUrl = Library::getIsolatedPreviewUrl($name);
+        $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         $libraryUrl = UrlHelper::siteUrl('/component-library');
         $library = Library::scanLibraryPath();
         return $this->renderTemplate('component-library/index', [
             'library' => $library,
-            'context' => $context,
+            'toolbar' => $toobarContext,
             'iframeUrl' => $iframeUrl,
             'libraryUrl' => $libraryUrl,
             'distUrl' => $distUrl,
         ]);
+    }
+
+    public function actionToolbar(): Response
+    {
+        $name = Craft::$app->request->getParam('name');
+        return $this->asJson(Library::getUiToolbarContext($name ?? ''));
     }
 
     public function actionNotFound(): Response

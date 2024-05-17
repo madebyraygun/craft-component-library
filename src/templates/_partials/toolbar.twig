@@ -1,0 +1,16 @@
+<script type="application/json">{{ toolbar | default([]) | json_encode() }}</script>
+{% include 'component-library/controls/tabs.twig' with {
+  tabs: [
+    {
+      id: 'view',
+      label: 'View',
+      switch: { label: 'Compiled View' }
+    },
+    {
+      id: 'context',
+      label: 'Context',
+      switch: { label: 'Compiled Context' }
+    },
+    { id: 'info', label: 'Info' },
+  ]
+} %}
