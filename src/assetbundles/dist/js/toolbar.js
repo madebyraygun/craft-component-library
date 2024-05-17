@@ -27,8 +27,9 @@ export class Toolbar extends LibraryComponent {
   }
 
   async swapComponentView(url) {
-    console.log('call')
     const response = await fetch(url);
+    if (response.status !== 200)
+      return console.error('Failed to fetch component view');
     const html = await response.text();
     this.toolbar.innerHTML = html;
     this.bindCodeHighlighting();

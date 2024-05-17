@@ -142,8 +142,14 @@ class Library
         $parts = Component::parseComponentParts($handle);
         if ($compiled) {
             $context = Context::getComponentContext($handle);
-            $view = Craft::$app->getView();
-            return $view->renderTemplate($handle, $context);
+            try
+            {
+                $view = Craft::$app->getView();
+                return $view->renderTemplate($handle, $context);
+            } catch (\Throwable $e)
+            {
+                return 'Error: ' . $e->getMessage();
+            }
         }
         return file_get_contents($parts->templatePath);
     }
