@@ -1,5 +1,4 @@
 import { EventDispatcher } from './event-dispatcher.js';
-// import 'https://cdnjs.cloudflare.com/ajax/libs/navigo/8.11.1/navigo.js';
 
 export class Router extends EventDispatcher {
   constructor() {
