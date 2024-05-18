@@ -1,1 +1,15 @@
+<div class="preview__header">
+  <h2>Preview</h2>
+  <div class="header__actions">
+    {% include 'component-library/controls/button' with {
+      icon: 'open_in_new',
+      href: '#open-in-new-tab',
+      target: '_blank'
+    } %}
+    {% include 'component-library/controls/button' with {
+      icon: 'fullscreen',
+      href: '#fullscreen'
+    } %}
+  </div>
+</div>
 <iframe id="preview-iframe" marginwidth="0" frameborder="0" scrolling="yes" src="{{iframeUrl}}"></iframe>
