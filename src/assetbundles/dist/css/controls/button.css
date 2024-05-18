@@ -1,0 +1,20 @@
+.button {
+  transition: all 0.15s ease-out;
+  user-select: none;
+  background: var(--button-bg-color);
+  color: var(--button-text-color);
+  border: 1px solid var(--button-border-color);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem;
+  font-size: 0.8rem;
+  .button__icon {
+    font-size: 1.25rem;
+  }
+  &:hover {
+    background: var(--button-hover-bg-color);
+    color: var(--button-hover-text-color);
+    border: 1px solid var(--button-hover-border-color);
+  }
+}

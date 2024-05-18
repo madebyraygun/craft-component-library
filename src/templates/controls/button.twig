@@ -1,0 +1,6 @@
+<a class="button" href="{{href}}" target="{{target|default('_self')}}">
+  {% if icon %}
+    <span class="button__icon material-symbols-outlined">{{icon}}</span>
+  {% endif %}
+  {{label|default}}
+</a>

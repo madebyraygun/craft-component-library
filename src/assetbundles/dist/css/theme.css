@@ -46,4 +46,11 @@
   --switch-track-bg-color: #37373d;
   --switch-track-checked-bg-color: #73c476;
   --switch-track-border-color: #242428;
+  /* Button */
+  --button-bg-color: transparent;
+  --button-hover-bg-color: #2a2d2e;
+  --button-text-color: #cdcdcd;
+  --button-hover-text-color: #fff;
+  --button-border-color: transparent;
+  --button-hover-border-color: #242428;
 }
