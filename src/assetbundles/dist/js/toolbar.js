@@ -62,8 +62,12 @@ export class Toolbar extends LibraryComponent {
     const codeElements = this.toolbar.querySelectorAll('pre code');
     codeElements.forEach(async (el) => {
       const lang = el.className.match(/.*language-(\w+)/)[1];
-      el.textContent = await this.formatCode(el.textContent, lang)
-      hljs.highlightElement(el, { language: lang });
+      try {
+        el.textContent = await this.formatCode(el.textContent, lang)
+        hljs.highlightElement(el, { language: lang });
+      } catch (e) {
+        console.warn('Failed to format code block')
+      }
     })
   }
 
