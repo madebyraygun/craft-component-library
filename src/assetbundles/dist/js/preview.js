@@ -5,6 +5,7 @@ export class Preview extends LibraryComponent {
     super();
     this.preview = document.querySelector('.preview');
     this.bindNavigationEvents();
+    this.bindButtonEvents();
   }
 
   bindNavigationEvents() {
@@ -19,5 +20,17 @@ export class Preview extends LibraryComponent {
       return console.error('Failed to fetch component view for:', url);
     const html = await response.text();
     this.preview.innerHTML = html;
+    this.bindButtonEvents();
+  }
+
+  bindButtonEvents() {
+    const btnExitFs = this.preview.querySelector('.preview__exit-full-btn');
+    const btnEnterFs = this.preview.querySelector('.preview__enter-full-btn');
+    btnExitFs.addEventListener('click', () => this.toggleFullScreen(false));
+    btnEnterFs.addEventListener('click', () => this.toggleFullScreen(true));
+  }
+
+  toggleFullScreen(active) {
+    this.preview.classList.toggle('preview--fullscreen', active);
   }
 }

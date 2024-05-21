@@ -17,4 +17,24 @@
       justify-self: flex-end;
     }
   }
+
+  .preview__exit-full-btn {
+    display: none;
+  }
+
+  &.preview--fullscreen {
+    position: fixed;
+    width: 100vw !important;
+    height: 100vh !important;
+    left: 0;
+    top: 0;
+    z-index: 1;
+
+    .preview__enter-full-btn {
+      display: none;
+    }
+    .preview__exit-full-btn {
+      display: unset;
+    }
+  }
 }

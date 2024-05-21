@@ -1,4 +1,5 @@
-<a class="button" href="{{href}}" target="{{target|default('_self')}}">
+{% set id_attr = id|default ? 'id="' ~ id ~ '"' : ''  %}
+<a {{id_attr}} class="button {{class|default('')}}" href="{{href}}" target="{{target|default('_self')}}">
   {% if icon %}
     <span class="button__icon material-symbols-outlined">{{icon}}</span>
   {% endif %}
