@@ -1,0 +1,5 @@
+.sidebar {
+  max-height: 100%;
+  overflow: auto;
+  background-color: var(--tree-bg-color);
+}

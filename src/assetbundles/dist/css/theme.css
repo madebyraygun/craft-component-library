@@ -1,0 +1,56 @@
+:root {
+  /* General */
+  --bg-color: #2f2f2f;
+  --text-color: #fff;
+  --split-gutter-color: #272626;
+  --split-border-color: #1f1f1f;
+  --render-bg-color: #1e1e1e;
+  /* Tree Explorer */
+  --tree-bg-color: #252526;
+  --tree-icon-folder-color: #c5c5c5;
+  --tree-icon-file-color: #c5c5c5;
+  --tree-tracks-color: #f0eeee17;
+  --tree-dir-arrow-color: #7a7a7a;
+  --tree-dir-selected-text-color: #fff;
+  --tree-dir-selected-bg-color: #2a2d2e;
+  --tree-dir-text-color: #fff;
+  --tree-dir-hover-bg-color: #2a2d2e;
+  --tree-dir-hover-text-color: #fff;
+  --tree-file-selected-text-color: #c5c5c5;
+  --tree-file-selected-bg-color: #37373d;
+  --tree-file-text-color: #c5c5c5;
+  --tree-file-hover-bg-color: #2a2d2e;
+  --tree-file-hover-text-color: #fff;
+  --tree-vertical-items-gap: 0.1rem;
+  /* Toolbar */
+  --toolbar-bg-color: #1e1e1e;
+  --toolbar-code-bg-color: #26292a;
+  --toolbar-code-border-color: #1f2122;
+  --toolbar-text-color: #cdcdcd;
+  /* Tabs */
+  --tabs-label-bg-color: #1e1e1e;
+  --tabs-label-text-color: #9d9d9d;
+  --tabs-label-border-color: transparent;
+  --tabs-label-hover-bg-color: transparent;
+  --tabs-label-hover-text-color: #fff;
+  --tabs-label-hover-border-color: transparent;
+  --tabs-label-active-bg-color: #2a2d2e;
+  --tabs-label-active-text-color: #fff;
+  --tabs-label-active-border-color: transparent;
+  --tabs-pane-bg-color: #2a2d2e;
+  /* Switch */
+  --switch-text-color: #cdcdcd;
+  --switch-text-hover-color: #ffffff;
+  --switch-handle-bg-color: #cdcdcd;
+  --switch-handle-hover-bg-color: #fff;
+  --switch-track-bg-color: #37373d;
+  --switch-track-checked-bg-color: #73c476;
+  --switch-track-border-color: #242428;
+  /* Button */
+  --button-bg-color: transparent;
+  --button-hover-bg-color: #2a2d2e;
+  --button-text-color: #cdcdcd;
+  --button-hover-text-color: #fff;
+  --button-border-color: transparent;
+  --button-hover-border-color: #242428;
+}

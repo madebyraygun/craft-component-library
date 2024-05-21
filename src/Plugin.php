@@ -84,6 +84,8 @@ class Plugin extends BasePlugin
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
                 $event->rules['component-library/preview'] = 'component-library/preview';
+                $event->rules['component-library/partials/toolbar'] = 'component-library/browser/partial-toolbar';
+                $event->rules['component-library/partials/preview'] = 'component-library/browser/partial-preview';
                 $event->rules['component-library'] = 'component-library/browser';
             }
         );

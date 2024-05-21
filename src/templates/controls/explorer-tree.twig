@@ -1,0 +1,43 @@
+{% set open_attr = level == 0 or expanded ? 'open' : '' %}
+<details {{open_attr}} class="explorer-tree explorer-tree--expanded level-{{level}}" style="--level:{{level}}">
+  <summary>
+    <div class="summary__wrapper parent-spacer">
+      <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
+      <span class="material-symbols-outlined icon-folder"></span>
+      <span class="summary__caption">{{name}}</span>
+    </div>
+    {% if level == 0 %}
+    <button class="collapse-expand-button">
+      <span class="material-symbols-outlined icon-collapse-expand"></span>
+    </button>
+    {% endif %}
+  </summary>
+  <ul class="explorer-tree__list">
+    {% if not nodes %}
+      <li class="list__item list__empty">
+        <span class="child-spacer">empty</span>
+      </li>
+    {% endif %}
+    {% for node in nodes %}
+      {% set selected_class = node.current|default ? 'list__item--selected' : '' %}
+      <li class="list__item list__item--{{node.type}} {{selected_class}}">
+        {% if node.type == 'file' %}
+          <a
+            class="child-spacer"
+            data-router-event="component-swap"
+            data-preview-url="{{node.isolated_url}}"
+            data-partial-toolbar-url="{{node.partial_toolbar_url}}"
+            data-partial-preview-url="{{node.partial_preview_url}}"
+            href="{{node.page_url}}"
+          >
+            <span class="material-symbols-outlined icon-file">draft</span>
+            {{ node.name }}
+          </a>
+        {% endif %}
+        {% if node.type == 'directory' %}
+          {% include 'component-library/controls/explorer-tree.twig' with node %}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</details>

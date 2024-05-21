@@ -1,1 +1,16 @@
-Hello!
+{% extends "component-library/_layouts/_library" %}
+{% block body %}
+  <div class="container js-loading">
+    <nav id="split-sidebar" class="sidebar">
+      {% include 'component-library/_partials/sidebar' %}
+    </nav>
+    <main id="split-content">
+      <div id="split-preview" class="preview">
+        {% include 'component-library/_partials/preview' %}
+      </div>
+      <div id="split-toolbar" class="toolbar">
+        {% include 'component-library/_partials/toolbar' %}
+      </div>
+    </main>
+  </div>
+{% endblock %}

@@ -58,6 +58,11 @@ class Component
         return preg_replace('/\..*/', '', $result);
     }
 
+    public static function componentExists(string $name): bool {
+        $componentPath = self::resolveComponentName($name);
+        return file_exists($componentPath);
+    }
+
     /**
      * Resolve the path to a component file.
      * Example: `@components/button` -> `/path/to/components/button.twig`
