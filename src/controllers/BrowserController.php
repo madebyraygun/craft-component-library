@@ -32,12 +32,22 @@ class BrowserController extends Controller
         ]);
     }
 
-    public function actionToolbar(): Response
+    public function actionPartialToolbar(): Response
     {
         $name = Craft::$app->request->getParam('name');
         return $this->renderTemplate('component-library/_partials/toolbar', [
             'toolbar' => Library::getUiToolbarContext($name ?? ''),
         ]);
+    }
+
+    public function actionPartialPreview(): Response
+    {
+        $name = Craft::$app->request->getParam('name');
+        $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
+        return $this->renderTemplate('component-library/_partials/preview', [
+            'iframeUrl' => $iframeUrl,
+        ]);
+
     }
 
     public function actionNotFound(): Response

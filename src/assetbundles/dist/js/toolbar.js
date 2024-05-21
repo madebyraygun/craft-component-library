@@ -22,7 +22,7 @@ export class Toolbar extends LibraryComponent {
 
   bindNavigationEvents() {
     this.app.router.addEventListener('component-swap', (e) => {
-      this.swapComponentView(e.detail.target.dataset.toolbarUrl);
+      this.swapComponentView(e.detail.target.dataset.partialToolbarUrl);
     })
   }
 

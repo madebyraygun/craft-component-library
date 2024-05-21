@@ -67,7 +67,8 @@ class Library
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
             $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
-            $toolbarUrl = self::getToolbarUrl($handlePath);
+            $partialToolbarUrl = self::getPartialUrl($handlePath, 'toolbar');
+            $partialPreviewUrl = self::getPartialUrl($handlePath, 'preview');
             $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
             $result[] = [
                 'name' => basename($file),
@@ -76,7 +77,8 @@ class Library
                 'path' => $file,
                 'handle' => $handlePath,
                 'page_url' => $pagePreviewUrl,
-                'toolbar_url' => $toolbarUrl,
+                'partial_toolbar_url' => $partialToolbarUrl,
+                'partial_preview_url' => $partialPreviewUrl,
                 'isolated_url' => $isolatedPreviewUrl,
                 'type' => 'file',
                 'nodes' => []
@@ -103,9 +105,9 @@ class Library
         return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
     }
 
-    public static function getToolbarUrl(string $handle): string
+    public static function getPartialUrl(string $handle, string $partial): string
     {
-        $siteUrl = UrlHelper::siteUrl('/component-library/browser/toolbar');
+        $siteUrl = UrlHelper::siteUrl('/component-library/partials/' . $partial);
         return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
     }
 
