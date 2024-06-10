@@ -19,6 +19,7 @@ class Library
         return [
             'name' => 'Components',
             'nodes' => $nodes,
+            'hidden' => false,
             'level' => 0,
         ];
     }
@@ -52,12 +53,14 @@ class Library
         // Scan directories
         foreach ($directories as $directory) {
             $nodes = self::scanPath($directory, $currentPath, $level + 1);
+            $hidden = self::allNodesHidden($nodes);
             $hasActiveChild = self::hasActiveChild($nodes);
             $result[] = [
                 'name' => basename($directory),
                 'path' => $directory,
                 'level' => $level,
                 'type' => 'directory',
+                'hidden' => $hidden,
                 'expanded' => $hasActiveChild,
                 'nodes' => $nodes
             ];
@@ -66,12 +69,15 @@ class Library
         // Add files
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
+            $component = Component::parseComponentParts($handlePath);
+            $context = Context::parseConfigParts($handlePath);
             $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
             $partialToolbarUrl = self::getPartialUrl($handlePath, 'toolbar');
             $partialPreviewUrl = self::getPartialUrl($handlePath, 'preview');
             $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
             $result[] = [
                 'name' => basename($file),
+                'hidden' => $context->settings->hidden,
                 'extension' => pathinfo($file, PATHINFO_EXTENSION),
                 'current' => $file === $currentPath,
                 'path' => $file,
@@ -97,6 +103,14 @@ class Library
             }
         }
         return false;
+    }
+
+    public static function allNodesHidden(array $nodes): bool
+    {
+        foreach ($nodes as $node) {
+            if (!$node['hidden']) return false;
+        }
+        return true;
     }
 
     public static function getPagePreviewUrl(string $handle): string

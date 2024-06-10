@@ -45,6 +45,7 @@ class Context {
             $settings = array_merge($settings, $entry);
         }
         unset($settings['context']);
+        unset($settings['variants']);
         $settings = array_merge(self::$settingsDefaults, $settings);
         return (object)$settings;
     }
