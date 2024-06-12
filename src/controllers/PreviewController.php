@@ -5,6 +5,7 @@ namespace madebyraygun\componentlibrary\controllers;
 use craft\web\Controller;
 use craft\web\Response;
 use madebyraygun\componentlibrary\Plugin;
+use madebyraygun\componentlibrary\helpers\Loader;
 use Craft;
 
 class PreviewController extends Controller
@@ -15,6 +16,10 @@ class PreviewController extends Controller
         if (!$name) {
             Plugin::error('No component name provided');
             return $this->asErrorJson('No component name provided');
+        }
+        if (!Loader::componentExists($name)) {
+            Plugin::error('Component not found');
+            return $this->asErrorJson('Component not found');
         }
         $provider = Plugin::$plugin->componentProvider;
         $settings = $provider->getComponentSettings($name);

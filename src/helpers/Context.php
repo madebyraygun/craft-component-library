@@ -4,6 +4,7 @@ namespace madebyraygun\componentlibrary\helpers;
 
 use craft\helpers\Json;
 use craft\helpers\ArrayHelper;
+use craft\helpers\StringHelper;
 use madebyraygun\componentlibrary\helpers\Component;
 
 class Context {
@@ -16,10 +17,11 @@ class Context {
     ];
 
     public static function parseConfigParts(string $name): object {
-        if (isset(Context::$cache[$name])) {
+        if (isset(Context::$cache[$name]))
+        {
             return Context::$cache[$name];
         }
-        $settings = self::extractConfigSettings($name);
+        $settings = self::getComponentSettings($name);
         $context = self::getComponentContext($name);
         $result = (object) [
             'settings' => $settings,
@@ -29,38 +31,68 @@ class Context {
         return $result;
     }
 
+    public static function getVariants(string $name, bool $virtualOnly = false): array {
+        $parts = Component::parseComponentParts($name);
+        if ($parts->isVariant) {
+            return [];
+        }
+        $config = self::getComponentConfig($name);
+        $variants = $config['variants'] ?? [];
+        $results = [];
+        $info = pathinfo($name);
+        foreach ($variants as $variant) {
+            if (!empty($variant['name'])) {
+                $variantName = Component::normalizeName($variant['name']);
+                $fullVariantName = $info['dirname'] . '--' . $variantName;
+                $variantParts = Component::parseComponentParts($fullVariantName);
+                $shouldInsert = $virtualOnly == false || $variantParts->isVirtual;
+                if ($shouldInsert) {
+                    $results[] = $variantParts;
+                }
+            }
+        }
+        return $results;
+    }
+
+    public static function getComponentConfig(string $name): array {
+        $parts = Component::parseComponentParts($name);
+        $config = self::readConfigFile($name);
+        $config['context'] = $config['context'] ?? [];
+        $config['variants'] = $config['variants'] ?? [];
+        $parentContext = $config['context'];
+        if ($parts->isVariant && isset($config['variants'])) {
+            $config = self::getVariantInConfig($config, $parts->name);
+            // inherit parent context
+            $config['context'] = array_merge($parentContext, $config['context'] ?? []);
+            unset($config['variants']);
+        }
+        $config['name'] = $config['name'] ?? $parts->name;
+        $config['title'] = empty($config['title']) ? $config['name'] : $config['title'];
+        $config['title'] = StringHelper::humanize($config['title']);
+        $config['name'] = StringHelper::dasherize($config['name']);
+        return $config;
+    }
+
+    public static function getVariantInConfig(array $config, string $name): array|null {
+        $variantNames = array_column($config['variants'], 'name');
+        $variantNames = array_map([Component::class, 'normalizeName'], $variantNames);
+        $idx = array_search($name, $variantNames);
+        return $idx !== false ? $config['variants'][$idx] : null;
+    }
+
     public static function getComponentContext(string $name): array {
-        $result = self::extractContext($name);
-        $result = self::resolveContextReferences($result);
+        $config = self::getComponentConfig($name);
+        $context = $config['context'];
+        $result = self::resolveContextReferences($context);
         return $result;
     }
 
-    public static function extractConfigSettings(string $name): object {
-        $parts = Component::parseComponentParts($name);
-        $config = self::readConfigFile($name);
-        $settings = $config ?? [];
-        if (!empty($parts->isVariant) && isset($config['variants'])) {
-            $idx = array_search($parts->variantName, array_column($config['variants'], 'name'));
-            $entry = $config['variants'][$idx] ?? [];
-            $settings = array_merge($settings, $entry);
-        }
-        unset($settings['context']);
-        unset($settings['variants']);
-        $settings = array_merge(self::$settingsDefaults, $settings);
+    public static function getComponentSettings(string $name): object {
+        $config = self::getComponentConfig($name);
+        unset($config['context']);
+        unset($config['variants']);
+        $settings = array_merge(self::$settingsDefaults, $config);
         return (object)$settings;
-    }
-
-    public static function extractContext(string $name): array {
-        $parts = Component::parseComponentParts($name);
-        $config = self::readConfigFile($name);
-        $context = $config['context'] ?? [];
-        if (!empty($parts->isVariant) && isset($config['variants'])) {
-            $idx = array_search($parts->variantName, array_column($config['variants'], 'name'));
-            $entry = $config['variants'][$idx] ?? [];
-            $variantContext = $entry['context'] ?? [];
-            $context = array_merge($context, $variantContext);
-        }
-        return $context;
     }
 
     public static function readConfigFile(string $name): array {
