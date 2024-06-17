@@ -5,6 +5,7 @@ namespace madebyraygun\componentlibrary\services;
 use craft\base\Component;
 use madebyraygun\componentlibrary\helpers\Component as ComponentHelper;
 use madebyraygun\componentlibrary\helpers\Context as ContextHelper;
+use madebyraygun\componentlibrary\helpers\Loader as LoaderHelper;
 
 class ComponentProvider extends Component
 {
@@ -14,8 +15,11 @@ class ComponentProvider extends Component
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
      * @param string $path
      */
-    public function resolveComponentPath(string $path): string
+    public function resolveComponentPath(string $path): string|null
     {
+        if (!LoaderHelper::componentExists($path)) {
+            return null;
+        }
         $parts = ComponentHelper::parseComponentParts($path);
         return $parts->templatePath;
     }
@@ -26,8 +30,11 @@ class ComponentProvider extends Component
      * @param string $path The path notation for the component
      * @return array
      */
-    public function getComponentContext(string $path): array
+    public function getComponentContext(string $path): array|null
     {
+        if (!LoaderHelper::componentExists($path)) {
+            return null;
+        }
         $parts = ContextHelper::parseConfigParts($path);
         return $parts->context;
     }
@@ -38,8 +45,11 @@ class ComponentProvider extends Component
      * @param string $path The path notation for the component
      * @return array
      */
-    public function getComponentSettings(string $path): object
+    public function getComponentSettings(string $path): object|null
     {
+        if (!LoaderHelper::componentExists($path)) {
+            return null;
+        }
         $parts = ContextHelper::parseConfigParts($path);
         return $parts->settings;
     }

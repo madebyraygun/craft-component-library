@@ -125,6 +125,10 @@
         padding-inline: 1.5rem;
       }
 
+      &.list__item--hidden {
+        display: none;
+      }
+
       .list__item--directory.list__item--selected > details > summary {
         background-color: var(--tree-dir-selected-bg-color);
         & .summary__caption {

@@ -8,8 +8,7 @@ use craft\web\Response;
 use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\helpers\Library;
-use madebyraygun\componentlibrary\helpers\Component;
-use madebyraygun\componentlibrary\helpers\Context;
+use madebyraygun\componentlibrary\helpers\Loader;
 
 class BrowserController extends Controller
 {
@@ -17,6 +16,9 @@ class BrowserController extends Controller
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
+        if (!Loader::componentExists($name)) {
+            return $this->asErrorJson('Component not found');
+        }
         $toobarContext = Library::getUiToolbarContext($name ?? '');
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);

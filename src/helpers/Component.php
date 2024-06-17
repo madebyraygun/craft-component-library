@@ -3,6 +3,7 @@
 namespace madebyraygun\componentlibrary\helpers;
 
 use craft\helpers\FileHelper;
+use craft\helpers\StringHelper;
 use madebyraygun\componentlibrary\Plugin;
 
 class Component
@@ -10,23 +11,28 @@ class Component
     private static array $cache = [];
 
     public static function parseComponentParts(string $name): object {
+        $name = strtolower($name);
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
         }
-        $componentPath = self::resolveComponentName($name);
+        $componentPath = self::resolveComponentPath($name);
+        $isVirtual = !file_exists($componentPath);
         $canonicalPath = preg_replace('/--[^.]+/', '', $componentPath);
         $variantName = self::getVariantName($componentPath);
-        $templateInfo = pathinfo($componentPath);
+        $defaultName = self::getDefaultName($componentPath);
         $canonicalInfo = pathinfo($canonicalPath);
+        $templateInfo = $isVirtual ? $canonicalInfo : pathinfo($componentPath);
+        $isVariant = $componentPath !== $canonicalPath;
         $result = (object)[
+            'name' => $isVariant ? $variantName : $defaultName,
             'includeName' => $name,
             'templateName' => $templateInfo['basename'],
             'templateDir' => $templateInfo['dirname'],
-            'templatePath' => $componentPath,
+            'templatePath' => $isVirtual ? $canonicalPath : $componentPath,
             'canonicalName' => $canonicalInfo['basename'],
             'canonicalPath' => $canonicalPath,
-            'isVariant' => $componentPath !== $canonicalPath,
-            'variantName' => $variantName,
+            'isVariant' => $isVariant,
+            'isVirtual' => $isVirtual,
             ...self::getConfigParts($canonicalPath)
         ];
         Component::$cache[$name] = $result;
@@ -52,15 +58,22 @@ class Component
         ];
     }
 
+    public static function normalizeName(string $name): string {
+        $name = strtolower($name);
+        $name = StringHelper::dasherize($name);
+        return $name;
+    }
+
     public static function getVariantName(string $name): string {
         $nameParts = explode('--', $name);
         $result = count($nameParts) > 1 ? array_pop($nameParts) : '';
         return preg_replace('/\..*/', '', $result);
     }
 
-    public static function componentExists(string $name): bool {
-        $componentPath = self::resolveComponentName($name);
-        return file_exists($componentPath);
+    public static function getDefaultName(string $name): string {
+        $nameParts = explode('--', $name);
+        $result = array_shift($nameParts);
+        return pathinfo($result)['filename'];
     }
 
     /**
@@ -69,7 +82,7 @@ class Component
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
      * @param string $name
      */
-    public static function resolveComponentName(string $name): string {
+    public static function resolveComponentPath(string $name): string {
         $settings = Plugin::$plugin->getSettings();
         $relPath = self::resolveAliases($name);
         $relPath = self::getDefaultComponentFile($relPath);

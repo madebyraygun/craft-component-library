@@ -7,6 +7,7 @@ use craft\helpers\UrlHelper;
 use craft\helpers\Json;
 use madebyraygun\componentlibrary\Plugin;
 use madebyraygun\componentlibrary\helpers\Component;
+use madebyraygun\componentlibrary\helpers\Loader;
 use Craft;
 
 class Library
@@ -14,24 +15,25 @@ class Library
     public static function scanLibraryPath(): array
     {
         $settings = Plugin::$plugin->getSettings();
-        $templatePath = self::getCurrentTemplatePath();
-        $nodes = self::scanPath($settings->root, $templatePath);
+        $name = Craft::$app->request->getParam('name');
+        $nodes = self::scanPath($settings->root, $name);
         return [
             'name' => 'Components',
             'nodes' => $nodes,
+            'hidden' => false,
             'level' => 0,
         ];
     }
 
     public static function getCurrentTemplatePath(): string
     {
-        $name = Craft::$app->request->getParam('name');
+
         if (empty($name)) return '';
         $parts = Component::parseComponentParts($name);
         return $parts->templatePath;
     }
 
-    public static function scanPath(string $path, string $currentPath = '', int $level = 1): array
+    public static function scanPath(string $path, string $currentName = '', int $level = 1): array
     {
         $directories = FileHelper::findDirectories($path, [
             'recursive' => false
@@ -51,13 +53,15 @@ class Library
 
         // Scan directories
         foreach ($directories as $directory) {
-            $nodes = self::scanPath($directory, $currentPath, $level + 1);
+            $nodes = self::scanPath($directory, $currentName, $level + 1);
+            $hidden = self::allNodesHidden($nodes);
             $hasActiveChild = self::hasActiveChild($nodes);
             $result[] = [
                 'name' => basename($directory),
                 'path' => $directory,
                 'level' => $level,
                 'type' => 'directory',
+                'hidden' => $hidden,
                 'expanded' => $hasActiveChild,
                 'nodes' => $nodes
             ];
@@ -66,26 +70,41 @@ class Library
         // Add files
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
-            $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
-            $partialToolbarUrl = self::getPartialUrl($handlePath, 'toolbar');
-            $partialPreviewUrl = self::getPartialUrl($handlePath, 'preview');
-            $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
-            $result[] = [
-                'name' => basename($file),
-                'extension' => pathinfo($file, PATHINFO_EXTENSION),
-                'current' => $file === $currentPath,
-                'path' => $file,
-                'handle' => $handlePath,
-                'page_url' => $pagePreviewUrl,
-                'partial_toolbar_url' => $partialToolbarUrl,
-                'partial_preview_url' => $partialPreviewUrl,
-                'isolated_url' => $isolatedPreviewUrl,
-                'type' => 'file',
-                'nodes' => []
-            ];
+            $result[] = self::formatFileEntry($handlePath, $currentName);
+            $variants = Context::getVariants($handlePath, true);
+            if (!empty($variants))
+            {
+                foreach ($variants as $variant) {
+                    $result[] = self::formatFileEntry($variant->includeName, $currentName);
+                }
+            }
         }
 
         return $result;
+    }
+
+    public static function formatFileEntry(string $handlePath, string $currentName): array {
+        $component = Component::parseComponentParts($handlePath);
+        $context = Context::parseConfigParts($handlePath);
+        $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
+        $partialToolbarUrl = self::getPartialUrl($handlePath, 'toolbar');
+        $partialPreviewUrl = self::getPartialUrl($handlePath, 'preview');
+        $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
+        return [
+            'name' => $context->settings->title,
+            'hidden' => $context->settings->hidden,
+            'current' => $currentName == $handlePath,
+            'path' => $component->templatePath,
+            'handle' => $handlePath,
+            'page_url' => $pagePreviewUrl,
+            'partial_toolbar_url' => $partialToolbarUrl,
+            'partial_preview_url' => $partialPreviewUrl,
+            'isolated_url' => $isolatedPreviewUrl,
+            'type' => 'file',
+            'is_variant' => $component->isVariant,
+            'is_virtual' => $component->isVirtual,
+            'nodes' => []
+        ];
     }
 
     public static function hasActiveChild(array $nodes): bool
@@ -97,6 +116,14 @@ class Library
             }
         }
         return false;
+    }
+
+    public static function allNodesHidden(array $nodes): bool
+    {
+        foreach ($nodes as $node) {
+            if (!$node['hidden']) return false;
+        }
+        return true;
     }
 
     public static function getPagePreviewUrl(string $handle): string
@@ -114,7 +141,7 @@ class Library
     public static function getIsolatedPreviewUrl(string|null $handle): string
     {
         $template = empty($handle) ? 'welcome' : 'preview';
-        if (!empty($handle) && !Component::componentExists($handle)) {
+        if (!empty($handle) && !Loader::componentExists($handle)) {
             $template = 'not-found';
         }
         $siteUrl = UrlHelper::siteUrl('/component-library/' . $template);
@@ -163,7 +190,7 @@ class Library
             ];
         }
 
-        $exists = Component::componentExists($name);
+        $exists = Loader::componentExists($name);
         if (!$exists) {
             return [
                 'error' => 'Component does not exist'

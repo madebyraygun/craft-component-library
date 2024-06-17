@@ -1,5 +1,9 @@
 {% set open_attr = level == 0 or expanded ? 'open' : '' %}
-<details {{open_attr}} class="explorer-tree explorer-tree--expanded level-{{level}}" style="--level:{{level}}">
+<details
+  {{open_attr}}
+  class="explorer-tree explorer-tree--expanded level-{{level}}"
+  style="--level:{{level}}"
+>
   <summary>
     <div class="summary__wrapper parent-spacer">
       <span class="material-symbols-outlined icon-arrow-right">arrow_right</span>
@@ -20,7 +24,8 @@
     {% endif %}
     {% for node in nodes %}
       {% set selected_class = node.current|default ? 'list__item--selected' : '' %}
-      <li class="list__item list__item--{{node.type}} {{selected_class}}">
+      {% set hidden_class = node.hidden ? 'list__item--hidden' : '' %}
+      <li class="list__item list__item--{{node.type}} {{selected_class}} {{hidden_class}}">
         {% if node.type == 'file' %}
           <a
             class="child-spacer"
