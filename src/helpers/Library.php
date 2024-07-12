@@ -167,6 +167,13 @@ class Library
         return file_get_contents($contextPath);
     }
 
+    public static function getDocContents(string $handle): string {
+        $parts = Component::parseComponentParts($handle);
+        $docParts = Component::getDocParts($parts->templatePath);
+        if (!$docParts['docExists']) return '';
+        return file_get_contents($docParts['docPath']);
+    }
+
     public static function getComponentContents(string $handle, bool $compiled): string {
         $parts = Component::parseComponentParts($handle);
         if ($compiled) {
@@ -208,6 +215,7 @@ class Library
                 'compiled_component' => Library::getComponentContents($name, true),
                 'raw_context' => Library::getContextContents($name, false),
                 'raw_component' => Library::getComponentContents($name, false),
+                'doc_contents' => Library::getDocContents($name)
             ]
         ];
     }

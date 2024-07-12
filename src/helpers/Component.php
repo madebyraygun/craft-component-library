@@ -15,7 +15,7 @@ class Component
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
         }
-        $componentPath = self::resolveComponentPath($name);
+        $componentPath = self::resolveFilePath($name, 'twig');
         $isVirtual = !file_exists($componentPath);
         $canonicalPath = preg_replace('/--[^.]+/', '', $componentPath);
         $variantName = self::getVariantName($componentPath);
@@ -23,16 +23,18 @@ class Component
         $canonicalInfo = pathinfo($canonicalPath);
         $templateInfo = $isVirtual ? $canonicalInfo : pathinfo($componentPath);
         $isVariant = $componentPath !== $canonicalPath;
+        $templatePath = $isVirtual ? $canonicalPath : $componentPath;
         $result = (object)[
             'name' => $isVariant ? $variantName : $defaultName,
             'includeName' => $name,
             'templateName' => $templateInfo['basename'],
             'templateDir' => $templateInfo['dirname'],
-            'templatePath' => $isVirtual ? $canonicalPath : $componentPath,
+            'templatePath' => $templatePath,
             'canonicalName' => $canonicalInfo['basename'],
             'canonicalPath' => $canonicalPath,
             'isVariant' => $isVariant,
             'isVirtual' => $isVirtual,
+            ...self::getDocParts($templatePath),
             ...self::getConfigParts($canonicalPath)
         ];
         Component::$cache[$name] = $result;
@@ -55,6 +57,34 @@ class Component
             'configType'=> $configType,
             'configPath' => $configPath,
             'configExists' => !empty($configPath)
+        ];
+    }
+
+    public static function getDocParts(string $templatePath): array {
+        $docPath = preg_replace('/\.twig$/', '.md', $templatePath);
+        $docExists = file_exists($docPath);
+        if (!$docExists) {
+            $cannonicalName = self::getDefaultName($docPath);
+            $names = [
+                $cannonicalName,
+                $cannonicalName . '.readme',
+                'readme',
+                'Readme',
+                'README',
+                'index'
+            ];
+            foreach ($names as $name) {
+                $pathInfo = pathinfo($docPath);
+                $docPath = $pathInfo['dirname'] . '/' . $name . '.md';
+                if (file_exists($docPath)) {
+                    $docExists = true;
+                    break;
+                }
+            }
+        }
+        return [
+            'docPath' => $docPath,
+            'docExists' => $docExists,
         ];
     }
 
@@ -82,10 +112,10 @@ class Component
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
      * @param string $name
      */
-    public static function resolveComponentPath(string $name): string {
+    public static function resolveFilePath(string $name, string $ext): string {
         $settings = Plugin::$plugin->getSettings();
         $relPath = self::resolveAliases($name);
-        $relPath = self::getDefaultComponentFile($relPath);
+        $relPath = self::getDefaultFilePath($relPath, $ext);
         $absPath = FileHelper::normalizePath($settings->root . '/' . $relPath);
         return $absPath;
     }
@@ -97,7 +127,7 @@ class Component
      * @param string $path
      * @return string
      */
-    public static function getDefaultComponentFile(string $path): string {
+    public static function getDefaultFilePath(string $path, string $ext = 'twig'): string {
         $rootPath = Plugin::$plugin->getSettings()->root;
         $canonicalPath = preg_replace('/--[^.]+/', '', $path);
         $normalizedPath = FileHelper::normalizePath($rootPath . '/'. $canonicalPath);
@@ -105,7 +135,7 @@ class Component
             $name = basename($path);
             $path = $canonicalPath . '/' . $name;
         }
-        return self::ensureExtension($path, 'twig');
+        return self::ensureExtension($path, $ext);
     }
 
     public static function ensureExtension(string $filename, string $defaultExtension): string {

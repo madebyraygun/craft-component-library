@@ -104,7 +104,7 @@ class TemplateLoader implements LoaderInterface
     {
         if (strpos($name, '@') === 0)
         {
-            $template = Plugin::$plugin->componentProvider->resolveComponentPath($name);
+            $template = Plugin::$plugin->componentProvider->resolveFilePath($name);
             if (!$template || !is_readable($template)) {
                 throw new TemplateLoaderException($name, Craft::t('app', 'Unable to resolve template "{name}" at {template}.', [
                     'path' => $template,
