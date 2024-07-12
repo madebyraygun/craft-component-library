@@ -16,7 +16,7 @@ class Library
     {
         $settings = Plugin::$plugin->getSettings();
         $name = Craft::$app->request->getParam('name');
-        $nodes = self::scanPath($settings->root, $name);
+        $nodes = self::scanPath($settings->root, $name ?? '');
         return [
             'name' => 'Components',
             'nodes' => $nodes,

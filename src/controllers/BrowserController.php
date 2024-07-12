@@ -16,7 +16,7 @@ class BrowserController extends Controller
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
-        if (!Loader::componentExists($name)) {
+        if (!empty($name) && !Loader::componentExists($name)) {
             return $this->asErrorJson('Component not found');
         }
         $toobarContext = Library::getUiToolbarContext($name ?? '');
