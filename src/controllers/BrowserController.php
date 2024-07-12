@@ -12,12 +12,15 @@ use madebyraygun\componentlibrary\helpers\Loader;
 
 class BrowserController extends Controller
 {
+
+    protected array|int|bool $allowAnonymous = true;
+
     public function actionIndex(): Response
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
         if (!empty($name) && !Loader::componentExists($name)) {
-            return $this->asErrorJson('Component not found');
+            return $this->asFailure('Component not found');
         }
         $toobarContext = Library::getUiToolbarContext($name ?? '');
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);

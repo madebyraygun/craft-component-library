@@ -10,16 +10,18 @@ use Craft;
 
 class PreviewController extends Controller
 {
+    protected array|int|bool $allowAnonymous = true;
+
     public function actionIndex(): Response
     {
         $name = $this->request->getParam('name');
         if (!$name) {
             Plugin::error('No component name provided');
-            return $this->asErrorJson('No component name provided');
+            return $this->asFailure('No component name provided');
         }
         if (!Loader::componentExists($name)) {
             Plugin::error('Component not found');
-            return $this->asErrorJson('Component not found');
+            return $this->asFailure('Component not found');
         }
         $provider = Plugin::$plugin->componentProvider;
         $settings = $provider->getComponentSettings($name);
