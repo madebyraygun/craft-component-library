@@ -15,6 +15,11 @@ export class ExplorerTree extends LibraryComponent {
   }
 
   bindNodeEvents() {
+
+    this.app.events.addEventListener('explorer-tree:file-click', () => {
+      this.selectNode(null, 'file');
+    });
+
     this.directories.forEach(directory => {
       directory.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -25,6 +30,7 @@ export class ExplorerTree extends LibraryComponent {
 
     this.files.forEach(file => {
       file.addEventListener('click', (e) => {
+        this.app.events.dispatchEvent('explorer-tree:file-click')
         this.selectNode(file, 'file');
         this.selectNode(null, 'directory');
       }, { capture: true });
