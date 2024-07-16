@@ -5,6 +5,7 @@ namespace madebyraygun\componentlibrary\controllers;
 use Craft;
 use craft\web\Controller;
 use craft\web\Response;
+use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\Plugin;
@@ -38,9 +39,11 @@ class PreviewController extends Controller
         $view = Craft::$app->getView();
         $view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
+        $libraryUrl = UrlHelper::siteUrl('/component-library');
         $html = $view->renderTemplate('component-library/_partials/document', [
             ...$context,
             'distUrl' => $distUrl,
+            'libraryUrl' => $libraryUrl,
         ]);
         return $this->renderTemplate('component-library/_previews/default', [
             'yield' => $html,
