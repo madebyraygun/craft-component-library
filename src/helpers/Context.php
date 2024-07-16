@@ -42,7 +42,7 @@ class Context
         $info = pathinfo($name);
         foreach ($variants as $variant) {
             if (!empty($variant['name'])) {
-                $variantName = Component::normalizeName($variant['name']);
+                $variantName = Common::normalizeName($variant['name']);
                 $fullVariantName = $info['dirname'] . '--' . $variantName;
                 $variantParts = Component::parseComponentParts($fullVariantName);
                 $shouldInsert = $virtualOnly == false || $variantParts->isVirtual;
@@ -77,7 +77,7 @@ class Context
     public static function getVariantInConfig(array $config, string $name): array|null
     {
         $variantNames = array_column($config['variants'], 'name');
-        $variantNames = array_map([Component::class, 'normalizeName'], $variantNames);
+        $variantNames = array_map([Common::class, 'normalizeName'], $variantNames);
         $idx = array_search($name, $variantNames);
         return $idx !== false ? $config['variants'][$idx] : null;
     }

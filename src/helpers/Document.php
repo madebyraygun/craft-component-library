@@ -15,7 +15,7 @@ class Document
             return Document::$cache[$name];
         }
 
-        $documentPath = Component::resolveFilePath($name, 'md');
+        $documentPath = Common::resolveFilePath($name, 'md');
         $fileInfo = pathinfo($documentPath);
         $result = (object)[
             'valid' => $fileInfo['extension'] === 'md' && file_exists($documentPath),
@@ -49,7 +49,7 @@ class Document
 
     public static function getDocPartsFromTemplate(string $handle): object
     {
-        $templatePath = Component::resolveFilePath($handle, 'twig');
+        $templatePath = Common::resolveFilePath($handle, 'twig');
         $paths = Document::getDefaultPaths($templatePath);
         foreach ($paths as $path) {
             $parts = self::parseDocumentParts($path);
