@@ -31,7 +31,7 @@ class Document
         $result = [
             preg_replace('/\.twig/', '.md', $templatePath),
         ];
-        $cannonicalName = Component::getDefaultName($templatePath);
+        $cannonicalName = Component::getCanonicalName($templatePath);
         $names = [
             $cannonicalName,
             $cannonicalName . '.readme',
@@ -62,12 +62,5 @@ class Document
             'name' => 'Invalid Document',
             'docPath' => $templatePath,
         ];
-    }
-
-    public static function normalizeName(string $name): string
-    {
-        $name = strtolower($name);
-        $name = StringHelper::dasherize($name);
-        return $name;
     }
 }

@@ -15,13 +15,6 @@ class Common
         return $name;
     }
 
-    public static function getDefaultName(string $name): string
-    {
-        $nameParts = explode('--', $name);
-        $result = array_shift($nameParts);
-        return pathinfo($result)['filename'];
-    }
-
     /**
      * Resolve the handle path to a component file.
      * Example: `@components/button` -> `/path/to/components/button.twig`

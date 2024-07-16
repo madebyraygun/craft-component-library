@@ -16,7 +16,7 @@ class Component
         $isVirtual = !file_exists($componentPath);
         $canonicalPath = preg_replace('/--[^.]+/', '', $componentPath);
         $variantName = self::getVariantName($componentPath);
-        $defaultName = self::getDefaultName($componentPath);
+        $defaultName = self::getCanonicalName($componentPath);
         $canonicalInfo = pathinfo($canonicalPath);
         $templateInfo = $isVirtual ? $canonicalInfo : pathinfo($componentPath);
         $isVariant = $componentPath !== $canonicalPath;
@@ -75,7 +75,7 @@ class Component
         return preg_replace('/\..*/', '', $result);
     }
 
-    public static function getDefaultName(string $name): string
+    public static function getCanonicalName(string $name): string
     {
         $nameParts = explode('--', $name);
         $result = array_shift($nameParts);
