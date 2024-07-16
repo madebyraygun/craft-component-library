@@ -25,6 +25,7 @@ class Component
         $isVariant = $componentPath !== $canonicalPath;
         $templatePath = $isVirtual ? $canonicalPath : $componentPath;
         $result = (object)[
+            'valid' => $templateInfo['extension'] === 'twig',
             'name' => $isVariant ? $variantName : $defaultName,
             'includeName' => $name,
             'templateName' => $templateInfo['basename'],
@@ -34,7 +35,7 @@ class Component
             'canonicalPath' => $canonicalPath,
             'isVariant' => $isVariant,
             'isVirtual' => $isVirtual,
-            ...self::getDocParts($templatePath),
+            ...self::getDocParts($name),
             ...self::getConfigParts($canonicalPath)
         ];
         Component::$cache[$name] = $result;
@@ -61,30 +62,10 @@ class Component
     }
 
     public static function getDocParts(string $templatePath): array {
-        $docPath = preg_replace('/\.twig$/', '.md', $templatePath);
-        $docExists = file_exists($docPath);
-        if (!$docExists) {
-            $cannonicalName = self::getDefaultName($docPath);
-            $names = [
-                $cannonicalName,
-                $cannonicalName . '.readme',
-                'readme',
-                'Readme',
-                'README',
-                'index'
-            ];
-            foreach ($names as $name) {
-                $pathInfo = pathinfo($docPath);
-                $docPath = $pathInfo['dirname'] . '/' . $name . '.md';
-                if (file_exists($docPath)) {
-                    $docExists = true;
-                    break;
-                }
-            }
-        }
+        $docParts = Document::getDocPartsFromTemplate($templatePath);
         return [
-            'docPath' => $docPath,
-            'docExists' => $docExists,
+            'docPath' => $docParts->docPath,
+            'docExists' => $docParts->valid,
         ];
     }
 
@@ -116,6 +97,7 @@ class Component
         $settings = Plugin::$plugin->getSettings();
         $relPath = self::resolveAliases($name);
         $relPath = self::getDefaultFilePath($relPath, $ext);
+        $relPath = str_replace($settings->root . '/', '', $relPath);
         $absPath = FileHelper::normalizePath($settings->root . '/' . $relPath);
         return $absPath;
     }

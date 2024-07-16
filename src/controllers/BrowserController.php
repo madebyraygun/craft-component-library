@@ -19,18 +19,25 @@ class BrowserController extends Controller
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
-        if (!empty($name) && !Loader::componentExists($name)) {
+        if (!empty($name) && !Loader::handleExists($name)) {
             return $this->asFailure('Component not found');
         }
-        $toobarContext = Library::getUiToolbarContext($name ?? '');
+        $toolbarContext = null;
+        if (Loader::componentExists($name)) {
+            $toolbarContext = Library::getUiToolbarContext($name);
+        }
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         $libraryUrl = UrlHelper::siteUrl('/component-library');
-        $sidebarContext = Library::scanLibraryPath();
+        $componentsSidebar = Library::scanLibraryPath();
+        $documentsSidebar = Library::scanDocumentsPath();
         return $this->renderTemplate('component-library/index', [
-            'sidebar' => $sidebarContext,
-            'toolbar' => $toobarContext,
+            'sidebars' => [
+                $componentsSidebar,
+                $documentsSidebar
+            ],
+            'toolbar' => $toolbarContext,
             'iframeUrl' => $iframeUrl,
             'libraryUrl' => $libraryUrl,
             'distUrl' => $distUrl,
@@ -52,7 +59,15 @@ class BrowserController extends Controller
         return $this->renderTemplate('component-library/_partials/preview', [
             'iframeUrl' => $iframeUrl,
         ]);
+    }
 
+    public function actionPartialDocument(): Response
+    {
+        $name = Craft::$app->request->getParam('name');
+        $document = Library::getDocContents($name);
+        return $this->renderTemplate('component-library/_partials/document', [
+            'document' => $document,
+        ]);
     }
 
     public function actionNotFound(): Response

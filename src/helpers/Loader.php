@@ -4,11 +4,21 @@ namespace madebyraygun\componentlibrary\helpers;
 
 use madebyraygun\componentlibrary\helpers\Component;
 use madebyraygun\componentlibrary\helpers\Context;
+use madebyraygun\componentlibrary\helpers\Document;
 
 class Loader {
+
+    public static function handleExists(string $handle): bool
+    {
+        return self::componentExists($handle) || self::documentExists($handle);
+    }
+
     public static function componentExists(string $name): bool
     {
         $parts = Component::parseComponentParts($name);
+        if (!$parts->valid) {
+            return false;
+        }
         if ($parts->isVirtual)
         {
             $parentName = strstr($name, '--', true);
@@ -20,5 +30,14 @@ class Loader {
             }
         }
         return file_exists($parts->templatePath);
+    }
+
+    public static function documentExists(string $handle): bool
+    {
+        $parts = Document::parseDocumentParts($handle);
+        if (!$parts->valid) {
+            return false;
+        }
+        return file_exists($parts->docPath);
     }
 }

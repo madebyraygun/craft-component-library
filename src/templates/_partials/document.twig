@@ -1,0 +1,6 @@
+{% extends "component-library/_layouts/_library" %}
+{% block body %}
+  <div class="markdown">
+    {{content|default('')|markdown('gfm')}}
+  </div>
+{% endblock %}

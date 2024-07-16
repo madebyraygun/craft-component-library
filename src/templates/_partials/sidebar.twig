@@ -1,1 +1,3 @@
-{% include 'component-library/controls/explorer-tree.twig' with sidebar %}
+{% for sidebar in sidebars %}
+  {% include 'component-library/controls/explorer-tree.twig' with sidebar %}
+{% endfor %}
