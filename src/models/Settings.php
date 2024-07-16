@@ -2,8 +2,8 @@
 
 namespace madebyraygun\componentlibrary\models;
 
-use craft\base\Model;
 use Craft;
+use craft\base\Model;
 
 class Settings extends Model
 {

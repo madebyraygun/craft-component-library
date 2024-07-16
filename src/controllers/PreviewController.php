@@ -2,12 +2,12 @@
 
 namespace madebyraygun\componentlibrary\controllers;
 
+use Craft;
 use craft\web\Controller;
 use craft\web\Response;
-use madebyraygun\componentlibrary\Plugin;
-use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
-use Craft;
+use madebyraygun\componentlibrary\helpers\Loader;
+use madebyraygun\componentlibrary\Plugin;
 
 class PreviewController extends Controller
 {
@@ -43,7 +43,7 @@ class PreviewController extends Controller
             'distUrl' => $distUrl,
         ]);
         return $this->renderTemplate('component-library/_previews/default', [
-            'yield' => $html
+            'yield' => $html,
         ]);
     }
 

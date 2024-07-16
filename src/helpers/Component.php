@@ -10,7 +10,8 @@ class Component
 {
     private static array $cache = [];
 
-    public static function parseComponentParts(string $name): object {
+    public static function parseComponentParts(string $name): object
+    {
         $name = strtolower($name);
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
@@ -36,13 +37,14 @@ class Component
             'isVariant' => $isVariant,
             'isVirtual' => $isVirtual,
             ...self::getDocParts($name),
-            ...self::getConfigParts($canonicalPath)
+            ...self::getConfigParts($canonicalPath),
         ];
         Component::$cache[$name] = $result;
         return $result;
     }
 
-    public static function getConfigParts(string $canonicalPath): array {
+    public static function getConfigParts(string $canonicalPath): array
+    {
         $jsonConfigPath = str_replace('.twig', '.config.json', $canonicalPath);
         $phpConfigPath = str_replace('.twig', '.config.php', $canonicalPath);
         $configType = '';
@@ -50,18 +52,19 @@ class Component
         if (file_exists($phpConfigPath)) {
             $configType = 'php';
             $configPath = $phpConfigPath;
-        } else if (file_exists($jsonConfigPath)) {
+        } elseif (file_exists($jsonConfigPath)) {
             $configType = 'json';
             $configPath = $jsonConfigPath;
         }
         return [
-            'configType'=> $configType,
+            'configType' => $configType,
             'configPath' => $configPath,
-            'configExists' => !empty($configPath)
+            'configExists' => !empty($configPath),
         ];
     }
 
-    public static function getDocParts(string $templatePath): array {
+    public static function getDocParts(string $templatePath): array
+    {
         $docParts = Document::getDocPartsFromTemplate($templatePath);
         return [
             'docPath' => $docParts->docPath,
@@ -69,19 +72,22 @@ class Component
         ];
     }
 
-    public static function normalizeName(string $name): string {
+    public static function normalizeName(string $name): string
+    {
         $name = strtolower($name);
         $name = StringHelper::dasherize($name);
         return $name;
     }
 
-    public static function getVariantName(string $name): string {
+    public static function getVariantName(string $name): string
+    {
         $nameParts = explode('--', $name);
         $result = count($nameParts) > 1 ? array_pop($nameParts) : '';
         return preg_replace('/\..*/', '', $result);
     }
 
-    public static function getDefaultName(string $name): string {
+    public static function getDefaultName(string $name): string
+    {
         $nameParts = explode('--', $name);
         $result = array_shift($nameParts);
         return pathinfo($result)['filename'];
@@ -93,7 +99,8 @@ class Component
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
      * @param string $name
      */
-    public static function resolveFilePath(string $name, string $ext): string {
+    public static function resolveFilePath(string $name, string $ext): string
+    {
         $settings = Plugin::$plugin->getSettings();
         $relPath = self::resolveAliases($name);
         $relPath = self::getDefaultFilePath($relPath, $ext);
@@ -109,10 +116,11 @@ class Component
      * @param string $path
      * @return string
      */
-    public static function getDefaultFilePath(string $path, string $ext = 'twig'): string {
+    public static function getDefaultFilePath(string $path, string $ext = 'twig'): string
+    {
         $rootPath = Plugin::$plugin->getSettings()->root;
         $canonicalPath = preg_replace('/--[^.]+/', '', $path);
-        $normalizedPath = FileHelper::normalizePath($rootPath . '/'. $canonicalPath);
+        $normalizedPath = FileHelper::normalizePath($rootPath . '/' . $canonicalPath);
         if (is_dir($normalizedPath)) {
             $name = basename($path);
             $path = $canonicalPath . '/' . $name;
@@ -120,7 +128,8 @@ class Component
         return self::ensureExtension($path, $ext);
     }
 
-    public static function ensureExtension(string $filename, string $defaultExtension): string {
+    public static function ensureExtension(string $filename, string $defaultExtension): string
+    {
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
         return empty($ext) ? $filename . '.' . $defaultExtension : $filename;
     }
@@ -129,7 +138,8 @@ class Component
      * Resolve aliases transforming (@text symbols) into corresponding paths from the settings.
      * @param string $path
      */
-    public static function resolveAliases(string $path): string {
+    public static function resolveAliases(string $path): string
+    {
         $aliases = Plugin::$plugin->getSettings()->aliases;
         foreach ($aliases as $alias => $replacement) {
             $path = str_replace($alias, $replacement, $path);

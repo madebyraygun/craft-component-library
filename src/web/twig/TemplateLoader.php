@@ -9,11 +9,11 @@
 namespace madebyraygun\componentlibrary\web\twig;
 
 use Craft;
-use craft\web\View;
 use craft\web\twig\TemplateLoaderException;
+use craft\web\View;
+use madebyraygun\componentlibrary\Plugin;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
-use madebyraygun\componentlibrary\Plugin;
 
 /**
  * Loads Craft templates into Twig.
@@ -102,8 +102,7 @@ class TemplateLoader implements LoaderInterface
      */
     private function _resolveTemplate(string $name): string
     {
-        if (strpos($name, '@') === 0)
-        {
+        if (strpos($name, '@') === 0) {
             $template = Plugin::$plugin->componentProvider->resolveFilePath($name);
             if (!$template || !is_readable($template)) {
                 throw new TemplateLoaderException($name, Craft::t('app', 'Unable to resolve template "{name}" at {template}.', [

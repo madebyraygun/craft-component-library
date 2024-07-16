@@ -3,21 +3,20 @@
 namespace madebyraygun\componentlibrary;
 
 use Craft;
-use craft\base\PluginTrait;
-use craft\web\twig\variables\CraftVariable;
-use yii\base\Event;
-use craft\base\Plugin as BasePlugin;
 use craft\base\Model;
-use craft\web\View;
-use craft\web\Application;
-use craft\web\UrlManager;
+use craft\base\Plugin as BasePlugin;
 use craft\events\RegisterUrlRulesEvent;
-use nystudio107\pluginvite\services\VitePluginService;
-use madebyraygun\componentlibrary\variables\ViteVariables;
-use madebyraygun\componentlibrary\web\twig\TemplateLoader;
+use craft\web\Application;
+use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
+use craft\web\View;
+use madebyraygun\componentlibrary\base\PluginLogTrait;
 use madebyraygun\componentlibrary\models\Settings;
 use madebyraygun\componentlibrary\services\ComponentProvider;
-use madebyraygun\componentlibrary\base\PluginLogTrait;
+use madebyraygun\componentlibrary\variables\ViteVariables;
+use madebyraygun\componentlibrary\web\twig\TemplateLoader;
+use nystudio107\pluginvite\services\VitePluginService;
+use yii\base\Event;
 
 /**
  * component-library plugin
@@ -51,7 +50,7 @@ class Plugin extends BasePlugin
                     // 'errorEntry' => 'js/main.js',
                     'cacheKeySuffix' => '',
 
-                ]
+                ],
             ],
         ];
     }
@@ -73,16 +72,16 @@ class Plugin extends BasePlugin
             Application::class,
             Application::EVENT_INIT,
             function(Event $event) {
-                if ( !Craft::$app->request->isCpRequest ) {
+                if (!Craft::$app->request->isCpRequest) {
                     $view = Craft::$app->getView();
                     $view->getTwig()->setLoader(new TemplateLoader($view));
                 }
-        });
+            });
 
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
+            function(RegisterUrlRulesEvent $event) {
                 $event->rules['component-library/preview'] = 'component-library/preview';
                 $event->rules['component-library/partials/toolbar'] = 'component-library/browser/partial-toolbar';
                 $event->rules['component-library/partials/preview'] = 'component-library/browser/partial-preview';
@@ -97,7 +96,7 @@ class Plugin extends BasePlugin
                 $variable = $event->sender;
                 $variable->set('library', [
                     'class' => ViteVariables::class,
-                    'viteService' => $this->vite
+                    'viteService' => $this->vite,
                 ]);
             }
         );

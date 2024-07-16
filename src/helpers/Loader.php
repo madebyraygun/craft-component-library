@@ -2,12 +2,8 @@
 
 namespace madebyraygun\componentlibrary\helpers;
 
-use madebyraygun\componentlibrary\helpers\Component;
-use madebyraygun\componentlibrary\helpers\Context;
-use madebyraygun\componentlibrary\helpers\Document;
-
-class Loader {
-
+class Loader
+{
     public static function handleExists(string $handle): bool
     {
         return self::componentExists($handle) || self::documentExists($handle);
@@ -19,13 +15,11 @@ class Loader {
         if (!$parts->valid) {
             return false;
         }
-        if ($parts->isVirtual)
-        {
+        if ($parts->isVirtual) {
             $parentName = strstr($name, '--', true);
             $config = Context::readConfigFile($parentName);
             $variant = Context::getVariantInConfig($config, $parts->name);
-            if (empty($variant))
-            {
+            if (empty($variant)) {
                 return false;
             }
         }

@@ -4,14 +4,12 @@ namespace madebyraygun\componentlibrary\base;
 
 use Craft;
 use craft\log\MonologTarget;
+use madebyraygun\componentlibrary\Plugin;
 use Monolog\Formatter\LineFormatter;
 use Psr\Log\LogLevel;
-use yii\log\Logger;
-use madebyraygun\componentlibrary\Plugin;
 
 trait PluginLogTrait
 {
-
     public static function log(string $message, array $params = []): void
     {
         $message = Craft::t('component-library', $message, $params);
@@ -49,9 +47,9 @@ trait PluginLogTrait
         Craft::getLogger()->dispatcher->targets[] = $target;
     }
 
-    public static function registerLogger(): void {
+    public static function registerLogger(): void
+    {
         // self::registerMonologTargetLevel(LogLevel::ERROR);
         self::registerMonologTargetLevel(LogLevel::INFO);
-
     }
 }

@@ -2,15 +2,14 @@
 
 namespace madebyraygun\componentlibrary\helpers;
 
-use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
-use madebyraygun\componentlibrary\Plugin;
 
 class Document
 {
     private static array $cache = [];
 
-    public static function parseDocumentParts(string $name): object {
+    public static function parseDocumentParts(string $name): object
+    {
         $name = strtolower($name);
         if (isset(Document::$cache[$name])) {
             return Document::$cache[$name];
@@ -27,7 +26,8 @@ class Document
         return $result;
     }
 
-    public static function getDefaultPaths(string $templatePath): array {
+    public static function getDefaultPaths(string $templatePath): array
+    {
         $result = [
             preg_replace('/\.twig/', '.md', $templatePath),
         ];
@@ -38,7 +38,7 @@ class Document
             'readme',
             'Readme',
             'README',
-            'index'
+            'index',
         ];
         $pathInfo = pathinfo($templatePath);
         foreach ($names as $name) {
@@ -47,7 +47,8 @@ class Document
         return $result;
     }
 
-    public static function getDocPartsFromTemplate(string $handle): object {
+    public static function getDocPartsFromTemplate(string $handle): object
+    {
         $templatePath = Component::resolveFilePath($handle, 'twig');
         $paths = Document::getDefaultPaths($templatePath);
         foreach ($paths as $path) {
@@ -63,7 +64,8 @@ class Document
         ];
     }
 
-    public static function normalizeName(string $name): string {
+    public static function normalizeName(string $name): string
+    {
         $name = strtolower($name);
         $name = StringHelper::dasherize($name);
         return $name;

@@ -3,16 +3,15 @@
 namespace madebyraygun\componentlibrary\controllers;
 
 use Craft;
+use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\Response;
-use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\helpers\Library;
 use madebyraygun\componentlibrary\helpers\Loader;
 
 class BrowserController extends Controller
 {
-
     protected array|int|bool $allowAnonymous = true;
 
     public function actionIndex(): Response
@@ -35,7 +34,7 @@ class BrowserController extends Controller
         return $this->renderTemplate('component-library/index', [
             'sidebars' => [
                 $componentsSidebar,
-                $documentsSidebar
+                $documentsSidebar,
             ],
             'toolbar' => $toolbarContext,
             'iframeUrl' => $iframeUrl,
@@ -58,15 +57,6 @@ class BrowserController extends Controller
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         return $this->renderTemplate('component-library/_partials/preview', [
             'iframeUrl' => $iframeUrl,
-        ]);
-    }
-
-    public function actionPartialDocument(): Response
-    {
-        $name = Craft::$app->request->getParam('name');
-        $document = Library::getDocContents($name);
-        return $this->renderTemplate('component-library/_partials/document', [
-            'document' => $document,
         ]);
     }
 
