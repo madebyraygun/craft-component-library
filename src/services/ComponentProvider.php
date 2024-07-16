@@ -16,7 +16,7 @@ class ComponentProvider extends Component
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
      * @param string $path
      */
-    public function resolveFilePath(string $path): string|null
+    public function resolveHandlePath(string $path): string|null
     {
         if (!LoaderHelper::componentExists($path)) {
             return null;

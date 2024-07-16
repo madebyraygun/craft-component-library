@@ -12,7 +12,7 @@ class Component
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
         }
-        $componentPath = Common::resolveFilePath($name, 'twig');
+        $componentPath = Common::resolveHandlePath($name, 'twig');
         $isVirtual = !file_exists($componentPath);
         $canonicalPath = preg_replace('/--[^.]+/', '', $componentPath);
         $variantName = self::getVariantName($componentPath);

@@ -23,16 +23,16 @@ class Common
     }
 
     /**
-     * Resolve the path to a component file.
+     * Resolve the handle path to a component file.
      * Example: `@components/button` -> `/path/to/components/button.twig`
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
-     * @param string $name
+     * @param string $handle
      */
-    public static function resolveFilePath(string $name, string $ext): string
+    public static function resolveHandlePath(string $handle, string $ext): string
     {
         $settings = Plugin::$plugin->getSettings();
-        $relPath = self::resolveAliases($name);
-        $relPath = self::getDefaultFilePath($relPath, $ext);
+        $relPath = self::resolveAliases($handle);
+        $relPath = self::expandComponentPath($relPath, $ext);
         $relPath = str_replace($settings->root . '/', '', $relPath);
         $absPath = FileHelper::normalizePath($settings->root . '/' . $relPath);
         return $absPath;
@@ -45,7 +45,7 @@ class Common
      * @param string $path
      * @return string
      */
-    public static function getDefaultFilePath(string $path, string $ext = 'twig'): string
+    public static function expandComponentPath(string $path, string $ext = 'twig'): string
     {
         $rootPath = Plugin::$plugin->getSettings()->root;
         $canonicalPath = preg_replace('/--[^.]+/', '', $path);
