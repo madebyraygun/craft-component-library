@@ -18,10 +18,6 @@ class BrowserController extends Controller
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
-        if (!empty($name) && !Loader::handleExists($name)) {
-            return $this->asFailure('Component not found');
-        }
-
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');

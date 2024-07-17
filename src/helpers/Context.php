@@ -76,7 +76,7 @@ class Context
 
     public static function getVariantInConfig(array $config, string $name): array|null
     {
-        $variantNames = array_column($config['variants'], 'name');
+        $variantNames = array_column($config['variants'] ?? [], 'name');
         $variantNames = array_map([Common::class, 'normalizeName'], $variantNames);
         $idx = array_search($name, $variantNames);
         return $idx !== false ? $config['variants'][$idx] : null;
