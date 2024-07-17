@@ -30,11 +30,12 @@
   --code-text-color: #cdcdcd;
   /* Markdown */
   --md-text-color: #cdcdcd;
+  --md-strong-color: #fff;
   --md-heading-border-color: #6e6e6e;
   --md-code-text-color: #fff;
   --md-blockquote-border-color: #9d9d9d;
-  --md-anchor-color: #2980b9;
-  --md-anchor-hover-color: #6ec3fc;
+  --md-anchor-color: #4eace9;
+  --md-anchor-hover-color: #b8e3ff;
   /* Tabs */
   --tabs-label-bg-color: #1e1e1e;
   --tabs-label-text-color: #9d9d9d;

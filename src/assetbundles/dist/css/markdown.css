@@ -7,6 +7,8 @@
 
   &.markdown-page {
     padding: 2rem;
+    max-width: 53rem;
+    margin: auto;
   }
 
   :first-child {
@@ -34,13 +36,26 @@
     margin: 15px 0;
   }
 
-  p {
+  code {
+    font-size: 0.8rem;
+    background: var(--code-bg-color);
+    color: var(--md-code-text-color);
+    border: 1px dashed var(--code-border-color);
+    padding: 0.15rem 0.25rem;
+  }
+
+  pre {
+    background: var(--code-bg-color);
+    border: 1px dashed var(--code-border-color);
+    overflow-x: scroll;
+    padding: 0.5rem;
     code {
+      border: none;
+      font-size: 0.8rem;
       font-family: 'Fira Code', monospace;
       background: var(--code-bg-color);
       color: var(--md-code-text-color);
-      border: 1px dashed var(--code-border-color);
-      padding: 0.1em 0.3em;
+      padding: 0.1rem 0.3rem;
     }
   }
 
@@ -112,12 +127,6 @@
 
   strong {
     font-weight: 800;
-  }
-
-  pre {
-    background: var(--code-bg-color);
-    border: 1px dashed var(--code-border-color);
-    overflow-x: scroll;
-    padding: 0.5rem;
+    color: var(--md-strong-color);
   }
 }
