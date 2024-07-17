@@ -21,14 +21,12 @@ class BrowserController extends Controller
         if (!empty($name) && !Loader::handleExists($name)) {
             return $this->asFailure('Component not found');
         }
-        $toolbarContext = null;
-        if (Loader::componentExists($name)) {
-            $toolbarContext = Library::getUiToolbarContext($name);
-        }
+
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         $libraryUrl = UrlHelper::siteUrl('/component-library');
+        $toolbarContext = Library::getUiToolbarContext($name);
         $componentsSidebar = Library::scanLibraryPath();
         $documentsSidebar = Library::scanDocumentsPath();
         return $this->renderTemplate('component-library/index', [
