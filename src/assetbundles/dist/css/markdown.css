@@ -1,8 +1,13 @@
 .markdown {
+  font-size: 1rem;
   color: var(--md-text-color);
   background: transparent !important;
   border: none !important;
   padding: 0;
+
+  &.markdown-page {
+    padding: 2rem;
+  }
 
   :first-child {
     margin-top: 0;
