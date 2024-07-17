@@ -1,6 +1,10 @@
 {% extends "component-library/_layouts/_library" %}
 {% block body %}
-  <div class="markdown">
+  <div class="markdown markdown-page">
     {{content|default('')|markdown('gfm')}}
   </div>
+{% endblock %}
+
+{% block bodyScripts %}
+  <script>console.log('Inject Documentation Scripts Here')</script>
 {% endblock %}

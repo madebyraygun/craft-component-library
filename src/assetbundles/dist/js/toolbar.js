@@ -22,7 +22,13 @@ export class Toolbar extends LibraryComponent {
 
   bindNavigationEvents() {
     this.app.router.addEventListener('component-swap', (e) => {
-      this.swapComponentView(e.detail.target.dataset.partialToolbarUrl);
+      const url = e.detail.target.dataset.partialToolbarUrl;
+      this.app.events.dispatchEvent('toolbar-visibility-changed', {
+        detail: {
+          visible: !!url
+        }
+      });
+      this.swapComponentView(url);
     })
   }
 
@@ -86,9 +92,5 @@ export class Toolbar extends LibraryComponent {
       parser: config[lang].parser || lang,
       plugins: [pluginBabel, pluginEstree, pluginHtml],
     })).replace(/;\s$/, '');
-  }
-
-  bind() {
-
   }
 }

@@ -11,6 +11,8 @@
   </head>
   <body data-base-url={{libraryUrl|default('')}}>
     {% block body %}{% endblock %}
-    <script type="module" src="{{distUrl}}/js/index.js"></script>
+    {% block bodyScripts %}
+      <script type="module" src="{{distUrl}}/js/index.js"></script>
+    {% endblock %}
   </body>
 </html>

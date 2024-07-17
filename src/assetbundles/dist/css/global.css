@@ -17,6 +17,14 @@ body {
     visibility: hidden;
     opacity: 0;
   }
+  &.toolbar-hidden {
+    .toolbar {
+      display: none;
+    }
+    .preview {
+      height: 100% !important;
+    }
+  }
 }
 
 main {

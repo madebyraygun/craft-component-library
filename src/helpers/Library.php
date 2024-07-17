@@ -122,6 +122,7 @@ class Library
                 'hidden' => $context->settings->hidden,
                 'path' => $component->templatePath,
                 'context' => $context,
+                'partial_toolbar_url' => self::getPartialUrl($handlePath, 'toolbar'),
                 'is_variant' => $component->isVariant,
                 'is_virtual' => $component->isVirtual,
             ];
@@ -131,12 +132,12 @@ class Library
             $fields = [
                 'name' => $document->name,
                 'hidden' => false,
+                'partial_toolbar_url' => null,
                 'path' => $document->docPath,
                 'context' => null,
             ];
         }
         $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
-        $partialToolbarUrl = self::getPartialUrl($handlePath, 'toolbar');
         $partialPreviewUrl = self::getPartialUrl($handlePath, 'preview');
         $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
         return [
@@ -144,7 +145,6 @@ class Library
             'current' => $currentName == $handlePath,
             'handle' => $handlePath,
             'page_url' => $pagePreviewUrl,
-            'partial_toolbar_url' => $partialToolbarUrl,
             'partial_preview_url' => $partialPreviewUrl,
             'isolated_url' => $isolatedPreviewUrl,
             'type' => 'file',
@@ -244,15 +244,15 @@ class Library
         return file_get_contents($parts->templatePath);
     }
 
-    public static function getUiToolbarContext(string $name): array
+    public static function getUiToolbarContext(string $name): array|null
     {
         if (empty($name)) {
-            return [];
+            return null;
         }
 
         $exists = Loader::componentExists($name);
         if (!$exists) {
-            return [];
+            return null;
         }
 
         $component = Component::parseComponentParts($name);
