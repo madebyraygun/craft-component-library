@@ -1,6 +1,7 @@
 import hljs from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/highlight.min.js';
 import twig from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/languages/twig.min.js';
 import xml from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/languages/xml.min.js';
+import scss from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/languages/scss.min.js';
 import php from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/languages/php.min.js';
 import javascript from 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/es/languages/javascript.min.js';
 import * as prettier from 'https://unpkg.com/prettier@3.2.5/standalone.mjs';
@@ -13,6 +14,7 @@ export function bindCodeHighlight(codeElements = []) {
   hljs.registerLanguage('twig', twig);
   hljs.registerLanguage('xml', xml);
   hljs.registerLanguage('php', php);
+  hljs.registerLanguage('scss', scss);
   hljs.registerLanguage('javascript', javascript);
   codeElements.forEach(async (el) => {
     const lang = el.className.match(/.*language-(\w+)/)[1];
