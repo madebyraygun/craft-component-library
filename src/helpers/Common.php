@@ -15,6 +15,15 @@ class Common
         return $name;
     }
 
+    public static function friendlyNameFromHandle(string $handle): string
+    {
+        $path = self::resolveHandlePath($handle, 'twig');
+        $info = pathinfo($path);
+        $name = $info['filename'];
+        $name = StringHelper::humanize($name);
+        return $name;
+    }
+
     /**
      * Resolve the handle path to a component file.
      * Example: `@components/button` -> `/path/to/components/button.twig`

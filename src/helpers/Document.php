@@ -15,11 +15,13 @@ class Document
             return Document::$cache[$name];
         }
 
+        $friendlyName = Common::friendlyNameFromHandle($name);
+        $friendlyName = preg_replace('/^index$/i', 'Overview', $friendlyName);
         $documentPath = Common::resolveHandlePath($name, 'md');
         $fileInfo = pathinfo($documentPath);
         $result = (object)[
             'valid' => $fileInfo['extension'] === 'md' && file_exists($documentPath),
-            'name' => $name,
+            'name' => $friendlyName,
             'docPath' => $documentPath,
         ];
         Document::$cache[$name] = $result;
