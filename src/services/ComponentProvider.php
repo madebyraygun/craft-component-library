@@ -5,6 +5,7 @@ namespace madebyraygun\componentlibrary\services;
 use craft\base\Component;
 use madebyraygun\componentlibrary\helpers\Component as ComponentHelper;
 use madebyraygun\componentlibrary\helpers\Context as ContextHelper;
+use madebyraygun\componentlibrary\helpers\Document;
 use madebyraygun\componentlibrary\helpers\Loader as LoaderHelper;
 
 class ComponentProvider extends Component
@@ -15,7 +16,7 @@ class ComponentProvider extends Component
      * Example: `@components/button--variant` -> `/path/to/components/button--variant.twig`
      * @param string $path
      */
-    public function resolveComponentPath(string $path): string|null
+    public function resolveHandlePath(string $path): string|null
     {
         if (!LoaderHelper::componentExists($path)) {
             return null;
@@ -52,5 +53,17 @@ class ComponentProvider extends Component
         }
         $parts = ContextHelper::parseConfigParts($path);
         return $parts->settings;
+    }
+
+    public function getDocumentContext(string $path): array|null
+    {
+        if (!LoaderHelper::documentExists($path)) {
+            return null;
+        }
+        $documentParts = Document::parseDocumentParts($path);
+        return [
+            'iframeUrl' => '',
+            'content' => file_get_contents($documentParts->docPath),
+        ];
     }
 }

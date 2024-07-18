@@ -2,13 +2,11 @@
 
 namespace madebyraygun\componentlibrary\helpers;
 
-use craft\helpers\FileHelper;
-use craft\helpers\UrlHelper;
-use craft\helpers\Json;
-use madebyraygun\componentlibrary\Plugin;
-use madebyraygun\componentlibrary\helpers\Component;
-use madebyraygun\componentlibrary\helpers\Loader;
 use Craft;
+use craft\helpers\FileHelper;
+use craft\helpers\Json;
+use craft\helpers\UrlHelper;
+use madebyraygun\componentlibrary\Plugin;
 
 class Library
 {
@@ -16,7 +14,10 @@ class Library
     {
         $settings = Plugin::$plugin->getSettings();
         $name = Craft::$app->request->getParam('name');
-        $nodes = self::scanPath($settings->root, $name);
+        $nodes = self::scanPath($settings->root, $name ?? '', 1, [
+            'dirs' => self::getFilterFunction([ $settings->docs ]),
+            'files' => ['*.twig'],
+        ]);
         return [
             'name' => 'Components',
             'nodes' => $nodes,
@@ -25,35 +26,61 @@ class Library
         ];
     }
 
-    public static function getCurrentTemplatePath(): string
+    public static function scanDocumentsPath(): array
     {
-
-        if (empty($name)) return '';
-        $parts = Component::parseComponentParts($name);
-        return $parts->templatePath;
+        $name = Craft::$app->request->getParam('name');
+        $settings = Plugin::$plugin->getSettings();
+        $nodes = self::scanPath($settings->docs, $name ?? '', 1, [
+            'dirs' => null,
+            'files' => ['*.md'],
+        ]);
+        return [
+            'name' => 'Documentation',
+            'nodes' => $nodes,
+            'hidden' => false,
+            'level' => 0,
+        ];
     }
 
-    public static function scanPath(string $path, string $currentName = '', int $level = 1): array
+    public static function getFilterFunction(array $filter): callable
     {
+        return function($path) use ($filter) {
+            foreach ($filter as $f) {
+                if (strpos($path, $f) !== false) {
+                    return false;
+                }
+            }
+            return true;
+        };
+    }
+
+    public static function scanPath(string $path, string $currentName = '', int $level = 1, $filter = null): array
+    {
+        // dir exists?
+        if (!is_dir($path)) {
+            return [];
+        }
+
         $directories = FileHelper::findDirectories($path, [
-            'recursive' => false
+            'recursive' => false,
+            'filter' => $filter['dirs'],
         ]);
 
         // sort directories
-        usort($directories, function ($a, $b) {
+        usort($directories, function($a, $b) {
             return strcasecmp(basename($a), basename($b));
         });
 
         $files = FileHelper::findFiles($path, [
-            'only' => ['*.twig'],
-            'recursive' => false
+            'only' => $filter['files'],
+            'recursive' => false,
         ]);
 
         $result = [];
 
         // Scan directories
         foreach ($directories as $directory) {
-            $nodes = self::scanPath($directory, $currentName, $level + 1);
+            $nodes = self::scanPath($directory, $currentName, $level + 1, $filter);
             $hidden = self::allNodesHidden($nodes);
             $hasActiveChild = self::hasActiveChild($nodes);
             $result[] = [
@@ -63,7 +90,7 @@ class Library
                 'type' => 'directory',
                 'hidden' => $hidden,
                 'expanded' => $hasActiveChild,
-                'nodes' => $nodes
+                'nodes' => $nodes,
             ];
         }
 
@@ -71,11 +98,12 @@ class Library
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
             $result[] = self::formatFileEntry($handlePath, $currentName);
-            $variants = Context::getVariants($handlePath, true);
-            if (!empty($variants))
-            {
-                foreach ($variants as $variant) {
-                    $result[] = self::formatFileEntry($variant->includeName, $currentName);
+            if (Loader::componentExists($handlePath)) {
+                $variants = Context::getVariants($handlePath, true);
+                if (!empty($variants)) {
+                    foreach ($variants as $variant) {
+                        $result[] = self::formatFileEntry($variant->includeName, $currentName);
+                    }
                 }
             }
         }
@@ -83,27 +111,44 @@ class Library
         return $result;
     }
 
-    public static function formatFileEntry(string $handlePath, string $currentName): array {
-        $component = Component::parseComponentParts($handlePath);
-        $context = Context::parseConfigParts($handlePath);
+    public static function formatFileEntry(string $handlePath, string $currentName): array
+    {
+        $fields = [];
+        if (Loader::componentExists($handlePath)) {
+            $component = Component::parseComponentParts($handlePath);
+            $context = Context::parseConfigParts($handlePath);
+            $fields = [
+                'name' => $context->settings->title,
+                'hidden' => $context->settings->hidden,
+                'path' => $component->templatePath,
+                'context' => $context,
+                'partial_toolbar_url' => self::getPartialUrl($handlePath, 'toolbar'),
+                'is_variant' => $component->isVariant,
+                'is_virtual' => $component->isVirtual,
+            ];
+        }
+        if (Loader::documentExists($handlePath)) {
+            $document = Document::parseDocumentParts($handlePath);
+            $fields = [
+                'name' => $document->name,
+                'hidden' => false,
+                'partial_toolbar_url' => null,
+                'path' => $document->docPath,
+                'context' => null,
+            ];
+        }
         $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
-        $partialToolbarUrl = self::getPartialUrl($handlePath, 'toolbar');
         $partialPreviewUrl = self::getPartialUrl($handlePath, 'preview');
         $isolatedPreviewUrl = self::getIsolatedPreviewUrl($handlePath);
         return [
-            'name' => $context->settings->title,
-            'hidden' => $context->settings->hidden,
+            ...$fields,
             'current' => $currentName == $handlePath,
-            'path' => $component->templatePath,
             'handle' => $handlePath,
             'page_url' => $pagePreviewUrl,
-            'partial_toolbar_url' => $partialToolbarUrl,
             'partial_preview_url' => $partialPreviewUrl,
             'isolated_url' => $isolatedPreviewUrl,
             'type' => 'file',
-            'is_variant' => $component->isVariant,
-            'is_virtual' => $component->isVirtual,
-            'nodes' => []
+            'nodes' => [],
         ];
     }
 
@@ -121,7 +166,9 @@ class Library
     public static function allNodesHidden(array $nodes): bool
     {
         foreach ($nodes as $node) {
-            if (!$node['hidden']) return false;
+            if (!$node['hidden']) {
+                return false;
+            }
         }
         return true;
     }
@@ -140,8 +187,11 @@ class Library
 
     public static function getIsolatedPreviewUrl(string|null $handle): string
     {
-        $template = empty($handle) ? 'welcome' : 'preview';
-        if (!empty($handle) && !Loader::componentExists($handle)) {
+        $template = 'welcome';
+        if (Loader::componentExists($handle) || Loader::documentExists($handle)) {
+            $template = 'preview';
+        }
+        if (!empty($handle) && !Loader::handleExists($handle)) {
             $template = 'not-found';
         }
         $siteUrl = UrlHelper::siteUrl('/component-library/' . $template);
@@ -156,9 +206,12 @@ class Library
         return $path;
     }
 
-    public static function getContextContents(string $path, bool $compiled): string {
+    public static function getContextContents(string $path, bool $compiled): string
+    {
         $parts = Component::parseComponentParts($path);
-        if (!$parts->configExists) return '';
+        if (!$parts->configExists) {
+            return '';
+        }
         $contextPath = $parts->configPath;
         if ($compiled) {
             $ctx = Context::getComponentContext($path);
@@ -167,34 +220,39 @@ class Library
         return file_get_contents($contextPath);
     }
 
-    public static function getComponentContents(string $handle, bool $compiled): string {
+    public static function getDocContents(string $handle): string
+    {
+        $parts = Document::getDocPartsFromTemplate($handle);
+        if (!$parts->valid) {
+            return '';
+        }
+        return file_get_contents($parts->docPath);
+    }
+
+    public static function getComponentContents(string $handle, bool $compiled): string
+    {
         $parts = Component::parseComponentParts($handle);
         if ($compiled) {
             $context = Context::getComponentContext($handle);
-            try
-            {
+            try {
                 $view = Craft::$app->getView();
                 return $view->renderTemplate($handle, $context);
-            } catch (\Throwable $e)
-            {
+            } catch (\Throwable $e) {
                 return 'Error: ' . $e->getMessage();
             }
         }
         return file_get_contents($parts->templatePath);
     }
 
-    public static function getUiToolbarContext(string $name): array {
+    public static function getUiToolbarContext(string $name): array|null
+    {
         if (empty($name)) {
-            return [
-                'error' => 'No name parameter provided'
-            ];
+            return null;
         }
 
         $exists = Loader::componentExists($name);
         if (!$exists) {
-            return [
-                'error' => 'Component does not exist'
-            ];
+            return null;
         }
 
         $component = Component::parseComponentParts($name);
@@ -208,7 +266,8 @@ class Library
                 'compiled_component' => Library::getComponentContents($name, true),
                 'raw_context' => Library::getContextContents($name, false),
                 'raw_component' => Library::getComponentContents($name, false),
-            ]
+                'doc_contents' => Library::getDocContents($name),
+            ],
         ];
     }
 }

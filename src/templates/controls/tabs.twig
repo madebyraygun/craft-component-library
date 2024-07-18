@@ -1,15 +1,19 @@
 <div class="tabs">
   <div class="tabs__container">
     {% for tab in tabs %}
-      {% set name = 'tab-' ~ loop.index %}
-      {% set checked_attr = loop.first ? 'checked' : '' %}
-      <input id="{{name}}" class="tabs__input tabs__input-{{loop.index}}" type="radio" name="tabs" value={{loop.index}} {{checked_attr}} >
-      <label for="{{name}}" class="tabs__label">{{ tab.label }}</label>
+      {% if tab.visible|default(false) %}
+        {% set name = 'tab-' ~ loop.index %}
+        {% set checked_attr = loop.first ? 'checked' : '' %}
+        <input id="{{name}}" class="tabs__input tabs__input-{{loop.index}}" type="radio" name="tabs" value={{loop.index}} {{checked_attr}} >
+        <label for="{{name}}" class="tabs__label">{{ tab.label }}</label>
+      {% endif %}
     {% endfor %}
     {% for tab in tabs %}
-      <section class="tabs__pane tabs__pane-{{loop.index}}">
-        {{ tab.content|default|raw }}
-      </section>
+      {% if tab.visible|default(false) %}
+        <section class="tabs__pane tabs__pane-{{loop.index}}">
+          {{ tab.content|default|raw }}
+        </section>
+      {% endif %}
     {% endfor %}
   </div>
 </div>

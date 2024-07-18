@@ -3,31 +3,34 @@
 namespace madebyraygun\componentlibrary\controllers;
 
 use Craft;
+use craft\helpers\UrlHelper;
 use craft\web\Controller;
 use craft\web\Response;
-use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\helpers\Library;
 use madebyraygun\componentlibrary\helpers\Loader;
 
 class BrowserController extends Controller
 {
+    protected array|int|bool $allowAnonymous = true;
+
     public function actionIndex(): Response
     {
         // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
-        if (!Loader::componentExists($name)) {
-            return $this->asErrorJson('Component not found');
-        }
-        $toobarContext = Library::getUiToolbarContext($name ?? '');
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         $libraryUrl = UrlHelper::siteUrl('/component-library');
-        $sidebarContext = Library::scanLibraryPath();
+        $toolbarContext = Library::getUiToolbarContext($name);
+        $componentsSidebar = Library::scanLibraryPath();
+        $documentsSidebar = Library::scanDocumentsPath();
         return $this->renderTemplate('component-library/index', [
-            'sidebar' => $sidebarContext,
-            'toolbar' => $toobarContext,
+            'sidebars' => [
+                $componentsSidebar,
+                $documentsSidebar,
+            ],
+            'toolbar' => $toolbarContext,
             'iframeUrl' => $iframeUrl,
             'libraryUrl' => $libraryUrl,
             'distUrl' => $distUrl,
@@ -49,7 +52,6 @@ class BrowserController extends Controller
         return $this->renderTemplate('component-library/_partials/preview', [
             'iframeUrl' => $iframeUrl,
         ]);
-
     }
 
     public function actionNotFound(): Response

@@ -25,7 +25,8 @@
 
   .tabs__input-1:checked ~ .tabs__pane-1,
   .tabs__input-2:checked ~ .tabs__pane-2,
-  .tabs__input-3:checked ~ .tabs__pane-3 {
+  .tabs__input-3:checked ~ .tabs__pane-3,
+  .tabs__input-4:checked ~ .tabs__pane-4 {
     display: block;
   }
 

@@ -1,0 +1,10 @@
+{% extends "component-library/_layouts/_library" %}
+{% block body %}
+  <div class="markdown markdown-page">
+    {{content|default('')|markdown('gfm')}}
+  </div>
+{% endblock %}
+
+{% block bodyScripts %}
+  <script type="module" src="{{distUrl}}/js/document.js"></script>
+{% endblock %}

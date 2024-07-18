@@ -1,6 +1,7 @@
 {% extends "component-library/_layouts/_library" %}
 {% block body %}
-  <div class="container js-loading">
+  {% set toolbarClass = toolbar|default(false) ? '' : 'toolbar-hidden' %}
+  <div class="container js-loading {{toolbarClass}}">
     <nav id="split-sidebar" class="sidebar">
       {% include 'component-library/_partials/sidebar' %}
     </nav>

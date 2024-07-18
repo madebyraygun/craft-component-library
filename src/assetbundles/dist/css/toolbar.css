@@ -11,8 +11,8 @@
 
   .toolbar__code {
     margin-top: 1rem;
-    background: var(--toolbar-code-bg-color);
-    border: 1px dashed var(--toolbar-code-border-color);
+    background: var(--code-bg-color);
+    border: 1px dashed var(--code-border-color);
     padding: 0.5rem;
     &.toolbar__code--compile-enabled {
       code.raw {
@@ -59,8 +59,8 @@
 
     .toolbar__value {
       color: var(--toolbar-text-color);
-      background: var(--toolbar-code-bg-color);
-      border: 1px dashed var(--toolbar-code-border-color);
+      background: var(--code-bg-color);
+      border: 1px dashed var(--code-border-color);
       padding: 0.25rem 1rem;
       font-size: 0.8rem;
       font-family: 'Fira Code', monospace;

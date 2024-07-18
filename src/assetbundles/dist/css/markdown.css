@@ -1,0 +1,132 @@
+.markdown {
+  font-size: 1rem;
+  color: var(--md-text-color);
+  background: transparent !important;
+  border: none !important;
+  padding: 0;
+
+  &.markdown-page {
+    padding: 2rem;
+    max-width: 53rem;
+    margin: auto;
+  }
+
+  :first-child {
+    margin-top: 0;
+  }
+
+  a {
+    color: var(--md-anchor-color);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  a:hover {
+    text-decoration: underline;
+    color: var(--md-anchor-hover-color);
+  }
+
+  p,
+  blockquote,
+  ul,
+  ol,
+  dl,
+  table,
+  pre {
+    margin: 15px 0;
+  }
+
+  code {
+    font-size: 0.8rem;
+    background: var(--code-bg-color);
+    color: var(--md-code-text-color);
+    border: 1px dashed var(--code-border-color);
+    padding: 0.15rem 0.25rem;
+  }
+
+  pre {
+    background: var(--code-bg-color);
+    border: 1px dashed var(--code-border-color);
+    overflow-x: scroll;
+    padding: 0.5rem;
+    code {
+      border: none;
+      font-size: 0.8rem;
+      font-family: 'Fira Code', monospace;
+      background: var(--code-bg-color);
+      color: var(--md-code-text-color);
+      padding: 0.1rem 0.3rem;
+    }
+  }
+
+  blockquote {
+    border-left: 5px solid var(--md-blockquote-border-color);
+    padding-left: 1rem;
+    opacity: 0.6;
+  }
+
+  ul,
+  ol {
+    padding-left: 30px;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  h1 {
+    border-bottom: 1px solid var(--md-heading-border-color);
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4, h5, h6 {
+    font-size: 1rem;
+    opacity: 0.75;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: bold;
+    line-height: 1.7;
+    margin: 1em 0 15px 0;
+  }
+
+  h1 + p,
+  h2 + p,
+  h3 + p {
+    margin-top: 0.625rem;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  small {
+    font-size: .707em;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  strong {
+    font-weight: 800;
+    color: var(--md-strong-color);
+  }
+}

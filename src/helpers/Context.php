@@ -2,13 +2,12 @@
 
 namespace madebyraygun\componentlibrary\helpers;
 
-use craft\helpers\Json;
 use craft\helpers\ArrayHelper;
+use craft\helpers\Json;
 use craft\helpers\StringHelper;
-use madebyraygun\componentlibrary\helpers\Component;
 
-class Context {
-
+class Context
+{
     private static array $cache = [];
 
     private static array $settingsDefaults = [
@@ -16,9 +15,9 @@ class Context {
         'hidden' => false,
     ];
 
-    public static function parseConfigParts(string $name): object {
-        if (isset(Context::$cache[$name]))
-        {
+    public static function parseConfigParts(string $name): object
+    {
+        if (isset(Context::$cache[$name])) {
             return Context::$cache[$name];
         }
         $settings = self::getComponentSettings($name);
@@ -31,7 +30,8 @@ class Context {
         return $result;
     }
 
-    public static function getVariants(string $name, bool $virtualOnly = false): array {
+    public static function getVariants(string $name, bool $virtualOnly = false): array
+    {
         $parts = Component::parseComponentParts($name);
         if ($parts->isVariant) {
             return [];
@@ -42,7 +42,7 @@ class Context {
         $info = pathinfo($name);
         foreach ($variants as $variant) {
             if (!empty($variant['name'])) {
-                $variantName = Component::normalizeName($variant['name']);
+                $variantName = Common::normalizeName($variant['name']);
                 $fullVariantName = $info['dirname'] . '--' . $variantName;
                 $variantParts = Component::parseComponentParts($fullVariantName);
                 $shouldInsert = $virtualOnly == false || $variantParts->isVirtual;
@@ -54,7 +54,8 @@ class Context {
         return $results;
     }
 
-    public static function getComponentConfig(string $name): array {
+    public static function getComponentConfig(string $name): array
+    {
         $parts = Component::parseComponentParts($name);
         $config = self::readConfigFile($name);
         $config['context'] = $config['context'] ?? [];
@@ -73,21 +74,24 @@ class Context {
         return $config;
     }
 
-    public static function getVariantInConfig(array $config, string $name): array|null {
-        $variantNames = array_column($config['variants'], 'name');
-        $variantNames = array_map([Component::class, 'normalizeName'], $variantNames);
+    public static function getVariantInConfig(array $config, string $name): array|null
+    {
+        $variantNames = array_column($config['variants'] ?? [], 'name');
+        $variantNames = array_map([Common::class, 'normalizeName'], $variantNames);
         $idx = array_search($name, $variantNames);
         return $idx !== false ? $config['variants'][$idx] : null;
     }
 
-    public static function getComponentContext(string $name): array {
+    public static function getComponentContext(string $name): array
+    {
         $config = self::getComponentConfig($name);
         $context = $config['context'];
         $result = self::resolveContextReferences($context);
         return $result;
     }
 
-    public static function getComponentSettings(string $name): object {
+    public static function getComponentSettings(string $name): object
+    {
         $config = self::getComponentConfig($name);
         unset($config['context']);
         unset($config['variants']);
@@ -95,7 +99,8 @@ class Context {
         return (object)$settings;
     }
 
-    public static function readConfigFile(string $name): array {
+    public static function readConfigFile(string $name): array
+    {
         $parts = Component::parseComponentParts($name);
         $config = [];
         if (file_exists($parts->configPath)) {
@@ -106,7 +111,7 @@ class Context {
                 } catch (\Throwable $e) {
                     $config = [];
                 }
-            } else if ($parts->configType === 'json') {
+            } elseif ($parts->configType === 'json') {
                 $json = Json::decode(file_get_contents($parts->configPath));
                 $config = is_array($json) ? $json : [];
             }
@@ -114,7 +119,8 @@ class Context {
         return $config;
     }
 
-    public static function resolveContextReferences(array $context): array {
+    public static function resolveContextReferences(array $context): array
+    {
         $resolved = [];
         foreach ($context as $key => $value) {
             if (is_string($value) && strpos($value, '@') === 0) {
