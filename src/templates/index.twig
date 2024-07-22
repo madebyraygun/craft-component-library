@@ -1,16 +1,16 @@
-{% extends "component-library/_layouts/_library" %}
+{% extends "_layouts/_library" %}
 {% block body %}
   {% set toolbarClass = toolbar|default(false) ? '' : 'toolbar-hidden' %}
   <div class="container js-loading {{toolbarClass}}">
     <nav id="split-sidebar" class="sidebar">
-      {% include 'component-library/_partials/sidebar' %}
+      {% include '_partials/sidebar' %}
     </nav>
     <main id="split-content">
       <div id="split-preview" class="preview">
-        {% include 'component-library/_partials/preview' %}
+        {% include '_partials/preview' %}
       </div>
       <div id="split-toolbar" class="toolbar">
-        {% include 'component-library/_partials/toolbar' %}
+        {% include '_partials/toolbar' %}
       </div>
     </main>
   </div>

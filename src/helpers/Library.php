@@ -175,14 +175,12 @@ class Library
 
     public static function getPagePreviewUrl(string $handle): string
     {
-        $siteUrl = UrlHelper::siteUrl('/component-library');
-        return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
+        return Common::libraryUrl('/', ['name' => $handle]);
     }
 
     public static function getPartialUrl(string $handle, string $partial): string
     {
-        $siteUrl = UrlHelper::siteUrl('/component-library/partials/' . $partial);
-        return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
+        return Common::libraryUrl('partials/' . $partial, ['name' => $handle]);
     }
 
     public static function getIsolatedPreviewUrl(string|null $handle): string
@@ -194,8 +192,7 @@ class Library
         if (!empty($handle) && !Loader::handleExists($handle)) {
             $template = 'not-found';
         }
-        $siteUrl = UrlHelper::siteUrl('/component-library/' . $template);
-        return UrlHelper::urlWithParams($siteUrl, ['name' => $handle]);
+        return Common::libraryUrl($template, ['name' => $handle]);
     }
 
     public static function getComponentPath(string $path): string
