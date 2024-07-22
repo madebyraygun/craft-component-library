@@ -1,5 +1,5 @@
 {% for sidebar in sidebars %}
   {% if sidebar|default(null) and sidebar.nodes|length > 0 %}
-    {% include 'component-library/controls/explorer-tree.twig' with sidebar %}
+    {% include 'controls/explorer-tree.twig' with sidebar %}
   {% endif %}
 {% endfor %}

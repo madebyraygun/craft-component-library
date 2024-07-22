@@ -3,14 +3,12 @@
 namespace madebyraygun\componentlibrary\controllers;
 
 use Craft;
-use craft\web\Controller;
 use craft\web\Response;
-use craft\helpers\UrlHelper;
-use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\helpers\Loader;
+use madebyraygun\componentlibrary\helpers\Common;
 use madebyraygun\componentlibrary\Plugin;
 
-class PreviewController extends Controller
+class PreviewController extends BaseController
 {
     protected array|int|bool $allowAnonymous = true;
 
@@ -36,16 +34,14 @@ class PreviewController extends Controller
     {
         $provider = Plugin::$plugin->componentProvider;
         $context = $provider->getDocumentContext($name) ?? [];
-        $view = Craft::$app->getView();
-        $view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
-        $libraryUrl = UrlHelper::siteUrl('/component-library');
-        $html = $view->renderTemplate('component-library/_partials/document', [
+        $libraryUrl = Common::libraryUrl('/');
+        $html = $this->renderPluginView('_partials/document', [
             ...$context,
             'distUrl' => $distUrl,
             'libraryUrl' => $libraryUrl,
         ]);
-        return $this->renderTemplate('component-library/_previews/default', [
+        return $this->renderPluginTemplate('_previews/default', [
             'yield' => $html,
         ]);
     }
@@ -55,8 +51,7 @@ class PreviewController extends Controller
         $provider = Plugin::$plugin->componentProvider;
         $settings = $provider->getComponentSettings($name);
         $context = $provider->getComponentContext($name) ?? [];
-        $view = Craft::$app->getView();
-        $html = $view->renderTemplate($name, $context);
+        $html = $this->renderPluginView($name, $context);
         $previewContext = $provider->getComponentContext($settings->preview);
         // validate $settings->preview or default to 'component-library/_previews/default'
         return $this->renderTemplate($settings->preview, [

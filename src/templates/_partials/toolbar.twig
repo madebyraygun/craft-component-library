@@ -1,28 +1,28 @@
-{% include 'component-library/controls/tabs.twig' with {
+{% include 'controls/tabs.twig' with {
   tabs: [
     {
       id: 'view',
       label: 'View',
       visible: true,
-      content: include('component-library/_partials/toolbar_view.twig')
+      content: include('_partials/toolbar_view.twig')
     },
     {
       id: 'context',
       label: 'Context',
       visible: true,
-      content: include('component-library/_partials/toolbar_context.twig')
+      content: include('_partials/toolbar_context.twig')
     },
     {
       id: 'info',
       label: 'Info',
       visible: true,
-      content: include('component-library/_partials/toolbar_info.twig')
+      content: include('_partials/toolbar_info.twig')
     },
     {
       id: 'docs',
       visible: toolbar.contents.doc_contents|default('')|length > 0,
       label: 'Docs',
-      content: include('component-library/_partials/toolbar_docs.twig')
+      content: include('_partials/toolbar_docs.twig')
     }
   ]
 } %}

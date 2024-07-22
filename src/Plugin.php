@@ -78,16 +78,21 @@ class Plugin extends BasePlugin
                 }
             });
 
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function(RegisterUrlRulesEvent $event) {
-                $event->rules['component-library/preview'] = 'component-library/preview';
-                $event->rules['component-library/partials/toolbar'] = 'component-library/browser/partial-toolbar';
-                $event->rules['component-library/partials/preview'] = 'component-library/browser/partial-preview';
-                $event->rules['component-library'] = 'component-library/browser';
-            }
-        );
+        if ($this->getSettings()->browserEnabled()) {
+            $path = $this->getSettings()->browserPath();
+            Event::on(
+                UrlManager::class,
+                UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+                function(RegisterUrlRulesEvent $event) use ($path) {
+                    $event->rules[$path . '/preview'] = 'component-library/preview';
+                    $event->rules[$path . '/partials/toolbar'] = 'component-library/browser/partial-toolbar';
+                    $event->rules[$path . '/partials/preview'] = 'component-library/browser/partial-preview';
+                    $event->rules[$path . '/welcome'] = 'component-library/browser/welcome';
+                    $event->rules[$path . '/not-found'] = 'component-library/browser/not-found';
+                    $event->rules[$path] = 'component-library/browser';
+                }
+            );
+        }
 
         Event::on(
             CraftVariable::class,
@@ -100,10 +105,6 @@ class Plugin extends BasePlugin
                 ]);
             }
         );
-
-        Event::on(View::class, View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS, function(Event $event) {
-            $event->roots['component-library'] = Craft::getAlias('@madebyraygun/component-library/templates');
-        });
     }
 
     protected function createSettingsModel(): ?Model

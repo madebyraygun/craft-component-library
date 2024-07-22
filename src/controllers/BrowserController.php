@@ -3,29 +3,24 @@
 namespace madebyraygun\componentlibrary\controllers;
 
 use Craft;
-use craft\helpers\UrlHelper;
-use craft\web\Controller;
 use craft\web\Response;
-use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\helpers\Library;
-use madebyraygun\componentlibrary\helpers\Loader;
-
-class BrowserController extends Controller
+use madebyraygun\componentlibrary\Plugin;
+use madebyraygun\componentlibrary\helpers\Common;
+class BrowserController extends BaseController
 {
     protected array|int|bool $allowAnonymous = true;
 
     public function actionIndex(): Response
     {
-        // read name parameter from the request
         $name = Craft::$app->request->getParam('name');
-        $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
-        $libraryUrl = UrlHelper::siteUrl('/component-library');
-        $toolbarContext = Library::getUiToolbarContext($name);
+        $libraryUrl = Common::libraryUrl('/');
+        $toolbarContext = Library::getUiToolbarContext($name ?? '');
         $componentsSidebar = Library::scanLibraryPath();
         $documentsSidebar = Library::scanDocumentsPath();
-        return $this->renderTemplate('component-library/index', [
+        return $this->renderPluginTemplate('index', [
             'sidebars' => [
                 $componentsSidebar,
                 $documentsSidebar,
@@ -40,7 +35,7 @@ class BrowserController extends Controller
     public function actionPartialToolbar(): Response
     {
         $name = Craft::$app->request->getParam('name');
-        return $this->renderTemplate('component-library/_partials/toolbar', [
+        return $this->renderPluginTemplate('_partials/toolbar', [
             'toolbar' => Library::getUiToolbarContext($name ?? ''),
         ]);
     }
@@ -49,18 +44,18 @@ class BrowserController extends Controller
     {
         $name = Craft::$app->request->getParam('name');
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
-        return $this->renderTemplate('component-library/_partials/preview', [
+        return $this->renderPluginTemplate('_partials/preview', [
             'iframeUrl' => $iframeUrl,
         ]);
     }
 
     public function actionNotFound(): Response
     {
-        return $this->renderTemplate('component-library/not-found');
+        return $this->renderPluginTemplate('not-found');
     }
 
     public function actionWelcome(): Response
     {
-        return $this->renderTemplate('component-library/welcome');
+        return $this->renderPluginTemplate('welcome');
     }
 }

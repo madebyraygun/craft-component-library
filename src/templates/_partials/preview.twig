@@ -1,17 +1,17 @@
 <div class="preview__header">
   <h2>Preview</h2>
   <div class="header__actions">
-    {% include 'component-library/controls/button' with {
+    {% include 'controls/button' with {
       icon: 'open_in_new',
       href: iframeUrl,
       target: '_blank'
     } %}
-    {% include 'component-library/controls/button' with {
+    {% include 'controls/button' with {
       class: 'preview__enter-full-btn',
       icon: 'fullscreen',
       href: '#fullscreen'
     } %}
-    {% include 'component-library/controls/button' with {
+    {% include 'controls/button' with {
       class: 'preview__exit-full-btn',
       icon: 'fullscreen_exit',
       href: '#fullscreen-exit'

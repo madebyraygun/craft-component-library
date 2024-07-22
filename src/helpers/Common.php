@@ -4,6 +4,7 @@ namespace madebyraygun\componentlibrary\helpers;
 
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
+use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\Plugin;
 
 class Common
@@ -13,6 +14,13 @@ class Common
         $name = strtolower($name);
         $name = StringHelper::dasherize($name);
         return $name;
+    }
+
+    public static function libraryUrl(string $path = '', array|string|null $params = null): string
+    {
+        $settings = Plugin::$plugin->getSettings();
+        $baseBath = $settings->browserPath();
+        return UrlHelper::siteUrl(trim($baseBath, '/') . '/' . trim($path, '/'), $params);
     }
 
     public static function friendlyNameFromHandle(string $handle): string
