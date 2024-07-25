@@ -5,7 +5,7 @@ export class ExplorerTree extends LibraryComponent {
     super();
     this.root = rootElement;
     this.directories = this.root.querySelectorAll('.list__item--directory');
-    this.files = this.root.querySelectorAll('.list__item--file');
+    this.items = this.root.querySelectorAll('.list__item--file, .list__item--component, .list__item--document');
     this.bind();
   }
 
@@ -16,22 +16,21 @@ export class ExplorerTree extends LibraryComponent {
 
   bindNodeEvents() {
 
-    this.app.events.addEventListener('explorer-tree:file-click', () => {
-      this.selectNode(null, 'file');
+    this.app.events.addEventListener('explorer-tree:item-click', () => {
+      this.selectNode(null, 'item');
     });
 
     this.directories.forEach(directory => {
       directory.addEventListener('click', (e) => {
         e.stopPropagation();
-        // this.selectNode(null, 'file');
         this.selectNode(directory, 'directory');
       });
     });
 
-    this.files.forEach(file => {
-      file.addEventListener('click', (e) => {
-        this.app.events.dispatchEvent('explorer-tree:file-click')
-        this.selectNode(file, 'file');
+    this.items.forEach(item => {
+      item.addEventListener('click', (e) => {
+        this.app.events.dispatchEvent('explorer-tree:item-click')
+        this.selectNode(item, 'item');
         this.selectNode(null, 'directory');
       }, { capture: true });
     });
@@ -58,7 +57,7 @@ export class ExplorerTree extends LibraryComponent {
   }
 
   selectNode(itemElement, type = 'directory') {
-    const nodes = type === 'directory' ? this.directories : this.files;
+    const nodes = type === 'directory' ? this.directories : this.items;
     nodes.forEach(dir => dir.classList.remove('list__item--selected'));
     if (itemElement) {
       itemElement.classList.add('list__item--selected');
