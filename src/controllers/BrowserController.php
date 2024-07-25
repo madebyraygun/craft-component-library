@@ -18,12 +18,16 @@ class BrowserController extends BaseController
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
         $libraryUrl = Common::libraryUrl('/');
         $toolbarContext = Library::getUiToolbarContext($name ?? '');
-        $componentsSidebar = Library::scanLibraryPath();
-        $documentsSidebar = Library::scanDocumentsPath();
+        $componentsTree = Library::getLibraryTree();
+        $documentsTree = Library::getDocumentsTree();
+        $searchIndex = Library::getSearchIndexFromTrees([$componentsTree, $documentsTree]);
         return $this->renderPluginTemplate('index', [
             'sidebars' => [
-                $componentsSidebar,
-                $documentsSidebar,
+                $componentsTree,
+                $documentsTree,
+            ],
+            'search_bar' => [
+                'index' => $searchIndex,
             ],
             'toolbar' => $toolbarContext,
             'iframeUrl' => $iframeUrl,
