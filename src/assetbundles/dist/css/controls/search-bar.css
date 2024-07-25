@@ -38,6 +38,17 @@
     background: var(--search-bar-results-bg-color);
   }
 
+  .search-bar__not-found {
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: var(--search-bar-text-color);
+    i {
+      font-size: 0.75rem;
+      color: var(--search-bar-placeholder-color);
+    }
+  }
+
   .search-bar__results-item {
     &:hover {
       background: var(--search-bar-bg-color);
