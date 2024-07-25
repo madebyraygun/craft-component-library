@@ -1,4 +1,25 @@
 <div class="search-bar">
-  <span class="search-bar__icon material-symbols-outlined">search</span>
-  <input type="text" class="search-bar__input" placeholder="Find Components">
+  <script type="application/json" id="search-index">
+  {{ search_bar.index|json_encode|raw }}
+  </script>
+  <div class="search-bar__field">
+    <span class="search-bar__icon material-symbols-outlined">search</span>
+    <input type="text" class="search-bar__input" placeholder="Find Components">
+  </div>
+  <ul class="search-bar__results-list">
+    <li class="search-bar__results-item">
+      <button>
+        <span class="item__icon material-symbols-outlined icon-file">draft</span>
+        <div class="item__name">A very long Component Name</div>
+        <span class="item__path">Components / Button</span>
+      </button>
+    </li>
+    <li class="search-bar__results-item">
+      <button>
+        <span class="item__icon material-symbols-outlined">draft</span>
+        <div class="item__name">Component Name</div>
+        <div class="item__path">Components / Button</div>
+      </button>
+    </li>
+  </ul>
 </div>

@@ -1,29 +1,76 @@
 .search-bar {
-  position: relative;
-  display: flex;
-  margin: 0.5rem;
-  align-items: center;
 
-  .search-bar__icon {
-    position: absolute;
-    pointer-events: none;
-    color: var(--search-bar-icon-color);
-    font-size: 1.075rem;
-    left: 0.5rem;
-  }
-  .search-bar__input {
-    font-size: 0.85rem;
-    width: 100%;
-    padding-inline: 2rem 1rem;
-    padding-block: 0.4rem;
-    background-color: var(--search-bar-bg-color);
-    color: var(--search-bar-text-color);
-    border: 1px solid var(--search-bar-border-color);
-    &::placeholder {
-      color: var(--search-bar-placeholder-color);
+  .search-bar__field {
+    margin: 0.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .search-bar__icon {
+      position: absolute;
+      pointer-events: none;
+      color: var(--search-bar-icon-color);
+      font-size: 1.075rem;
+      left: 0.5rem;
     }
-    &:focus {
-      border-color: var(--search-bar-focus-border-color);
+    .search-bar__input {
+      font-size: 0.85rem;
+      width: 100%;
+      padding-inline: 2rem 1rem;
+      padding-block: 0.4rem;
+      background-color: var(--search-bar-bg-color);
+      color: var(--search-bar-text-color);
+      border: 1px solid var(--search-bar-border-color);
+      &::placeholder {
+        color: var(--search-bar-placeholder-color);
+      }
+      &:focus {
+        border-color: var(--search-bar-focus-border-color);
+      }
     }
   }
+
+  .search-bar__results-list {
+    display: flex;
+    margin-block: 0.25rem;
+
+    flex-direction: column;
+    background: var(--search-bar-results-bg-color);
+  }
+
+  .search-bar__results-item {
+    &:hover {
+      background: var(--search-bar-bg-color);
+    }
+    button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: var(--search-bar-text-color);
+      cursor: pointer;
+
+      .item__icon {
+        font-size: 1rem;
+        color: var(--search-bar-icon-color);
+        margin-right: 0.5rem;
+        grid-row: 1 / -1;
+      }
+
+      .item__name {
+        grid-row: 1;
+        grid-column: 2;
+      }
+
+      .item__path {
+        grid-row: 2;
+        grid-column: 2;
+        font-size: 0.75rem;
+        color: var(--search-bar-placeholder-color);
+      }
+    }
+  }
+
 }
