@@ -10,11 +10,10 @@ class Document
 
     public static function parseDocumentParts(string $name): object
     {
-        $name = strtolower($name);
+        $name = Common::collapseHandlePath($name);
         if (isset(Document::$cache[$name])) {
             return Document::$cache[$name];
         }
-
         $friendlyName = Common::friendlyNameFromHandle($name);
         $friendlyName = preg_replace('/^index$/i', 'Overview', $friendlyName);
         $documentPath = Common::resolveHandlePath($name, 'md');
@@ -22,6 +21,7 @@ class Document
         $result = (object)[
             'valid' => $fileInfo['extension'] === 'md' && file_exists($documentPath),
             'name' => $friendlyName,
+            'includeName' => $name,
             'docPath' => $documentPath,
         ];
         Document::$cache[$name] = $result;

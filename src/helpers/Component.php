@@ -8,7 +8,7 @@ class Component
 
     public static function parseComponentParts(string $name): object
     {
-        $name = strtolower($name);
+        $name = Common::collapseHandlePath($name);
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
         }

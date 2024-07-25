@@ -56,11 +56,14 @@ class Library
     {
         $nodes = [];
         foreach ($tree['nodes'] as $node) {
-            $nodes[] = [
-                'name' => $node['name'],
-                // 'handle' => $node['handle'],
-                'path' => $node['path'],
-            ];
+            if ($node['type'] !== 'directory') {
+                $nodes[] = [
+                    'name' => $node['includeName'],
+                    'type' => $node['type'],
+                    'icon' => $node['icon'] ?? '',
+                    'path' => $node['path'],
+                ];
+            }
             $nodes = array_merge($nodes, self::flattenTree($node));
         }
         return $nodes;
@@ -137,6 +140,7 @@ class Library
 
     public static function formatFileEntry(string $handlePath, string $currentName): array
     {
+        $handlePath = Common::collapseHandlePath($handlePath);
         $fields = [];
         if (Loader::componentExists($handlePath)) {
             $component = Component::parseComponentParts($handlePath);
@@ -147,6 +151,7 @@ class Library
                 'name' => $context->settings->title,
                 'hidden' => $context->settings->hidden,
                 'path' => $component->templatePath,
+                'includeName' => $component->includeName,
                 'context' => $context,
                 'partial_toolbar_url' => self::getPartialUrl($handlePath, 'toolbar'),
                 'is_variant' => $component->isVariant,
@@ -159,6 +164,7 @@ class Library
                 'type' => 'document',
                 'icon' => 'article',
                 'name' => $document->name,
+                'includeName' => '',
                 'hidden' => false,
                 'partial_toolbar_url' => null,
                 'path' => $document->docPath,

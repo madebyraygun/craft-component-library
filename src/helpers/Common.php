@@ -49,6 +49,47 @@ class Common
     }
 
     /**
+     * Collapse a handle path into it's shortest form.
+     * This might be seen as the opposite of what expandComponentPath does.
+     * Additionally it will try to collapse the path into defined aliases.
+     * Example: `@components/button/button.twig` -> `@components/button`
+     * Example: `@components/button/button--variant.twig` -> `@components/button--variant`
+     * @param string $handle
+     * @return string
+     */
+    public static function collapseHandlePath(string $handle): string
+    {
+        $handle = strtolower($handle);
+        // Collapse path into defined aliases
+        $alias = Plugin::$plugin->getSettings()->aliases;
+        foreach ($alias as $key => $value) {
+            if (strpos($handle, $value) === 0) {
+                $handle = str_replace($value, $key, $handle);
+                break;
+            }
+        }
+
+        // Remove the file extension
+        $path = preg_replace('/\.[^.]+$/', '', $handle);
+        $segments = explode('/', $path);
+        if (count($segments) <= 1) {
+            return $handle;
+        }
+        // Find the parent directory and the component name
+        $parentDir = $segments[count($segments) - 2];
+        $componentName = $segments[count($segments) - 1];
+        $isVariant = strpos($componentName, '--');
+        if ($isVariant) {
+            $componentName = explode('--', $componentName)[0];
+        }
+        if ($componentName === $parentDir) {
+            // Collapse component names
+            array_splice($segments, -2, 1);
+        }
+        return implode('/', $segments);
+    }
+
+    /**
      * Add the default component file if the path ends with a directory name.
      * Example: `path/to/component` -> `path/to/component/component.twig`
      * Example: `path/to/component--variant` -> `path/to/component/component--variant.twig`
