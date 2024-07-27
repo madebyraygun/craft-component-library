@@ -70,13 +70,14 @@
     font-size: 0.85rem;
     color: var(--search-bar-text-color);
     cursor: pointer;
+    line-height: 1.2;
 
     &:hover {
       background: var(--search-bar-bg-color);
     }
 
     .item__icon {
-      font-size: 1rem;
+      font-size: 1.2rem;
       color: var(--search-bar-icon-color);
       margin-right: 0.5rem;
       grid-row: 1 / -1;

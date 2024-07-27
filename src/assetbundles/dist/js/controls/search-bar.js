@@ -62,15 +62,29 @@ export class SearchBar extends LibraryComponent {
   renderResults(results) {
     this.root.classList.toggle('search-bar--results', results.length > 0);
     this.root.classList.toggle('search-bar--no-results', results.length === 0);
+    const resultsElement = this.root.querySelector('.search-bar__results-list');
+    resultsElement.innerHTML = '';
+    results.forEach(result => {
+      const itemElement = this.createItemElement(result.item);
+      resultsElement.appendChild(itemElement);
+    });
+  }
+
+  createElement(tag, classes, content) {
+    const element = document.createElement(tag);
+    element.classList.add(...classes);
+    element.textContent = content;
+    return element;
   }
 
   createItemElement(item) {
     const exists = this.elements.has(item.handle);
     if (!exists) {
-      const itemElement = document.createElement('li');
-      itemElement.classList.add('search-bar__item');
-      itemElement.innerHTML = ``;
-      this.elements.set(item.handle, item);
+      const el = this.createElement('li', ['search-bar__results-item']);
+      el.appendChild(this.createElement('span', ['item__icon', 'material-symbols-outlined', 'icon-file'], item.icon));
+      el.appendChild(this.createElement('div', ['item__name'], item.name));
+      el.appendChild(this.createElement('span', ['item__path'], item.path));
+      this.elements.set(item.handle, el);
     }
     return this.elements.get(item.handle);
   }
