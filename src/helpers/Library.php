@@ -58,7 +58,8 @@ class Library
         foreach ($tree['nodes'] as $node) {
             if ($node['type'] !== 'directory') {
                 $nodes[] = [
-                    'name' => $node['includeName'],
+                    'name' => $node['name'],
+                    'includeName' => $node['includeName'],
                     'type' => $node['type'],
                     'icon' => $node['icon'] ?? '',
                     'path' => $node['path'],
@@ -164,7 +165,7 @@ class Library
                 'type' => 'document',
                 'icon' => 'article',
                 'name' => $document->name,
-                'includeName' => '',
+                'includeName' => $document->includeName,
                 'hidden' => false,
                 'partial_toolbar_url' => null,
                 'path' => $document->docPath,
