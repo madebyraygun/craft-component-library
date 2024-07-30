@@ -83,6 +83,10 @@
       grid-row: 1 / -1;
     }
 
+    .highlight {
+      color: var(--search-bar-highlight-color);
+    }
+
     .item__name {
       grid-row: 1;
       grid-column: 2;

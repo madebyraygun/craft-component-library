@@ -6,8 +6,8 @@ export class SearchBar extends LibraryComponent {
     super();
     this.root = rootElement;
     this.items = this.parseItems();
-    this.elements = new Map();
     this.fuse = this.initFuse();
+    this.elements = new Map();
     this.bindListeners();
   }
 
@@ -15,9 +15,8 @@ export class SearchBar extends LibraryComponent {
     return new Fuse(this.items, {
       keys: ['name', 'path', 'type'],
       includeScore: true,
-      // isCaseSensitive: false,
       includeMatches: true,
-      // threshold: 0.3,
+      threshold: 0.45,
     });
   }
 
@@ -66,6 +65,7 @@ export class SearchBar extends LibraryComponent {
     resultsElement.innerHTML = '';
     results.forEach(result => {
       const itemElement = this.createItemElement(result.item);
+      this.updateElementHighlights(itemElement, result.matches);
       resultsElement.appendChild(itemElement);
     });
   }
@@ -75,6 +75,24 @@ export class SearchBar extends LibraryComponent {
     element.classList.add(...classes);
     element.textContent = content;
     return element;
+  }
+
+  updateElementHighlights(element, matches) {
+    const highlights = element.querySelectorAll('i');
+    highlights.forEach(highlight => highlight.replaceWith(highlight.textContent));
+    matches.forEach(match => {
+      if (match.key === 'type') {
+        return;
+      }
+      const node = element.querySelector(`.item__${match.key}`);
+      const text = node.textContent;
+      match.indices.forEach(([start, end]) => {
+        const highlight = this.createElement('i', ['highlight'], text.substring(start, end + 1));
+        node.textContent = text.substring(0, start);
+        node.appendChild(highlight);
+        node.appendChild(document.createTextNode(text.substring(end + 1)));
+      });
+    });
   }
 
   createItemElement(item) {
