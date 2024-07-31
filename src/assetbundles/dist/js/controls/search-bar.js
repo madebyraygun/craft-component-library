@@ -41,11 +41,12 @@ export class SearchBar extends LibraryComponent {
   bindListeners() {
     const inputElement = this.root.querySelector('.search-bar__input');
     inputElement.addEventListener('input', this.onSearchInput);
+    document.addEventListener('keydown', this.onKeyDown);
   }
 
   onSearchInput = (event) => {
     if (event.target.value === '') {
-      this.hideSearchResults();
+      this.toggleSearchResults(false, false);
       return;
     }
     const query = event.target.value
@@ -55,19 +56,32 @@ export class SearchBar extends LibraryComponent {
 
   onItemClick = (event) => {
     const btn = event.target.closest('button');
+    this.toggleSearchResults(false, false);
     this.app.events.dispatchEvent('explorer-tree:item-select', {
       detail: { handle: btn.getAttribute('data-handle') }
     });
   }
 
-  hideSearchResults() {
-    this.root.classList.remove('search-bar--results');
-    this.root.classList.remove('search-bar--no-results');
+  onKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      this.toggleSearchResults(false, false);
+      this.root.querySelector('.search-bar__input').value = '';
+    } else if (event.key === '/') {
+      this.root.querySelector('.search-bar__input').focus();
+      event.preventDefault();
+    }
+  }
+
+  toggleSearchResults(resultsVisible, notFoundVisible) {
+    this.root.classList.toggle('search-bar--results', resultsVisible);
+    this.root.classList.toggle('search-bar--no-results', notFoundVisible);
+    this.app.events.dispatchEvent('search-bar:results-toggle', {
+      detail: { visible: resultsVisible || notFoundVisible }
+    })
   }
 
   renderResults(results) {
-    this.root.classList.toggle('search-bar--results', results.length > 0);
-    this.root.classList.toggle('search-bar--no-results', results.length === 0);
+    this.toggleSearchResults(results.length > 0, results.length === 0);
     const resultsElement = this.root.querySelector('.search-bar__results-list');
     resultsElement.innerHTML = '';
     results.forEach(result => {
