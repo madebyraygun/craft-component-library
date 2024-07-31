@@ -26,16 +26,17 @@
       {% set selected_class = node.current|default ? 'list__item--selected' : '' %}
       {% set hidden_class = node.hidden ? 'list__item--hidden' : '' %}
       <li class="list__item list__item--{{node.type}} {{selected_class}} {{hidden_class}}">
-        {% if node.type == 'file' %}
+        {% if node.type in ['component', 'document'] %}
           <a
             class="child-spacer"
             data-router-event="component-swap"
+            data-handle="{{node.includeName}}"
             data-preview-url="{{node.isolated_url}}"
             data-partial-toolbar-url="{{node.partial_toolbar_url}}"
             data-partial-preview-url="{{node.partial_preview_url}}"
             href="{{node.page_url}}"
           >
-            <span class="material-symbols-outlined icon-file">draft</span>
+            <span class="material-symbols-outlined icon-file">{{node.icon|default('draft')}}</span>
             {{ node.name }}
           </a>
         {% endif %}

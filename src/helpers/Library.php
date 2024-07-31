@@ -3,14 +3,13 @@
 namespace madebyraygun\componentlibrary\helpers;
 
 use Craft;
-use craft\helpers\FileHelper;
 use craft\helpers\Json;
-use craft\helpers\UrlHelper;
+use craft\helpers\FileHelper;
 use madebyraygun\componentlibrary\Plugin;
 
 class Library
 {
-    public static function scanLibraryPath(): array
+    public static function getLibraryTree(): array
     {
         $settings = Plugin::$plugin->getSettings();
         $name = Craft::$app->request->getParam('name');
@@ -26,7 +25,7 @@ class Library
         ];
     }
 
-    public static function scanDocumentsPath(): array
+    public static function getDocumentsTree(): array
     {
         $name = Craft::$app->request->getParam('name');
         $settings = Plugin::$plugin->getSettings();
@@ -40,6 +39,35 @@ class Library
             'hidden' => false,
             'level' => 0,
         ];
+    }
+
+
+    public static function getSearchIndexFromTrees(array $trees): array
+    {
+        // Flatten trees into a list of nodes with their path and name
+        $nodes = [];
+        foreach ($trees as $tree) {
+            $nodes = array_merge($nodes, self::flattenTree($tree));
+        }
+        return $nodes;
+    }
+
+    public static function flattenTree(array $tree): array
+    {
+        $nodes = [];
+        foreach ($tree['nodes'] as $node) {
+            if ($node['type'] !== 'directory') {
+                $nodes[] = [
+                    'name' => $node['name'],
+                    'includeName' => $node['includeName'],
+                    'type' => $node['type'],
+                    'icon' => $node['icon'] ?? '',
+                    'path' => $node['path'],
+                ];
+            }
+            $nodes = array_merge($nodes, self::flattenTree($node));
+        }
+        return $nodes;
     }
 
     public static function getFilterFunction(array $filter): callable
@@ -113,14 +141,18 @@ class Library
 
     public static function formatFileEntry(string $handlePath, string $currentName): array
     {
+        $handlePath = Common::collapseHandlePath($handlePath);
         $fields = [];
         if (Loader::componentExists($handlePath)) {
             $component = Component::parseComponentParts($handlePath);
             $context = Context::parseConfigParts($handlePath);
             $fields = [
+                'type' => 'component',
+                'icon' => 'deployed_code',
                 'name' => $context->settings->title,
                 'hidden' => $context->settings->hidden,
                 'path' => $component->templatePath,
+                'includeName' => $component->includeName,
                 'context' => $context,
                 'partial_toolbar_url' => self::getPartialUrl($handlePath, 'toolbar'),
                 'is_variant' => $component->isVariant,
@@ -130,7 +162,10 @@ class Library
         if (Loader::documentExists($handlePath)) {
             $document = Document::parseDocumentParts($handlePath);
             $fields = [
+                'type' => 'document',
+                'icon' => 'article',
                 'name' => $document->name,
+                'includeName' => $document->includeName,
                 'hidden' => false,
                 'partial_toolbar_url' => null,
                 'path' => $document->docPath,
@@ -143,11 +178,9 @@ class Library
         return [
             ...$fields,
             'current' => $currentName == $handlePath,
-            'handle' => $handlePath,
             'page_url' => $pagePreviewUrl,
             'partial_preview_url' => $partialPreviewUrl,
             'isolated_url' => $isolatedPreviewUrl,
-            'type' => 'file',
             'nodes' => [],
         ];
     }

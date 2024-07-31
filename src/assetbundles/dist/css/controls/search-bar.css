@@ -1,0 +1,123 @@
+.search-bar {
+  position: relative;
+
+  &.search-bar--no-results {
+    .search-bar__not-found {
+      display: block;
+    }
+  }
+
+  &.search-bar--results {
+    .search-bar__results-list {
+      display: flex;
+    }
+  }
+
+  .search-bar__hot-key {
+    user-select: none;
+    pointer-events: none;
+    position: absolute;
+    right: 0.5rem;
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+    background: #303030;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: #5c5c5c;
+    font-size: 0.65rem;
+    padding-inline: 0.5rem;
+  }
+
+  .search-bar__field {
+    margin: 0.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .search-bar__icon {
+      position: absolute;
+      pointer-events: none;
+      color: var(--search-bar-icon-color);
+      font-size: 1.075rem;
+      left: 0.5rem;
+    }
+    .search-bar__input {
+      font-size: 0.85rem;
+      width: 100%;
+      padding-inline: 2rem 1rem;
+      padding-block: 0.4rem;
+      background-color: var(--search-bar-bg-color);
+      color: var(--search-bar-text-color);
+      border: 1px solid var(--search-bar-border-color);
+      &::placeholder {
+        color: var(--search-bar-placeholder-color);
+      }
+      &:focus {
+        border-color: var(--search-bar-focus-border-color);
+      }
+    }
+  }
+
+  .search-bar__results-list {
+    display: none;
+    margin-block: 0.25rem;
+    flex-direction: column;
+    background: var(--search-bar-results-bg-color);
+  }
+
+  .search-bar__not-found {
+    display: none;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    color: var(--search-bar-text-color);
+    i {
+      font-size: 0.75rem;
+      color: var(--search-bar-placeholder-color);
+    }
+  }
+
+  .search-bar__results-item {
+    .item__button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: var(--search-bar-text-color);
+      cursor: pointer;
+      line-height: 1.2;
+      text-align: left;
+      &:hover, &.active, &:focus {
+        background: var(--search-bar-bg-color);
+      }
+    }
+
+    .item__icon {
+      font-size: 1.2rem;
+      color: var(--search-bar-icon-color);
+      margin-right: 0.5rem;
+      grid-row: 1 / -1;
+    }
+
+    .highlight {
+      color: var(--search-bar-highlight-color);
+    }
+
+    .item__name {
+      grid-row: 1;
+      grid-column: 2;
+    }
+
+    .item__path {
+      grid-row: 2;
+      grid-column: 2;
+      font-size: 0.75rem;
+      color: var(--search-bar-placeholder-color);
+    }
+  }
+}

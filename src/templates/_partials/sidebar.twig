@@ -1,3 +1,4 @@
+{% include 'controls/search-bar.twig' with search_bar %}
 {% for sidebar in sidebars %}
   {% if sidebar|default(null) and sidebar.nodes|length > 0 %}
     {% include 'controls/explorer-tree.twig' with sidebar %}

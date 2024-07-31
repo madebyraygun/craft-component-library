@@ -1,0 +1,16 @@
+<div class="search-bar">
+  <script type="application/json" id="search-index">
+  {{ search_bar.index|json_encode|raw }}
+  </script>
+  <div class="search-bar__field">
+    <span class="search-bar__icon material-symbols-outlined">search</span>
+    <input type="text" class="search-bar__input" placeholder="Find Components">
+    <span class="search-bar__hot-key">/</span>
+  </div>
+  <div class="search-bar__not-found">
+    <p>No components found</p>
+    <i>Find components by name or path</i>
+  </div>
+  <ul class="search-bar__results-list">
+  </ul>
+</div>

@@ -20,6 +20,7 @@
 
   &[open] {
     &::after {
+      transition: opacity 0.15s ease-in-out;
       content: '';
       display: block;
       position: absolute;
@@ -28,6 +29,10 @@
       width: 1px;
       left: calc(var(--level) * 16px + 9px);
       top: 24px;
+      opacity: 0;
+    }
+    &:hover::after {
+      opacity: 1;
     }
 
     > summary {
@@ -136,7 +141,9 @@
         }
       }
 
-      &.list__item--file {
+      &.list__item--file,
+      &.list__item--component,
+      &.list__item--document {
         &.list__item--selected {
           & > a {
             color: var(--tree-file-selected-text-color);
