@@ -63,11 +63,12 @@ export class SearchBar extends LibraryComponent {
   }
 
   onKeyDown = (event) => {
+    const input = this.root.querySelector('.search-bar__input');
     if (event.key === 'Escape') {
       this.toggleSearchResults(false, false);
-      this.root.querySelector('.search-bar__input').value = '';
+      input.value = '';
     } else if (event.key === '/') {
-      this.root.querySelector('.search-bar__input').focus();
+      input.focus();
       event.preventDefault();
     }
   }
