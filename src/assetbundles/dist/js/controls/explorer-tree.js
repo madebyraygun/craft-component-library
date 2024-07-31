@@ -79,7 +79,7 @@ export class ExplorerTree extends LibraryComponent {
   selectNodeByHandle(handle) {
     const itemElement = this.root.querySelector(`[data-handle="${handle}"]`);
     if (itemElement) {
-      this.toggleExpand(false);
+      itemElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       this.expandNodeDetails(itemElement);
       itemElement.click();
     }
