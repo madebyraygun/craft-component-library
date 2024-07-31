@@ -20,6 +20,10 @@ export class ExplorerTree extends LibraryComponent {
       this.selectNode(null, 'item');
     });
 
+    this.app.events.addEventListener('explorer-tree:item-select', (event) => {
+      this.selectNodeByHandle(event.detail.handle);
+    });
+
     this.directories.forEach(directory => {
       directory.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -61,6 +65,23 @@ export class ExplorerTree extends LibraryComponent {
     nodes.forEach(dir => dir.classList.remove('list__item--selected'));
     if (itemElement) {
       itemElement.classList.add('list__item--selected');
+    }
+  }
+
+  expandNodeDetails(itemElement) {
+    const details = itemElement.parentElement.closest('details.explorer-tree');
+    if (details) {
+      details.open = true;
+      this.expandNodeDetails(details);
+    }
+  }
+
+  selectNodeByHandle(handle) {
+    const itemElement = this.root.querySelector(`[data-handle="${handle}"]`);
+    if (itemElement) {
+      this.toggleExpand(false);
+      this.expandNodeDetails(itemElement);
+      itemElement.click();
     }
   }
 

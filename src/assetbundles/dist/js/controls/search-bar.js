@@ -53,6 +53,13 @@ export class SearchBar extends LibraryComponent {
     this.renderResults(results);
   }
 
+  onItemClick = (event) => {
+    const btn = event.target.closest('button');
+    this.app.events.dispatchEvent('explorer-tree:item-select', {
+      detail: { handle: btn.getAttribute('data-handle') }
+    });
+  }
+
   hideSearchResults() {
     this.root.classList.remove('search-bar--results');
     this.root.classList.remove('search-bar--no-results');
@@ -65,6 +72,8 @@ export class SearchBar extends LibraryComponent {
     resultsElement.innerHTML = '';
     results.forEach(result => {
       const itemElement = this.createItemElement(result.item);
+      itemElement.removeEventListener('click', this.onItemClick);
+      itemElement.addEventListener('click', this.onItemClick);
       this.updateElementHighlights(itemElement, result.matches);
       resultsElement.appendChild(itemElement);
     });
@@ -99,9 +108,12 @@ export class SearchBar extends LibraryComponent {
     const exists = this.elements.has(item.handle);
     if (!exists) {
       const el = this.createElement('li', ['search-bar__results-item']);
-      el.appendChild(this.createElement('span', ['item__icon', 'material-symbols-outlined', 'icon-file'], item.icon));
-      el.appendChild(this.createElement('div', ['item__name'], item.name));
-      el.appendChild(this.createElement('span', ['item__path'], item.path));
+      const btn = this.createElement('button', ['item__button']);
+      btn.setAttribute('data-handle', item.handle);
+      el.appendChild(btn);
+      btn.appendChild(this.createElement('span', ['item__icon', 'material-symbols-outlined', 'icon-file'], item.icon));
+      btn.appendChild(this.createElement('div', ['item__name'], item.name));
+      btn.appendChild(this.createElement('span', ['item__path'], item.path));
       this.elements.set(item.handle, el);
     }
     return this.elements.get(item.handle);

@@ -62,18 +62,20 @@
   }
 
   .search-bar__results-item {
-    width: 100%;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    color: var(--search-bar-text-color);
-    cursor: pointer;
-    line-height: 1.2;
-
-    &:hover {
-      background: var(--search-bar-bg-color);
+    .item__button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      color: var(--search-bar-text-color);
+      cursor: pointer;
+      line-height: 1.2;
+      text-align: left;
+      &:hover, &.active, &:focus {
+        background: var(--search-bar-bg-color);
+      }
     }
 
     .item__icon {
