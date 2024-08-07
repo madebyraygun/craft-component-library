@@ -53,6 +53,14 @@ class BrowserController extends BaseController
         ]);
     }
 
+    public function actionIcon(): Response
+    {
+        $iconPath = Craft::getAlias('@madebyraygun/componentlibrary/icon.svg');
+        $icon = file_get_contents($iconPath);
+        Craft::$app->response->headers->set('Content-Type', 'image/svg+xml');
+        return $this->asRaw($icon);
+    }
+
     public function actionNotFound(): Response
     {
         return $this->renderPluginTemplate('not-found');
