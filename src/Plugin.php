@@ -89,6 +89,7 @@ class Plugin extends BasePlugin
                     $event->rules[$path . '/partials/preview'] = 'component-library/browser/partial-preview';
                     $event->rules[$path . '/welcome'] = 'component-library/browser/welcome';
                     $event->rules[$path . '/not-found'] = 'component-library/browser/not-found';
+                    $event->rules[$path . '/icon.svg'] = 'component-library/browser/icon';
                     $event->rules[$path] = 'component-library/browser';
                 }
             );
