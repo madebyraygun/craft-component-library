@@ -1,0 +1,50 @@
+.page {
+  display: flex;
+  padding: 2rem;
+  height: 100%;
+  width: 100%;
+  .page__inner {
+    display: flex;
+    padding: 4rem;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .page__error-emoji {
+    font-size: 5rem;
+    opacity: 0.75;
+    margin: 1rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+    opacity: 0.75;
+  }
+  h3 {
+    font-size: 1.25rem;
+    opacity: 0.75;
+  }
+
+  &.page--welcome {
+    .page__inner {
+      display: grid;
+      max-width: 52rem;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 100%;
+      grid-gap: 2rem;
+      margin: auto;
+      .page__heading {
+        grid-column: 1 / -1;
+      }
+
+      .page__recent, .page__start {
+        height: 100%;
+      }
+    }
+  }
+}
