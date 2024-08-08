@@ -1,1 +1,25 @@
-Welcome!
+{% extends "_layouts/_library" %}
+{% block body %}
+  <section class="page page--welcome">
+    <div class="page__inner">
+      <div class="page__heading">
+        <h1>{{currentSite.name}}</h1>
+        <h2>Component Library</h2>
+      </div>
+      <div class="page__recent">
+        <h3>Recent</h3>
+        <ul>
+          <li><span>Name</span> @component/name</li>
+        </ul>
+      </div>
+      <div class="page__start">
+        <h3>Getting started</h3>
+        <p>Use the sidebar to navigate the component library</p>
+        <p>See the official <a href="#docs">documentation</a> to learn more.</p>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+{% block bodyScripts %}
+  {# <script type="module" src="{{distUrl}}/js/not-found.js"></script> #}
+{% endblock %}

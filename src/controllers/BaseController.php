@@ -7,6 +7,7 @@ use craft\web\Controller;
 use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\Plugin;
+use madebyraygun\componentlibrary\helpers\Common;
 
 class BaseController extends Controller
 {
@@ -29,6 +30,12 @@ class BaseController extends Controller
     public function renderPluginTemplate(string $template, array $variables = [], ?string $templateMode = null): Response
     {
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
+        $libraryUrl = Common::libraryUrl('/');
+        $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
+        $variables = array_merge($variables, [
+            'libraryUrl' => $libraryUrl,
+            'distUrl' => $distUrl,
+        ]);
         $this->view->setTemplatesPath(Craft::getAlias($this->pluginTemplatePath));
         return $this->renderTemplate($template, $variables, $templateMode);
     }
