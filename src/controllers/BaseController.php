@@ -36,7 +36,7 @@ class BaseController extends Controller
         $result = [
             'empty' => empty($handle),
             'exists' => $exists,
-            'includeName' => $parts->includeName,
+            'handle' => $parts->includeName,
             'type' => $parts->type,
             'name' => $parts->name,
             'icon' => $parts->icon,
