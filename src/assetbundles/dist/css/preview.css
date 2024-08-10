@@ -13,6 +13,18 @@
     align-items: center;
     padding: 0.5rem 1rem;
     grid-template-columns: 1fr 1fr;
+    .header__heading {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      .heading__name {
+        text-transform: capitalize;
+        font-weight: 600;
+      }
+      .heading__handle {
+        opacity: 0.75;
+      }
+    }
     .header__actions {
       justify-self: flex-end;
     }
