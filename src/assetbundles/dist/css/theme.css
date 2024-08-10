@@ -2,6 +2,8 @@
   /* General */
   --bg-color: #2f2f2f;
   --text-color: #fff;
+  --anchor-color: #4eace9;
+  --anchor-hover-color: #b8e3ff;
   --split-gutter-color: #272626;
   --split-border-color: #1f1f1f;
   --render-bg-color: #1e1e1e;
