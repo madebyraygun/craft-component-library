@@ -19,6 +19,8 @@ class Document
         $documentPath = Common::resolveHandlePath($name, 'md');
         $fileInfo = pathinfo($documentPath);
         $result = (object)[
+            'type' => 'document',
+            'icon' => 'article',
             'valid' => $fileInfo['extension'] === 'md' && file_exists($documentPath),
             'name' => $friendlyName,
             'includeName' => $name,

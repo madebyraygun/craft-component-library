@@ -7,9 +7,9 @@
     </nav>
     <main id="split-content">
       <div id="split-preview" class="preview">
-        {% if component_name is empty %}
+        {% if current.empty %}
           {% include 'welcome' %}
-        {% elseif not component_exists %}
+        {% elseif not current.exists %}
           {% include 'not-found' %}
         {% else %}
           {% include '_partials/preview' %}

@@ -7,6 +7,7 @@ use craft\web\Controller;
 use craft\helpers\UrlHelper;
 use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\Plugin;
+use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\helpers\Common;
 
 class BaseController extends Controller
@@ -27,12 +28,29 @@ class BaseController extends Controller
         return parent::beforeAction($action);
     }
 
+    public function getCurrentSelection(): array
+    {
+        $handle = Craft::$app->request->getParam('name') ?? '';
+        $exists = Loader::handleExists($handle);
+        $parts = Loader::parseHandleParts($handle);
+        $result = [
+            'empty' => empty($handle),
+            'exists' => $exists,
+            'includeName' => $parts->includeName,
+            'type' => $parts->type,
+            'name' => $parts->name,
+            'icon' => $parts->icon,
+        ];
+        return $result;
+    }
+
     public function renderPluginTemplate(string $template, array $variables = [], ?string $templateMode = null): Response
     {
         $this->view->registerAssetBundle(LibraryBrowserAssets::class);
         $libraryUrl = Common::libraryUrl('/');
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $variables = array_merge($variables, [
+            'current' => $this->getCurrentSelection(),
             'libraryUrl' => $libraryUrl,
             'distUrl' => $distUrl,
         ]);

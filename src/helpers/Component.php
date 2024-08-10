@@ -22,6 +22,8 @@ class Component
         $isVariant = $componentPath !== $canonicalPath;
         $templatePath = $isVirtual ? $canonicalPath : $componentPath;
         $result = (object)[
+            'type' => 'component',
+            'icon' => 'deployed_code',
             'valid' => $templateInfo['extension'] === 'twig',
             'name' => $isVariant ? $variantName : $defaultName,
             'includeName' => $name,

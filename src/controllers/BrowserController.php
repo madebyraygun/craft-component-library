@@ -19,8 +19,6 @@ class BrowserController extends BaseController
         $documentsTree = Library::getDocumentsTree();
         $searchIndex = Library::getSearchIndexFromTrees([$componentsTree, $documentsTree]);
         return $this->renderPluginTemplate('index', [
-            'component_name' => $name,
-            'component_exists' => $name && Loader::handleExists($name),
             'sidebars' => [
                 $componentsTree,
                 $documentsTree,
