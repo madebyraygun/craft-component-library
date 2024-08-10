@@ -27,11 +27,12 @@ export class Preview extends LibraryComponent {
   bindButtonEvents() {
     const btnExitFs = this.preview.querySelector('.preview__exit-full-btn');
     const btnEnterFs = this.preview.querySelector('.preview__enter-full-btn');
-    btnExitFs?.addEventListener('click', () => this.toggleFullScreen(false));
-    btnEnterFs?.addEventListener('click', () => this.toggleFullScreen(true));
+    btnExitFs?.addEventListener('click', this.toggleFullScreen.bind(null, false));
+    btnEnterFs?.addEventListener('click', this.toggleFullScreen.bind(null, true));
   }
 
-  toggleFullScreen(active) {
+  toggleFullScreen = (active, event) => {
     this.preview.classList.toggle('preview--fullscreen', active);
+    event.preventDefault();
   }
 }
