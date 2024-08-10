@@ -19,10 +19,33 @@ export class Recent extends LibraryComponent {
     if (items) {
       this.items = JSON.parse(items) || [];
     }
+    this.updateLists();
   }
 
   writeItems() {
-    localStorage.setItem('recentItems', JSON.stringify(this.items));
+    const lastItems = this.items.slice(0, 10);
+    localStorage.setItem('recentItems', JSON.stringify(lastItems));
+    this.updateLists();
+  }
+
+  updateLists() {
+    const list = document.querySelector('.recent__list');
+    if (!list) return;
+    list.innerHTML = this.items.length > 0 ? '' : 'No recent items';
+    this.items.forEach(item => {
+      const li = document.createElement('li');
+      li.classList.add('recent__item');
+      const url = new URL(this.app.router.baseUrl);
+      url.searchParams.set('name', item.handle);
+      li.innerHTML = `
+        <span class="material-symbols-outlined item__icon">${item.icon}</span>
+        <a href="${url}">
+          <span class="item__name">${item.name}</span>
+          <span class="item__handle">${item.handle}</span>
+        </a>
+      `;
+      list.appendChild(li);
+    });
   }
 
   updateCurrentComponent = () => {
