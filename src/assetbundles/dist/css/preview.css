@@ -17,6 +17,9 @@
       display: flex;
       align-items: center;
       gap: 0.25rem;
+      .heading__icon {
+        opacity: 0.5;
+      }
       .heading__name {
         text-transform: capitalize;
         font-weight: 600;
@@ -27,6 +30,9 @@
     }
     .header__actions {
       justify-self: flex-end;
+      .button {
+        text-decoration: none;
+      }
     }
   }
 
