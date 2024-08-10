@@ -9,8 +9,9 @@ export class Preview extends LibraryComponent {
   }
 
   bindNavigationEvents() {
-    this.app.router.addEventListener('component-swap', (e) => {
-      this.swapComponentView(e.detail.target.dataset.partialPreviewUrl);
+    this.app.router.addEventListener('component-swap', async (e) => {
+      await this.swapComponentView(e.detail.target.dataset.partialPreviewUrl);
+      this.app.events.dispatchEvent('preview-component-swapped');
     })
   }
 

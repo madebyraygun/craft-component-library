@@ -1,5 +1,12 @@
 <div class="preview__header">
-  <h2>Preview</h2>
+  <script type="application/json" id="preview-current">
+    {{ current|json_encode|raw }}
+  </script>
+  <h2 class="header">
+    <span class="material-symbols-outlined header__icon">{{current.icon}}</span>
+    <span class="header__name">{{current.name}}</span>:
+    <span class="header__handle">{{current.includeName}}</span>
+  </h2>
   <div class="header__actions">
     {% include 'controls/button' with {
       icon: 'open_in_new',
