@@ -2,6 +2,7 @@
   display: grid;
   grid-template-rows: auto 1fr;
   background: var(--render-bg-color);
+  overflow-y: auto;
   iframe {
     width: 100%;
     height: 100%;
