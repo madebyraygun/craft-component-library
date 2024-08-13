@@ -1,13 +1,8 @@
-{% extends "_layouts/_library" %}
-{% block body %}
-  <section class="page page--not-found">
-    <div class="page__inner">
-      <span class="page__error-emoji">(>_<)</span>
-      <h1>Not found</h1>
-      <p>The component "{{craft.app.request.getQueryParam('name')}}" was not found</p>
-    </div>
-  </section>
-{% endblock %}
-{% block bodyScripts %}
-  {# <script type="module" src="{{distUrl}}/js/not-found.js"></script> #}
-{% endblock %}
+<section class="page page--not-found">
+  <div class="page__inner">
+    <span class="page__error-emoji">(>_<)</span>
+    <h1>Not found</h1>
+    <p>The component "{{craft.app.request.getQueryParam('name')}}" was not found</p>
+  </div>
+</section>
+{# <script type="module" src="{{distUrl}}/js/not-found.js"></script> #}
