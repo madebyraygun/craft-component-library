@@ -50,6 +50,7 @@ class BaseController extends Controller
         $libraryUrl = Common::libraryUrl('/');
         $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $variables = array_merge($variables, [
+            'config' => Plugin::getInstance()->getSettings(),
             'current' => $this->getCurrentSelection(),
             'libraryUrl' => $libraryUrl,
             'distUrl' => $distUrl,

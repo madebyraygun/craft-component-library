@@ -13,6 +13,7 @@ class Settings extends Model
         'requiresLogin' => false,
         'enabled' => true,
         'path' => 'component-library',
+        'welcome' => '',
     ];
 
     public string $root = '';
@@ -41,6 +42,11 @@ class Settings extends Model
     public function browserPath(): string
     {
         return $this->browser['path'] ?? 'component-library';
+    }
+
+    public function browserWelcome(): string
+    {
+        return $this->browser['welcome'] ?? '';
     }
 
     public function rules(): array

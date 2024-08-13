@@ -10,6 +10,18 @@ class BrowserController extends BaseController
 {
     protected array|int|bool $allowAnonymous = true;
 
+    private function getWelcomePageContent(): string {
+        $settings = Craft::$app->getPlugins()->getPlugin('component-library')->getSettings();
+        $welcome = $settings->browserWelcome();
+        if (!empty($welcome) && Loader::documentExists($welcome)) {
+            $parts = Loader::parseHandleParts($welcome);
+            if ($parts->docPath) {
+                return file_get_contents($parts->docPath);
+            }
+        }
+        return '';
+    }
+
     public function actionIndex(): Response
     {
         $name = Craft::$app->request->getParam('name');
@@ -19,6 +31,7 @@ class BrowserController extends BaseController
         $documentsTree = Library::getDocumentsTree();
         $searchIndex = Library::getSearchIndexFromTrees([$componentsTree, $documentsTree]);
         return $this->renderPluginTemplate('index', [
+            'welcome' => $this->getWelcomePageContent(),
             'sidebars' => [
                 $componentsTree,
                 $documentsTree,
