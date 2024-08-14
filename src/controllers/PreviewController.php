@@ -52,8 +52,15 @@ class PreviewController extends BaseController
         $settings = $provider->getComponentSettings($name);
         $context = $provider->getComponentContext($name) ?? [];
         $html = $this->renderPluginView($name, $context);
-        $previewContext = $provider->getComponentContext($settings->preview);
-        // validate $settings->preview or default to 'component-library/_previews/default'
+        $previewContext = $provider->getComponentContext($settings->preview) ?? [];
+        if (!Loader::handleExists($settings->preview)) {
+            $settings->preview = '_previews/default';
+            $this->view->setTemplatesPath(Craft::getAlias(static::PLUGIN_TEMPLATE_PATH));
+            return $this->renderTemplate($settings->preview, [
+                ...$previewContext,
+                'yield' => $html,
+            ]);
+        }
         return $this->renderTemplate($settings->preview, [
             ...$previewContext,
             'yield' => $html,

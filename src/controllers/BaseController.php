@@ -14,7 +14,7 @@ class BaseController extends Controller
 {
     protected array|int|bool $allowAnonymous = true;
 
-    private string $pluginTemplatePath = '@madebyraygun/component-library/templates';
+    public const PLUGIN_TEMPLATE_PATH = '@madebyraygun/component-library/templates';
 
     public function beforeAction($action): bool
     {
@@ -55,7 +55,7 @@ class BaseController extends Controller
             'libraryUrl' => $libraryUrl,
             'distUrl' => $distUrl,
         ]);
-        $this->view->setTemplatesPath(Craft::getAlias($this->pluginTemplatePath));
+        $this->view->setTemplatesPath(Craft::getAlias(self::PLUGIN_TEMPLATE_PATH));
         return $this->renderTemplate($template, $variables, $templateMode);
     }
 
@@ -63,7 +63,7 @@ class BaseController extends Controller
     {
         $view = Craft::$app->getView();
         $before = $view->templatesPath;
-        $view->setTemplatesPath(Craft::getAlias($this->pluginTemplatePath));
+        $view->setTemplatesPath(Craft::getAlias(self::PLUGIN_TEMPLATE_PATH));
         $html = $view->renderTemplate($name, $context);
         $view->setTemplatesPath($before);
         return $html;

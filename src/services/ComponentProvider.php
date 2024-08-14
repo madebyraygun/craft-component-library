@@ -40,7 +40,7 @@ class ComponentProvider extends Component
     public function getComponentContext(string $path): array|null
     {
         if (!LoaderHelper::componentExists($path)) {
-            return null;
+            return [];
         }
         $parts = ContextHelper::parseConfigParts($path);
         return $parts->context;
