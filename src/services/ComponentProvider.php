@@ -18,11 +18,17 @@ class ComponentProvider extends Component
      */
     public function resolveHandlePath(string $path): string|null
     {
-        if (!LoaderHelper::componentExists($path)) {
+        if (!LoaderHelper::handleExists($path)) {
             return null;
         }
-        $parts = ComponentHelper::parseComponentParts($path);
-        return $parts->templatePath;
+        $parts = LoaderHelper::parseHandleParts($path);
+        if ($parts->type === 'component') {
+            return $parts->templatePath;
+        }
+        if ($parts->type === 'document') {
+            return $parts->docPath;
+        }
+        return null;
     }
 
     /**
@@ -34,7 +40,7 @@ class ComponentProvider extends Component
     public function getComponentContext(string $path): array|null
     {
         if (!LoaderHelper::componentExists($path)) {
-            return null;
+            return [];
         }
         $parts = ContextHelper::parseConfigParts($path);
         return $parts->context;

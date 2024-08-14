@@ -5,23 +5,33 @@ namespace madebyraygun\componentlibrary\controllers;
 use Craft;
 use craft\web\Response;
 use madebyraygun\componentlibrary\helpers\Library;
-use madebyraygun\componentlibrary\Plugin;
-use madebyraygun\componentlibrary\helpers\Common;
+use madebyraygun\componentlibrary\helpers\Loader;
 class BrowserController extends BaseController
 {
     protected array|int|bool $allowAnonymous = true;
 
+    private function getWelcomePageContent(): string {
+        $settings = Craft::$app->getPlugins()->getPlugin('component-library')->getSettings();
+        $welcome = $settings->browserWelcome();
+        if (!empty($welcome) && Loader::documentExists($welcome)) {
+            $parts = Loader::parseHandleParts($welcome);
+            if ($parts->docPath) {
+                return file_get_contents($parts->docPath);
+            }
+        }
+        return '';
+    }
+
     public function actionIndex(): Response
     {
         $name = Craft::$app->request->getParam('name');
-        $distUrl = Craft::$app->assetManager->getPublishedUrl('@madebyraygun/componentlibrary/assetbundles/dist', true);
         $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
-        $libraryUrl = Common::libraryUrl('/');
         $toolbarContext = Library::getUiToolbarContext($name ?? '');
         $componentsTree = Library::getLibraryTree();
         $documentsTree = Library::getDocumentsTree();
         $searchIndex = Library::getSearchIndexFromTrees([$componentsTree, $documentsTree]);
         return $this->renderPluginTemplate('index', [
+            'welcome' => $this->getWelcomePageContent(),
             'sidebars' => [
                 $componentsTree,
                 $documentsTree,
@@ -30,9 +40,7 @@ class BrowserController extends BaseController
                 'index' => $searchIndex,
             ],
             'toolbar' => $toolbarContext,
-            'iframeUrl' => $iframeUrl,
-            'libraryUrl' => $libraryUrl,
-            'distUrl' => $distUrl,
+            'iframeUrl' => $iframeUrl
         ]);
     }
 
@@ -59,15 +67,5 @@ class BrowserController extends BaseController
         $icon = file_get_contents($iconPath);
         Craft::$app->response->headers->set('Content-Type', 'image/svg+xml');
         return $this->asRaw($icon);
-    }
-
-    public function actionNotFound(): Response
-    {
-        return $this->renderPluginTemplate('not-found');
-    }
-
-    public function actionWelcome(): Response
-    {
-        return $this->renderPluginTemplate('welcome');
     }
 }

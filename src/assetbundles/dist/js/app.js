@@ -3,12 +3,14 @@ import { Sidebar } from './sidebar.js';
 import { Preview } from './preview.js';
 import { Toolbar } from './toolbar.js';
 import { Splitter } from './splitter.js';
+import { Recent } from './recent.js';
 
 export class App extends LibraryComponent {
   constructor() {
     super();
     this.container = document.querySelector('.container')
     this.splitter = new Splitter();
+    this.recent = new Recent();
     this.sidebar = new Sidebar();
     this.preview = new Preview();
     this.toolbar = new Toolbar();

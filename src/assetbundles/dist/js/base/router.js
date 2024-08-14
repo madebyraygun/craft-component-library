@@ -9,11 +9,15 @@ export class Router extends EventDispatcher {
 
   bind() {
     this.addEventListener('click', (e) => {
+
       if (!this.maybeOverrideDefault(e)) return;
       e.preventDefault();
       this.onNavigationChange(e.target);
       this.updateState(e.target.href);
     }, true);
+    window.addEventListener('popstate', (e) => {
+      window.location.reload();
+    });
   }
 
   maybeOverrideDefault(e) {
@@ -31,7 +35,7 @@ export class Router extends EventDispatcher {
   }
 
   onNavigationChange(target) {
-    const eventName = target.dataset.routerEvent || 'navigate';
+    const eventName = target.dataset?.routerEvent || 'navigate';
     this.dispatchEvent(eventName, {
       bubbles: true,
       detail: {

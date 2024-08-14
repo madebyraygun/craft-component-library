@@ -1,1 +1,25 @@
-Welcome!
+{% if config.browserWelcome() is not empty %}
+<section class="markdown markdown-page">
+  {{ welcome|markdown('gfm') }}
+  <script type="module" src="{{distUrl}}/js/document.js"></script>
+</section>
+{% else %}
+<section class="page page--welcome">
+  <div class="page__inner">
+    <div class="page__heading">
+      <h1>{{currentSite.name}}</h1>
+      <h2>Component Library</h2>
+    </div>
+    <div class="page__recent">
+      <h3>Recent</h3>
+      <ul class="recent__list">
+      </ul>
+    </div>
+    <div class="page__start">
+      <h3>Getting started</h3>
+      <p>Use the sidebar to navigate the component library</p>
+      <p>See the official <a href="https://github.com/madebyraygun/component-library" target="_blank">documentation</a> to learn more.</p>
+    </div>
+  </div>
+</section>
+{% endif %}

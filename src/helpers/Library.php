@@ -147,8 +147,8 @@ class Library
             $component = Component::parseComponentParts($handlePath);
             $context = Context::parseConfigParts($handlePath);
             $fields = [
-                'type' => 'component',
-                'icon' => 'deployed_code',
+                'type' => $component->type,
+                'icon' => $component->icon,
                 'name' => $context->settings->title,
                 'hidden' => $context->settings->hidden,
                 'path' => $component->templatePath,
@@ -162,13 +162,13 @@ class Library
         if (Loader::documentExists($handlePath)) {
             $document = Document::parseDocumentParts($handlePath);
             $fields = [
-                'type' => 'document',
-                'icon' => 'article',
+                'type' => $document->type,
+                'icon' => $document->icon,
                 'name' => $document->name,
+                'path' => $document->docPath,
                 'includeName' => $document->includeName,
                 'hidden' => false,
                 'partial_toolbar_url' => null,
-                'path' => $document->docPath,
                 'context' => null,
             ];
         }
@@ -218,14 +218,7 @@ class Library
 
     public static function getIsolatedPreviewUrl(string|null $handle): string
     {
-        $template = 'welcome';
-        if (Loader::componentExists($handle) || Loader::documentExists($handle)) {
-            $template = 'preview';
-        }
-        if (!empty($handle) && !Loader::handleExists($handle)) {
-            $template = 'not-found';
-        }
-        return Common::libraryUrl($template, ['name' => $handle]);
+        return Common::libraryUrl('preview', ['name' => $handle]);
     }
 
     public static function getComponentPath(string $path): string

@@ -17,6 +17,7 @@ return [
       'enabled' => true,
       'requiresLogin' => true,
       'path' => 'my-library',
+      'welcome' => '@docs/index',
     ]
     'root' => dirname(__DIR__) . '/library',
     'docs' => dirname(__DIR__) . '/library/docs',

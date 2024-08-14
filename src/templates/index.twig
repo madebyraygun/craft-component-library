@@ -7,7 +7,13 @@
     </nav>
     <main id="split-content">
       <div id="split-preview" class="preview">
-        {% include '_partials/preview' %}
+        {% if current.empty %}
+          {% include 'welcome' %}
+        {% elseif not current.exists %}
+          {% include 'not-found' %}
+        {% else %}
+          {% include '_partials/preview' %}
+        {% endif %}
       </div>
       <div id="split-toolbar" class="toolbar">
         {% include '_partials/toolbar' %}

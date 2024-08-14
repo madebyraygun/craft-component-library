@@ -9,6 +9,31 @@ class Loader
         return self::componentExists($handle) || self::documentExists($handle);
     }
 
+    public static function handleType(string $handle): string
+    {
+        if (self::handleExists($handle)) {
+            return self::componentExists($handle) ? 'component' : 'document';
+        }
+        return '';
+    }
+
+    public static function parseHandleParts(string $handle): object
+    {
+        if (self::componentExists($handle)) {
+            return Component::parseComponentParts($handle);
+        }
+        if (self::documentExists($handle)) {
+            return Document::parseDocumentParts($handle);
+        }
+        return (object)[
+            'includeName' => $handle,
+            'valid' => false,
+            'type' => '',
+            'icon' => '',
+            'name' => '',
+        ];
+    }
+
     public static function componentExists(string $name): bool
     {
         $parts = Component::parseComponentParts($name);

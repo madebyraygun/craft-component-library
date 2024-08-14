@@ -44,3 +44,13 @@ main {
     border-right: 1px solid var(--split-border-color);
   }
 }
+
+a {
+  color: var(--anchor-color);
+  text-decoration: none;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+    color: var(--anchor-hover-color);
+  }
+}
