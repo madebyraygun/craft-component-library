@@ -12,14 +12,14 @@ export class Toolbar extends LibraryComponent {
   }
 
   bindNavigationEvents() {
-    this.app.router.addEventListener('component-swap', (e) => {
+    this.app.router.addEventListener('component-swap', async (e) => {
       const url = e.detail.target.dataset.partialToolbarUrl;
+      await this.swapComponentView(url);
       this.app.events.dispatchEvent('toolbar-visibility-changed', {
         detail: {
           visible: !!url
         }
       });
-      this.swapComponentView(url);
     })
   }
 
