@@ -34,12 +34,18 @@ main {
 }
 
 .gutter {
+  transition: background-color 0.25s ease-out;
   background: var(--split-gutter-color);
+  &:hover {
+    background: var(--split-gutter-hover-color);
+  }
   &.gutter-vertical {
+    cursor: row-resize;
     border-top: 1px solid var(--split-border-color);
     border-bottom: 1px solid var(--split-border-color);
   }
   &.gutter-horizontal {
+    cursor: col-resize;
     border-left: 1px solid var(--split-border-color);
     border-right: 1px solid var(--split-border-color);
   }
