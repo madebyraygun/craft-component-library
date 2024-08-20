@@ -7,6 +7,12 @@
     <span class="heading__name">{{current.name}}</span>:
     <span class="heading__handle">{{current.handle}}</span>
   </h2>
+  <div class="header__size">
+    <span class="size__width">0</span>
+    <span>×</span>
+    <span class="size__height">0</span>
+    <span class="size__unit">px</span>
+  </div>
   <div class="header__actions">
     {% include 'controls/button' with {
       icon: 'open_in_new',
@@ -27,5 +33,5 @@
 </div>
 <div class="preview__container">
   <iframe id="preview-iframe" marginwidth="0" frameborder="0" scrolling="yes" src="{{iframeUrl}}"></iframe>
-  <div id="split-preview-resize"></div>
+  <div id="split-preview-resize" class="resize"></div>
 </div>

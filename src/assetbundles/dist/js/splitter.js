@@ -1,5 +1,6 @@
-import { LibraryComponent } from './base/library-component.js';
 import 'https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js';
+import { LibraryComponent } from './base/library-component.js';
+
 /**
  * Uses https://github.com/nathancahill/split/tree/master/packages/splitjs
  */
@@ -13,8 +14,8 @@ export class Splitter extends LibraryComponent {
   }
 
   createSplit(pair, options = {}) {
-    const exists = document.querySelector(pair[0]).parentElement.querySelectorAll('.gutter');
-    if (exists.length > 0) return;
+    const exists = document.querySelector(pair[0])?.parentElement.querySelectorAll('.gutter');
+    if (!exists || exists.length > 0) return;
     this.splitters.push(Split(pair, options));
   }
 
@@ -44,10 +45,7 @@ export class Splitter extends LibraryComponent {
       direction: 'horizontal',
       minSize: 0,
       sizes: [100, 0],
-      gutterSize: 8,
-      onDrag: function () {
-        console.log('dragging')
-      },
+      gutterSize: 8
     })
   }
 
