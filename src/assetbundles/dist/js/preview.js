@@ -32,14 +32,14 @@ export class Preview extends LibraryComponent {
       unit: preview.querySelector('.size__unit'),
     }
     const { iframe, container } = this.sizeElements;
-    iframe.contentWindow.addEventListener('resize', this.updatePreviewSize)
-    container.addEventListener('click', this.switchSizeUnit)
+    iframe?.contentWindow.addEventListener('resize', this.updatePreviewSize)
+    container?.addEventListener('click', this.switchSizeUnit)
   }
 
   unbindSizeElements() {
     const { iframe, container } = this.sizeElements;
-    iframe.removeEventListener('resize', this.updatePreviewSize)
-    container.removeEventListener('click', this.switchSizeUnit)
+    iframe?.removeEventListener('resize', this.updatePreviewSize)
+    container?.removeEventListener('click', this.switchSizeUnit)
   }
 
   switchSizeUnit = () => {
@@ -49,6 +49,7 @@ export class Preview extends LibraryComponent {
   }
 
   updatePreviewSize = debounce(() => {
+    if (!this.sizeElements.iframe) return;
     const { iframe, width, height, unit } = this.sizeElements;
     const { clientWidth, clientHeight } = iframe;
     const isRem = unit.textContent.toLowerCase() === 'rem';
