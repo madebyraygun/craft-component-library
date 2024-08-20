@@ -1,11 +1,26 @@
 import 'https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js';
+import { LibraryComponent } from './base/library-component.js';
+
 /**
  * Uses https://github.com/nathancahill/split/tree/master/packages/splitjs
  */
 
-export class Splitter {
+export class Splitter extends LibraryComponent {
   constructor() {
-    Split([
+    super();
+    this.splitters = [];
+    this.createSplitters();
+    this.bindEvents();
+  }
+
+  createSplit(pair, options = {}) {
+    const exists = document.querySelector(pair[0])?.parentElement.querySelectorAll('.gutter');
+    if (!exists || exists.length > 0) return;
+    this.splitters.push(Split(pair, options));
+  }
+
+  createSplitters() {
+    this.createSplit([
       '#split-sidebar',
       '#split-content',
     ], {
@@ -15,14 +30,32 @@ export class Splitter {
       gutterSize: 8,
       cursor: 'col-resize',
     })
-    Split([
+    this.createSplit([
       '#split-preview',
       '#split-toolbar',
     ], {
-
       direction: 'vertical',
       sizes: [60, 40],
       gutterSize: 8,
+    })
+    this.createSplit([
+      '#preview-iframe',
+      '#split-preview-resize'
+    ], {
+      direction: 'horizontal',
+      minSize: 0,
+      sizes: [100, 0],
+      gutterSize: 8
+    })
+  }
+
+  bindEvents() {
+    this.app.events.addEventListener('toolbar-visibility-changed', (e) => {
+      if (e.detail.visible) {
+        setTimeout(() => {
+          this.createSplitters();
+        }, 250);
+      }
     })
   }
 }
