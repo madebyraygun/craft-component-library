@@ -54,7 +54,7 @@ export class Splitter extends LibraryComponent {
       if (e.detail.visible) {
         setTimeout(() => {
           this.createSplitters();
-        }, 100);
+        }, 250);
       }
     })
   }
