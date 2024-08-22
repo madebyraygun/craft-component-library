@@ -17,8 +17,8 @@ export function bindCodeHighlight(codeElements = []) {
   hljs.registerLanguage('scss', scss);
   hljs.registerLanguage('javascript', javascript);
   codeElements.forEach(async (el) => {
-    const lang = el.className.match(/.*language-(\w+)/)[1];
     try {
+      const lang = el.className.match(/.*language-(\w+)/)[1];
       el.textContent = await formatCode(el.textContent, lang)
       hljs.highlightElement(el, { language: lang });
     } catch (e) {
