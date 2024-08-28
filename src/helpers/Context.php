@@ -5,15 +5,22 @@ namespace madebyraygun\componentlibrary\helpers;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Json;
 use craft\helpers\StringHelper;
+use madebyraygun\componentlibrary\Plugin;
 
 class Context
 {
     private static array $cache = [];
 
     private static array $settingsDefaults = [
-        'preview' => '@preview',
+        'preview' => '',
         'hidden' => false,
     ];
+
+    private static function setPreviewTemplate() : void
+    {
+        $preview = Plugin::getInstance()->getSettings()->preview;
+        self::$settingsDefaults['preview'] = $preview;
+    }
 
     public static function parseConfigParts(string $name): object
     {
@@ -92,6 +99,7 @@ class Context
 
     public static function getComponentSettings(string $name): object
     {
+        self::setPreviewTemplate();
         $config = self::getComponentConfig($name);
         unset($config['context']);
         unset($config['variants']);

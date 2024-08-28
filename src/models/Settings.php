@@ -20,12 +20,15 @@ class Settings extends Model
 
     public string $docs = '';
 
+    public string $preview = '';
+
     // set defaults
     public function init(): void
     {
         parent::init();
         $this->root = Craft::getAlias('@root') . '/library';
         $this->docs = Craft::getAlias('@root') . '/docs';
+        $this->preview = '@preview';
         $this->browser = [];
     }
 
