@@ -123,7 +123,10 @@ class Context
     {
         $resolved = [];
         foreach ($context as $key => $value) {
-            if (is_string($value) && strpos($value, '@') === 0) {
+            if (is_array($value)) {
+                // Recursively resolve nested arrays
+                $resolved[$key] = self::resolveContextReferences($value);
+            } elseif (is_string($value) && strpos($value, '@') === 0) {
                 $parts = explode('.', $value);
                 $componentInclude = $parts[0] ?? '';
                 $contextPath = $parts[1] ?? '';
