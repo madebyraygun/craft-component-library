@@ -22,6 +22,12 @@ export class Preview extends LibraryComponent {
     })
   }
 
+  rebindSizeElements = () => {
+    this.unbindSizeElements();
+    this.bindSizeElements();
+    this.updatePreviewSize();
+  }
+
   bindSizeElements() {
     const { preview } = this;
     this.sizeElements = {
@@ -33,6 +39,7 @@ export class Preview extends LibraryComponent {
     }
     const { iframe, container } = this.sizeElements;
     iframe?.contentWindow.addEventListener('resize', this.updatePreviewSize)
+    iframe?.addEventListener('load', this.rebindSizeElements)
     container?.addEventListener('click', this.switchSizeUnit)
   }
 
