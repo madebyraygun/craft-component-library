@@ -11,15 +11,13 @@ class Context
 {
     private static array $cache = [];
 
-    private static array $settingsDefaults = [
-        'preview' => '',
-        'hidden' => false,
-    ];
-
-    private static function setPreviewTemplate() : void
+    private static function setConfigDefaults(array $config) : array
     {
-        $preview = Plugin::getInstance()->getSettings()->preview;
-        self::$settingsDefaults['preview'] = $preview;
+        $preview = Plugin::$plugin->getSettings()->browserPreview();
+        return array_merge([
+            'preview' => $preview,
+            'hidden' => false,
+        ], $config);
     }
 
     public static function parseConfigParts(string $name): object
@@ -99,11 +97,10 @@ class Context
 
     public static function getComponentSettings(string $name): object
     {
-        self::setPreviewTemplate();
         $config = self::getComponentConfig($name);
         unset($config['context']);
         unset($config['variants']);
-        $settings = array_merge(self::$settingsDefaults, $config);
+        $settings = self::setConfigDefaults($config);
         return (object)$settings;
     }
 

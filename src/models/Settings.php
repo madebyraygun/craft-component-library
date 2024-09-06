@@ -14,13 +14,12 @@ class Settings extends Model
         'enabled' => true,
         'path' => 'component-library',
         'welcome' => '',
+        'preview' => '@preview',
     ];
 
     public string $root = '';
 
     public string $docs = '';
-
-    public string $preview = '';
 
     // set defaults
     public function init(): void
@@ -28,7 +27,6 @@ class Settings extends Model
         parent::init();
         $this->root = Craft::getAlias('@root') . '/library';
         $this->docs = Craft::getAlias('@root') . '/docs';
-        $this->preview = '@preview';
         $this->browser = [];
     }
 
@@ -50,6 +48,11 @@ class Settings extends Model
     public function browserWelcome(): string
     {
         return $this->browser['welcome'] ?? '';
+    }
+
+    public function browserPreview(): string
+    {
+        return $this->browser['preview'] ?? '@preview';
     }
 
     public function rules(): array
