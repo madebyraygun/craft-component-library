@@ -14,6 +14,7 @@ class Settings extends Model
         'enabled' => true,
         'path' => 'component-library',
         'welcome' => '',
+        'preview' => '@preview',
     ];
 
     public string $root = '';
@@ -47,6 +48,11 @@ class Settings extends Model
     public function browserWelcome(): string
     {
         return $this->browser['welcome'] ?? '';
+    }
+
+    public function browserPreview(): string
+    {
+        return $this->browser['preview'] ?? '@preview';
     }
 
     public function rules(): array

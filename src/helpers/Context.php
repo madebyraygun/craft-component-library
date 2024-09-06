@@ -5,15 +5,20 @@ namespace madebyraygun\componentlibrary\helpers;
 use craft\helpers\ArrayHelper;
 use craft\helpers\Json;
 use craft\helpers\StringHelper;
+use madebyraygun\componentlibrary\Plugin;
 
 class Context
 {
     private static array $cache = [];
 
-    private static array $settingsDefaults = [
-        'preview' => '@preview',
-        'hidden' => false,
-    ];
+    private static function setConfigDefaults(array $config) : array
+    {
+        $preview = Plugin::$plugin->getSettings()->browserPreview();
+        return array_merge([
+            'preview' => $preview,
+            'hidden' => false,
+        ], $config);
+    }
 
     public static function parseConfigParts(string $name): object
     {
@@ -95,7 +100,7 @@ class Context
         $config = self::getComponentConfig($name);
         unset($config['context']);
         unset($config['variants']);
-        $settings = array_merge(self::$settingsDefaults, $config);
+        $settings = self::setConfigDefaults($config);
         return (object)$settings;
     }
 

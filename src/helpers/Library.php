@@ -237,8 +237,11 @@ class Library
         }
         $contextPath = $parts->configPath;
         if ($compiled) {
-            $ctx = Context::getComponentContext($path);
-            return Json::encode($ctx, JSON_PRETTY_PRINT);
+            $out = (array)Context::parseConfigParts($path);
+            // merge settings key contents to the top level
+            $out = array_merge((array)$out['settings'], $out);
+            unset($out['settings']);
+            return Json::encode($out, JSON_PRETTY_PRINT);
         }
         return file_get_contents($contextPath);
     }
