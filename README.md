@@ -1,6 +1,6 @@
-# component-library
+# Craft CMS - Component Library
 
-Component Library to preview and develop integrated components with CraftCMS
+Component Library to preview and develop integrated components with CraftCMS.
 
 ## Requirements
 
@@ -40,22 +40,23 @@ return [
 
 
 ## Components
-Library components are just `twig` templates that are stored in the component library directory. The component library browser will automatically detect and make them available anywhere in your craft templates.
+Library components are just `twig` templates that are stored in the component library directory. The component library browser will automatically detect and make them available anywhere in your craft templates. The handle for each component is defined by the path of the component inside the library.
 
-For example, if you have a directory `library/button` that contains a `button.twig` file you can include it in your templates using the `@component` alias. The directory structure would look like:
+For example, if you have a `button` component stored in the following directory:
 ```
 .
 └── library/
     └── button/
         └── button.twig
 ```
-And you would include it in your templates using its handle:
+You can include it in your templates using its handle:
 ```twig
   {% include '@button/button' %}
 ```
 
 ## Aliases and Handles
-The path of each component inside the library is what defines its handle.
+When dealing with complex component libraries it can be useful to define aliases for directories and make handles shorter to include components.
+
 So for the following directory structure:
 ```
 .
@@ -64,12 +65,12 @@ So for the following directory structure:
         └── button/
             └── button.twig
 ```
-You could include the `button` component using the full relative path:
+To include the `button` component you will normally need to use the full relative path:
 ```twig
   {% include '@elements/button/button' %}
 ```
 
-But for more complex structures it can be useful to define aliases for directories. This is done in the `component-library.php` config file. For example, if you have a directory `elements/button` that you want to access as `@button` you would an alias as:
+It can be useful to define aliases for directories. This is done in the `component-library.php` config file. For example, if you have a directory `elements/button` that you want to access as `@button` you can define an alias like:
 ```php
 'aliases' => [
     '@button' => 'elements/button',
