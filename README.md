@@ -1,11 +1,8 @@
 # Craft CMS - Component Library
-
-Component Library to preview and develop integrated components with CraftCMS.
+A library for previewing and developing integrated components within CraftCMS.
 
 ## Requirements
-
 This plugin requires Craft CMS 5.0.0 or later, and PHP 8.2 or later.
-
 
 ## Configuration
 Create a `component-library.php` file in your Craft config directory
@@ -29,35 +26,37 @@ return [
 ];
 ```
 
-- **`browser.enabled`** - <default: `true`>. Enables/disables completely the component library browser. Global usage for your components inside the library are not affected.
-- **`browser.requiresLogin`** <default: `false`>. Requires the user to be logged in to access the component library browser. The Browser needs to be enabled for this to work.
-- **`browser.path`** <default: `component-library`>. The path to access the component library browser from the site root.
-- **`browser.welcome`** <default: `''`> The markdown component handle to display as the welcome page.
-- **`browser.preview`** <default: `@preview`> This is the default template to use as the preview on all components that do not have a specific preview template in their settings.
+- **`browser.enabled`** - <default: `true`>. Enables or disables the component library browser. This setting doesn’t affect global component usage within the library..
+- **`browser.requiresLogin`** <default: `false`> Requires user login to access the component library browser. The browser must be enabled for this setting to take effect.
+- **`browser.path`** <default: `component-library`> The URL path for accessing the component library browser from the site root.
+- **`browser.welcome`** <default: `''`> The handle of the markdown component to display as the welcome page.
+- **`browser.preview`** <default: `@preview`> Default template to use as the preview on all components that do not have a specific preview template in their settings. See [Previews](#previews) for more information.
 - **`root`** <default: `'@root/library'`> The root directory of the component library.
 - **`docs`** <default: `'@root/library/docs'`> The directory where the markdown files are stored.
-- **`aliases`** <default: `[]`> The aliases for the directories inside the component library. This is used to make custom shorthandles for the directories.
+- **`aliases`** <default: `[]`> Custom shorthand aliases for directories inside the component library. See [Aliases and Handles](#aliases-and-handles) for more information.
 
 
 ## Components
-Library components are just `twig` templates that are stored in the component library directory. The component library browser will automatically detect and make them available anywhere in your craft templates. The handle for each component is defined by the path of the component inside the library.
+Library components are simply `twig` templates stored in the component library directory. The component library browser will automatically detect and make them available anywhere in your craft templates. The handle for each component is defined by the path of the component inside the library.
 
-For example, if you have a `button` component stored in the following directory:
+Example:
+If you have a `button` component in the following directory:
 ```
 .
 └── library/
     └── button/
         └── button.twig
 ```
-You can include it in your templates using its handle:
+You can include it in your templates using:
 ```twig
   {% include '@button/button' %}
 ```
 
 ## Aliases and Handles
-When dealing with complex component libraries it can be useful to define aliases for directories and make handles shorter to include components.
+When dealing with long handles it can be useful to define aliases for directories and make handles shorter to include components.
 
-So for the following directory structure:
+Example:
+With this structure:
 ```
 .
 └── library/
@@ -65,26 +64,30 @@ So for the following directory structure:
         └── button/
             └── button.twig
 ```
-To include the `button` component you will normally need to use the full relative path:
+Instead of using the full path:
 ```twig
   {% include '@elements/button/button' %}
 ```
 
-It can be useful to define aliases for directories. This is done in the `component-library.php` config file. For example, if you have a directory `elements/button` that you want to access as `@button` you can define an alias like:
+You can define an alias in `component-library.php`:
 ```php
 'aliases' => [
     '@button' => 'elements/button',
 ]
 ```
-Then you can include it using:
+Now, include the component like this:
 ```twig
   {% include '@button/button' %}
 ```
 
 ### Collapsed Form Handles
-Additionally when a parent directory has the same name as the component (case sensitive) you can use a shorter handle (collapsed form) to include the component. So for the example above you could include the button component just by using:
+If a component’s directory and filename are identical (case sensitive), you can use a collapsed form handle. For example, instead of:
 ```twig
-  {# looks for ~/elements/button/button.twig (using config alias example) #}
+  {% include '@elements/button/button' %}
+```
+Using the `@button` alias and a collapsed handle you can shorten it to:
+```twig
+  {# looks for ~/elements/button/button.twig  #}
   {% include '@button' %}
 ```
 
