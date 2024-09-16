@@ -440,11 +440,11 @@ Example:
 
 ## Vite Integration
 
-The component library includes full Vite support. The plugin internally uses [nystudio107/craft-vite](https://nystudio107.com/docs/vite/) to provide a seamless integration with the Vite build system. This allows you to use the latest ES6+ features, SCSS, PostCSS, and more in your components. If you want to see the Vite integration in action you can see our [sample implementation](https://github.com/madebyraygun/craft-component-library-demo) in the Component Library Demo repo.
+The component library includes full Vite support. The plugin internally uses [nystudio107/craft-vite](https://nystudio107.com/docs/vite/) to provide a seamless integration with the Vite build system. This allows you to use the latest ES6+ features, SCSS, PostCSS, and more in your components. See our [sample Vite implementation](https://github.com/madebyraygun/craft-component-library-demo/blob/dev/README.md#vite-configuration) in the Component Library Demo repo.
 
-## Using your components in Craft templates
+## Using your components in Craft
 
-It's possible to load your components directly in your twig templates by passing along the necessary data, like so:
+It's possible to load your components directly into your Craft twig templates by passing along the necessary data, like so:
 
 ```html
 {% include '@modules/card/article with {url: '#', title: 'Card title'} %}
@@ -477,7 +477,7 @@ class HomepageEntryContext
 ```
 
 `craft/templates/homepage/entry.twig`
-```
+```twig
 {% hook 'homepage-entry-context' %}
 {% extends "_layouts/_site" %}
 {% block main %}
