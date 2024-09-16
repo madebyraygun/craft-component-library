@@ -1,12 +1,12 @@
 # Component Library plugin for Craft CMS
 
-A full-featured component library system for building, previewing, and maintaining front-end web components, fully integrated with [Craft CMS](https://craftcms.com). Component preview data can be hard-coded via config file, dynamically generated with PHP, or populated directly from live Craft entries.
+A complete component library system for building, previewing, and maintaining front-end web components, fully-integrated with [Craft CMS](https://craftcms.com). 
 
-The browser-based library viewer allows you to traverse or search your component folder and preview each component, as well as displaying helpful details about the raw and compiled template, context data, and documentation.
+The built-in browser-based library viewer allows you to traverse or search your component folder to preview each component, and displays helpful details about the component template, context data, and component documentation.
 
-The plugin is CSS and Javascript-framework agnostic, and can support any folder structure, including nested, hierarchical component structures to support an [Atomic Design](https://atomicdesign.bradfrost.com) methodology.
+The plugin is CSS and Javascript-framework agnostic, and can support any folder structure, including nested and hierarchical component structures to support [atomic design principles](https://atomicdesign.bradfrost.com).
 
-This plugin works hand-in-hand with the [Block Loader](https://github.com/madebyraygun/craft-block-loader) plugin to format and populate block data in your components. See an example of both plugins in action in the [Component Library Demo](https://github.com/madebyraygun/craft-component-library-demo) repository.
+The [demo respository](https://github.com/madebyraygun/craft-component-library-demo/blob/dev/README.md) includes code samples for use with Vite and includes a full matrix block implementation using a companion context loader plugin.
 
 ## Requirements
 
