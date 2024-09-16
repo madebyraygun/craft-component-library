@@ -1,6 +1,6 @@
 {
   "name": "madebyraygun/craft-component-library",
-  "description": "Component Library to preview and develop integrated components with CraftCMS",
+  "description": "A fully-integrated component library system for Craft CMS",
   "version": "1.0.0",
   "type": "craft-plugin",
   "require": {
