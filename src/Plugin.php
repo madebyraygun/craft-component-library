@@ -63,7 +63,6 @@ class Plugin extends BasePlugin
         $this->registerLogger();
         Craft::setAlias('@madebyraygun/component-library', $this->getBasePath());
         $this->controllerNamespace = 'madebyraygun\componentlibrary\controllers';
-        self::log('Component Library plugin loaded');
     }
 
     protected function installEventListeners(): void

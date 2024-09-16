@@ -1,6 +1,7 @@
 {
-  "name": "madebyraygun/component-library",
+  "name": "madebyraygun/craft-component-library",
   "description": "Component Library to preview and develop integrated components with CraftCMS",
+  "version": "1.0.0",
   "type": "craft-plugin",
   "require": {
     "php": ">=8.2",
@@ -16,11 +17,24 @@
       "madebyraygun\\componentlibrary\\": "src/"
     }
   },
+  "support": {
+    "docs": "https://github.com/madebyraygun/craft-component-library/blob/dev/README.md",
+    "issues": "https://github.com/madebyraygun/craft-component-library/issues",
+    "source": "https://github.com/madebyraygun/craft-component-library"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "madebyraygun",
+      "homepage": "https://github.com/madebyraygun"
+    }
+  ],
   "extra": {
     "handle": "component-library",
     "name": "Component Library",
     "developer": "Raygun",
-    "documentationUrl": ""
+    "developerUrl": "https://github.com/madebyraygun",
+    "documentationUrl": "https://github.com/madebyraygun/craft-component-library/blob/dev/README.md"
   },
   "scripts": {
     "check-cs": "ecs check --ansi",
