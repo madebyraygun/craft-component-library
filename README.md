@@ -29,7 +29,7 @@ return [
       'path' => 'component-library',
       'welcome' => '@docs/index',
       'preview' => '@preview',
-    ]
+    ],
     'root' => dirname(__DIR__) . '/library',
     'docs' => dirname(__DIR__) . '/library/docs',
     'aliases' => [
