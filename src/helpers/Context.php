@@ -41,7 +41,8 @@ class Context
         if ($parts->isVariant) {
             return [];
         }
-        $config = self::getComponentConfig($name);
+        // Read config file directly to avoid name normalization overhead in getComponentConfig()
+        $config = self::readConfigFile($name);
         $variants = $config['variants'] ?? [];
         $results = [];
         $info = pathinfo($name);
@@ -102,6 +103,33 @@ class Context
         unset($config['variants']);
         $settings = self::setConfigDefaults($config);
         return (object)$settings;
+    }
+
+    /**
+     * Get only the minimal settings needed for tree display (title, hidden).
+     * This method avoids parsing full context and resolving references,
+     * providing significant performance improvements for large component libraries.
+     */
+    public static function getTreeSettings(string $name): object
+    {
+        $parts = Component::parseComponentParts($name);
+        $config = self::readConfigFile($name);
+
+        // For variants, replace config with variant-specific data (matching getComponentConfig behavior)
+        if ($parts->isVariant && isset($config['variants'])) {
+            $variantConfig = self::getVariantInConfig($config, $parts->name);
+            if ($variantConfig) {
+                $config = $variantConfig;
+            }
+        }
+
+        $title = $config['title'] ?? $config['name'] ?? $parts->name;
+        $title = StringHelper::humanize($title);
+
+        return (object) self::setConfigDefaults([
+            'title' => $title,
+            'hidden' => $config['hidden'] ?? false,
+        ]);
     }
 
     public static function readConfigFile(string $name): array

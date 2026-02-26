@@ -145,15 +145,15 @@ class Library
         $fields = [];
         if (Loader::componentExists($handlePath)) {
             $component = Component::parseComponentParts($handlePath);
-            $context = Context::parseConfigParts($handlePath);
+            // Use lightweight settings method - full context is lazy-loaded via toolbar partial
+            $settings = Context::getTreeSettings($handlePath);
             $fields = [
                 'type' => $component->type,
                 'icon' => $component->icon,
-                'name' => $context->settings->title,
-                'hidden' => $context->settings->hidden,
+                'name' => $settings->title,
+                'hidden' => $settings->hidden,
                 'path' => $component->templatePath,
                 'includeName' => $component->includeName,
-                'context' => $context,
                 'partial_toolbar_url' => self::getPartialUrl($handlePath, 'toolbar'),
                 'is_variant' => $component->isVariant,
                 'is_virtual' => $component->isVirtual,
@@ -169,7 +169,6 @@ class Library
                 'includeName' => $document->includeName,
                 'hidden' => false,
                 'partial_toolbar_url' => null,
-                'context' => null,
             ];
         }
         $pagePreviewUrl = self::getPagePreviewUrl($handlePath);
