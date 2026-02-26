@@ -41,8 +41,7 @@ class Context
         if ($parts->isVariant) {
             return [];
         }
-        // Read config file directly instead of using getComponentConfig()
-        // to avoid unnecessary context processing during tree building
+        // Read config file directly to avoid name normalization overhead in getComponentConfig()
         $config = self::readConfigFile($name);
         $variants = $config['variants'] ?? [];
         $results = [];
@@ -116,11 +115,11 @@ class Context
         $parts = Component::parseComponentParts($name);
         $config = self::readConfigFile($name);
 
-        // For variants, get variant-specific title if available
+        // For variants, replace config with variant-specific data (matching getComponentConfig behavior)
         if ($parts->isVariant && isset($config['variants'])) {
             $variantConfig = self::getVariantInConfig($config, $parts->name);
             if ($variantConfig) {
-                $config = array_merge($config, $variantConfig);
+                $config = $variantConfig;
             }
         }
 

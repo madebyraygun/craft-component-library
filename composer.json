@@ -1,7 +1,7 @@
 {
   "name": "madebyraygun/craft-component-library",
   "description": "A fully-integrated component library system for Craft CMS",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "craft-plugin",
   "require": {
     "php": ">=8.2",
