@@ -15,6 +15,8 @@ use yii\base\Event;
  */
 abstract class PluginTestCase extends TestCase
 {
+    public const REQUESTED_ROUTE = 'component-library/browser';
+
     private mixed $previousApp = null;
 
     protected function setUp(): void
@@ -31,19 +33,48 @@ abstract class PluginTestCase extends TestCase
     /**
      * @param array<string, mixed>|null $browser the `browser` settings, or null to leave them unset
      */
-    protected function pluginWith(?array $browser): Plugin
+    protected function pluginWith(?array $browser, bool $guest = true): Plugin
     {
         $plugin = (new ReflectionClass(Plugin::class))->newInstanceWithoutConstructor();
         if ($browser !== null) {
             $plugin->setSettings(['browser' => $browser]);
         }
-        Craft::$app = new class($plugin) {
+        Craft::$app = new class($plugin, $guest) {
             /** @var array<class-string, object> */
             public array $loadedModules;
 
-            public function __construct(Plugin $plugin)
+            public string $requestedRoute = PluginTestCase::REQUESTED_ROUTE;
+
+            public object $user;
+
+            public function __construct(Plugin $plugin, bool $guest)
             {
                 $this->loadedModules = [Plugin::class => $plugin];
+                $this->user = new class($guest) {
+                    public function __construct(private bool $guest)
+                    {
+                    }
+
+                    public function getIsGuest(): bool
+                    {
+                        return $this->guest;
+                    }
+                };
+            }
+
+            public function getUser(): object
+            {
+                return $this->user;
+            }
+
+            public function getErrorHandler(): object
+            {
+                return (object)['exception' => null];
+            }
+
+            public function getIsLive(): bool
+            {
+                return true;
             }
         };
 

@@ -43,14 +43,17 @@ return [
 ];
 ```
 
-- **`browser.enabled`** - <default: `true`>. Enables or disables the component library browser. When `false` the browser is off completely: its URLs under `browser.path` and the plugin's controller actions (`actions/component-library/...` and `?action=component-library/...`) all return 404, for guests and logged-in users alike. Template loading is still functional, so components keep rendering in your site templates.
+- **`browser.enabled`** <default: `true`> Enables or disables the component library browser. When `false`, the browser's routes return 404 however they are requested. Template loading is still functional, so components keep rendering in your site templates. The plugin registers no routes under `browser.path` while the browser is disabled, so a URL there returns 404 unless one of your own templates or entries matches it.
 - **`browser.requiresLogin`** <default: `true`> Requires user login to access the component library browser. Guests are sent to the control panel login unless this is set to `false`. The browser must be enabled for this setting to take effect.
+
 - **`browser.path`** <default: `component-library`> The URL path for accessing the component library browser from the site root.
 - **`browser.welcome`** <default: `''`> The handle of the markdown component to display as the welcome page.
 - **`browser.preview`** <default: `@preview`> Default template to use as the preview on all components that do not have a specific preview template in their settings. See [Previews](#previews) for more information.
 - **`root`** <default: `'library'`> The root directory of the component library, default is a folder called `library` in the `craft` application folder.
 - **`docs`** <default: `'@root/docs'`> The directory where the markdown files are stored.
 - **`aliases`** <default: `[]`> Custom shorthand aliases for directories inside the component library. See [Aliases and handles](#aliases-and-handles) for more information.
+
+`browser.enabled` and `browser.requiresLogin` take a boolean. A string is read the way Craft reads a boolean environment value, so `'false'`, `'off'` and `'0'` are false, and a reference such as `'$LIBRARY_BROWSER'` is resolved first. A setting that is not set, is `null`, or is a string with no boolean meaning uses its default.
 
 
 ### Per-environment settings
@@ -62,9 +65,14 @@ When a setting depends on the environment, compare first and negate the result:
 ```php
 $isDev = App::env('CRAFT_ENVIRONMENT') === 'dev';
 
-'requiresLogin' => !$isDev,                             // correct
-'requiresLogin' => App::env('CRAFT_ENVIRONMENT') !== 'dev', // correct
-'requiresLogin' => !App::env('CRAFT_ENVIRONMENT') === 'dev', // always false: `!` applies to the string before the comparison
+'requiresLogin' => !$isDev,
+```
+
+Do not negate inside the comparison. This is wrong: `!` applies to the string before `===` compares it, so the result is `false` in every environment.
+
+```php
+// Wrong: always false
+'requiresLogin' => !App::env('CRAFT_ENVIRONMENT') === 'dev',
 ```
 
 ## Components
