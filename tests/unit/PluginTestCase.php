@@ -49,6 +49,14 @@ abstract class PluginTestCase extends TestCase
 
             public ?object $request = null;
 
+            public ?object $response = null;
+
+            public ?object $view = null;
+
+            public string $charset = 'UTF-8';
+
+            public string $language = 'en-US';
+
             public function __construct(Plugin $plugin, bool $guest)
             {
                 $this->loadedModules = [Plugin::class => $plugin];
@@ -77,6 +85,38 @@ abstract class PluginTestCase extends TestCase
             public function getIsLive(): bool
             {
                 return true;
+            }
+
+            public function getPlugins(): object
+            {
+                return new class($this->loadedModules[Plugin::class]) {
+                    public function __construct(private object $plugin)
+                    {
+                    }
+
+                    public function getPlugin(string $handle): object
+                    {
+                        return $this->plugin;
+                    }
+                };
+            }
+
+            public function getView(): ?object
+            {
+                return $this->view;
+            }
+
+            public function getI18n(): object
+            {
+                return new class {
+                    /**
+                     * @param array<string, mixed> $params
+                     */
+                    public function translate(string $category, string $message, array $params, string $language): string
+                    {
+                        return strtr($message, array_combine(array_map(static fn($key) => '{' . $key . '}', array_keys($params)), array_map('strval', $params)));
+                    }
+                };
             }
         };
 

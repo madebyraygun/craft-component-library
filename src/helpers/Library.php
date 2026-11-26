@@ -82,12 +82,19 @@ class Library
         };
     }
 
-    public static function scanPath(string $path, string $currentName = '', int $level = 1, $filter = null): array
+    public static function scanPath(string $path, string $currentName = '', int $level = 1, $filter = null, array $parents = []): array
     {
         // dir exists?
         if (!is_dir($path)) {
             return [];
         }
+
+        // a linked folder that leaves the library, or leads back to a folder already being scanned, is not followed
+        $realPath = realpath($path);
+        if (!Common::isDirectoryInsideLibrary($path) || in_array($realPath, $parents, true)) {
+            return [];
+        }
+        $parents[] = $realPath;
 
         $directories = FileHelper::findDirectories($path, [
             'recursive' => false,
@@ -108,7 +115,10 @@ class Library
 
         // Scan directories
         foreach ($directories as $directory) {
-            $nodes = self::scanPath($directory, $currentName, $level + 1, $filter);
+            if (!Common::isDirectoryInsideLibrary($directory) || in_array(realpath($directory), $parents, true)) {
+                continue;
+            }
+            $nodes = self::scanPath($directory, $currentName, $level + 1, $filter, $parents);
             $hidden = self::allNodesHidden($nodes);
             $hasActiveChild = self::hasActiveChild($nodes);
             $result[] = [
@@ -269,7 +279,7 @@ class Library
                 $view = Craft::$app->getView();
                 return $view->renderTemplate(Common::libraryHandle($handle), $context);
             } catch (\Throwable $e) {
-                return 'Error: ' . $e->getMessage();
+                return 'Error: ' . Common::withRelativePaths($e->getMessage());
             }
         }
         return file_get_contents($parts->templatePath);

@@ -11,14 +11,14 @@ class Document
     public static function parseDocumentParts(string $name): object
     {
         if (!Common::isUsableHandle($name)) {
-            return self::outsideParts($name);
+            return self::unknownParts($name);
         }
         $name = Common::collapseHandlePath($name);
         if (isset(Document::$cache[$name])) {
             return Document::$cache[$name];
         }
         if (!Common::isHandleInsideLibrary($name)) {
-            return Document::$cache[$name] = self::outsideParts($name);
+            return Document::$cache[$name] = self::unknownParts($name);
         }
         $friendlyName = Common::friendlyNameFromHandle($name);
         $friendlyName = preg_replace('/^index$/i', 'Overview', $friendlyName);
@@ -37,9 +37,9 @@ class Document
     }
 
     /**
-     * The parts of a handle that does not resolve to a file inside the library or the docs folder.
+     * The parts of a handle that is not a document in the library or the docs folder.
      */
-    private static function outsideParts(string $name): object
+    private static function unknownParts(string $name): object
     {
         return (object)[
             'type' => 'document',

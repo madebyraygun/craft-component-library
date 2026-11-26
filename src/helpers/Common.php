@@ -2,6 +2,7 @@
 
 namespace madebyraygun\componentlibrary\helpers;
 
+use Craft;
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
@@ -20,7 +21,7 @@ class Common
     }
 
     /**
-     * A handle that always resolves through the library, never through Craft's own template paths.
+     * The handle form that the template loader resolves through the library.
      */
     public static function libraryHandle(string $handle): string
     {
@@ -28,8 +29,7 @@ class Common
     }
 
     /**
-     * Whether a handle points inside the library root or the docs folder.
-     * Works on the path as text and touches no files, so it says nothing about what exists outside.
+     * Whether a handle points inside the library root or the docs folder. Works on the path as text.
      */
     public static function isHandleInsideLibrary(string $handle): bool
     {
@@ -64,6 +64,34 @@ class Common
         }
         $realPath = realpath($path);
         return $realPath !== false && is_file($realPath) && self::startsWithARoot($realPath, true);
+    }
+
+    /**
+     * Whether a path is an existing directory that is still inside the library root or the docs
+     * folder after symlinks are resolved.
+     */
+    public static function isDirectoryInsideLibrary(string $path): bool
+    {
+        $realPath = realpath($path);
+        if ($realPath === false || !is_dir($realPath)) {
+            return false;
+        }
+        return in_array($realPath, self::roots(true), true) || self::startsWithARoot($realPath, true);
+    }
+
+    /**
+     * A message with the library root, the docs folder and the project root removed from any path in it.
+     */
+    public static function withRelativePaths(string $message): string
+    {
+        $prefixes = [...self::roots(false), ...self::roots(true), FileHelper::normalizePath((string)Craft::getAlias('@root', false))];
+        usort($prefixes, static fn(string $a, string $b): int => strlen($b) <=> strlen($a));
+        foreach ($prefixes as $prefix) {
+            if (strlen($prefix) > 1) {
+                $message = str_replace([$prefix . DIRECTORY_SEPARATOR, $prefix], '', $message);
+            }
+        }
+        return $message;
     }
 
     /**
@@ -159,7 +187,7 @@ class Common
      */
     public static function collapseHandlePath(string $handle): string
     {
-        $handle = strtolower($handle);
+        $handle = strtolower(str_replace('\\', '/', $handle));
         // Collapse path into defined aliases
         $alias = Plugin::$plugin->getSettings()->aliases;
         foreach ($alias as $key => $value) {
