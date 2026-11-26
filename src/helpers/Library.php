@@ -13,7 +13,7 @@ class Library
     {
         $settings = Plugin::$plugin->getSettings();
         $name = Craft::$app->request->getParam('name');
-        $nodes = self::scanPath($settings->root, $name ?? '', 1, [
+        $nodes = self::scanPath($settings->root, is_string($name) ? $name : '', 1, [
             'dirs' => self::getFilterFunction([ $settings->docs ]),
             'files' => ['*.twig'],
         ]);
@@ -29,7 +29,7 @@ class Library
     {
         $name = Craft::$app->request->getParam('name');
         $settings = Plugin::$plugin->getSettings();
-        $nodes = self::scanPath($settings->docs, $name ?? '', 1, [
+        $nodes = self::scanPath($settings->docs, is_string($name) ? $name : '', 1, [
             'dirs' => null,
             'files' => ['*.md'],
         ]);
@@ -82,12 +82,19 @@ class Library
         };
     }
 
-    public static function scanPath(string $path, string $currentName = '', int $level = 1, $filter = null): array
+    public static function scanPath(string $path, string $currentName = '', int $level = 1, $filter = null, array $parents = []): array
     {
         // dir exists?
         if (!is_dir($path)) {
             return [];
         }
+
+        // a linked folder that leaves the library, or leads back to a folder already being scanned, is not followed
+        $realPath = realpath($path);
+        if (!Common::isDirectoryInsideLibrary($path) || in_array($realPath, $parents, true)) {
+            return [];
+        }
+        $parents[] = $realPath;
 
         $directories = FileHelper::findDirectories($path, [
             'recursive' => false,
@@ -108,12 +115,15 @@ class Library
 
         // Scan directories
         foreach ($directories as $directory) {
-            $nodes = self::scanPath($directory, $currentName, $level + 1, $filter);
+            if (!Common::isDirectoryInsideLibrary($directory) || in_array(realpath($directory), $parents, true)) {
+                continue;
+            }
+            $nodes = self::scanPath($directory, $currentName, $level + 1, $filter, $parents);
             $hidden = self::allNodesHidden($nodes);
             $hasActiveChild = self::hasActiveChild($nodes);
             $result[] = [
                 'name' => basename($directory),
-                'path' => $directory,
+                'path' => Common::relativePath($directory),
                 'level' => $level,
                 'type' => 'directory',
                 'hidden' => $hidden,
@@ -125,6 +135,9 @@ class Library
         // Add files
         foreach ($files as $file) {
             $handlePath = self::getComponentPath($file);
+            if (!Loader::handleExists($handlePath)) {
+                continue;
+            }
             $result[] = self::formatFileEntry($handlePath, $currentName);
             if (Loader::componentExists($handlePath)) {
                 $variants = Context::getVariants($handlePath, true);
@@ -152,7 +165,7 @@ class Library
                 'icon' => $component->icon,
                 'name' => $settings->title,
                 'hidden' => $settings->hidden,
-                'path' => $component->templatePath,
+                'path' => Common::relativePath($component->templatePath),
                 'includeName' => $component->includeName,
                 'partial_toolbar_url' => self::getPartialUrl($handlePath, 'toolbar'),
                 'is_variant' => $component->isVariant,
@@ -165,7 +178,7 @@ class Library
                 'type' => $document->type,
                 'icon' => $document->icon,
                 'name' => $document->name,
-                'path' => $document->docPath,
+                'path' => Common::relativePath($document->docPath),
                 'includeName' => $document->includeName,
                 'hidden' => false,
                 'partial_toolbar_url' => null,
@@ -256,14 +269,17 @@ class Library
 
     public static function getComponentContents(string $handle, bool $compiled): string
     {
+        if (!Loader::componentExists($handle)) {
+            return '';
+        }
         $parts = Component::parseComponentParts($handle);
         if ($compiled) {
             $context = Context::getComponentContext($handle);
             try {
                 $view = Craft::$app->getView();
-                return $view->renderTemplate($handle, $context);
+                return $view->renderTemplate(Common::libraryHandle($handle), $context);
             } catch (\Throwable $e) {
-                return 'Error: ' . $e->getMessage();
+                return 'Error: ' . Common::withRelativePaths($e->getMessage());
             }
         }
         return file_get_contents($parts->templatePath);
@@ -284,6 +300,7 @@ class Library
         $context = Context::parseConfigParts($name);
         return [
             'name' => $name,
+            'file' => Common::relativePath($component->templatePath),
             'component' => $component,
             'context' => $context,
             'contents' => [

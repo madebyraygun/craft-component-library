@@ -8,23 +8,38 @@ class Component
 
     public static function parseComponentParts(string $name): object
     {
+        if (!Common::isUsableHandle($name)) {
+            return self::unknownParts($name);
+        }
         $name = Common::collapseHandlePath($name);
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
         }
+        if (!Common::isHandleInsideLibrary($name)) {
+            return self::$cache[$name] = self::unknownParts($name);
+        }
         $componentPath = Common::resolveHandlePath($name, 'twig');
-        $isVirtual = !file_exists($componentPath);
         $canonicalPath = preg_replace('/--[^.]+/', '', $componentPath);
+        if (!Common::isInsideLibrary($componentPath) || !Common::isInsideLibrary($canonicalPath)) {
+            return self::$cache[$name] = self::unknownParts($name);
+        }
+        $isVirtual = !file_exists($componentPath);
         $variantName = self::getVariantName($componentPath);
         $defaultName = self::getCanonicalName($componentPath);
         $canonicalInfo = pathinfo($canonicalPath);
         $templateInfo = $isVirtual ? $canonicalInfo : pathinfo($componentPath);
         $isVariant = $componentPath !== $canonicalPath;
         $templatePath = $isVirtual ? $canonicalPath : $componentPath;
+        if (!str_ends_with($templatePath, '.twig') || !str_ends_with($canonicalPath, '.twig')) {
+            return self::$cache[$name] = self::unknownParts($name);
+        }
+        if (file_exists($templatePath) && !Common::isFileInsideLibrary($templatePath)) {
+            return self::$cache[$name] = self::unknownParts($name);
+        }
         $result = (object)[
             'type' => 'component',
             'icon' => 'deployed_code',
-            'valid' => $templateInfo['extension'] === 'twig',
+            'valid' => true,
             'name' => $isVariant ? $variantName : $defaultName,
             'includeName' => $name,
             'templateName' => $templateInfo['basename'],
@@ -41,23 +56,51 @@ class Component
         return $result;
     }
 
+    /**
+     * The parts of a handle that is not a component template in the library.
+     */
+    private static function unknownParts(string $name): object
+    {
+        return (object)[
+            'type' => 'component',
+            'icon' => 'deployed_code',
+            'valid' => false,
+            'name' => '',
+            'includeName' => $name,
+            'templateName' => '',
+            'templateDir' => '',
+            'templatePath' => '',
+            'canonicalName' => '',
+            'canonicalPath' => '',
+            'isVariant' => false,
+            'isVirtual' => false,
+            'docPath' => '',
+            'docExists' => false,
+            'configType' => '',
+            'configPath' => '',
+            'configExists' => false,
+        ];
+    }
+
     public static function getConfigParts(string $canonicalPath): array
     {
-        $jsonConfigPath = str_replace('.twig', '.config.json', $canonicalPath);
-        $phpConfigPath = str_replace('.twig', '.config.php', $canonicalPath);
-        $configType = '';
-        $configPath = '';
-        if (file_exists($phpConfigPath)) {
-            $configType = 'php';
-            $configPath = $phpConfigPath;
-        } elseif (file_exists($jsonConfigPath)) {
-            $configType = 'json';
-            $configPath = $jsonConfigPath;
+        if (str_ends_with($canonicalPath, '.twig')) {
+            $basePath = substr($canonicalPath, 0, -strlen('.twig'));
+            foreach (['php', 'json'] as $configType) {
+                $configPath = $basePath . '.config.' . $configType;
+                if (Common::isFileInsideLibrary($configPath)) {
+                    return [
+                        'configType' => $configType,
+                        'configPath' => $configPath,
+                        'configExists' => true,
+                    ];
+                }
+            }
         }
         return [
-            'configType' => $configType,
-            'configPath' => $configPath,
-            'configExists' => !empty($configPath),
+            'configType' => '',
+            'configPath' => '',
+            'configExists' => false,
         ];
     }
 

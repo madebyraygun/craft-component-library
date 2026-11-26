@@ -10,9 +10,15 @@ class Document
 
     public static function parseDocumentParts(string $name): object
     {
+        if (!Common::isUsableHandle($name)) {
+            return self::unknownParts($name);
+        }
         $name = Common::collapseHandlePath($name);
         if (isset(Document::$cache[$name])) {
             return Document::$cache[$name];
+        }
+        if (!Common::isHandleInsideLibrary($name)) {
+            return Document::$cache[$name] = self::unknownParts($name);
         }
         $friendlyName = Common::friendlyNameFromHandle($name);
         $friendlyName = preg_replace('/^index$/i', 'Overview', $friendlyName);
@@ -21,13 +27,28 @@ class Document
         $result = (object)[
             'type' => 'document',
             'icon' => 'article',
-            'valid' => $fileInfo['extension'] === 'md' && file_exists($documentPath),
+            'valid' => ($fileInfo['extension'] ?? '') === 'md' && Common::isFileInsideLibrary($documentPath),
             'name' => $friendlyName,
             'includeName' => $name,
             'docPath' => $documentPath,
         ];
         Document::$cache[$name] = $result;
         return $result;
+    }
+
+    /**
+     * The parts of a handle that is not a document in the library or the docs folder.
+     */
+    private static function unknownParts(string $name): object
+    {
+        return (object)[
+            'type' => 'document',
+            'icon' => 'article',
+            'valid' => false,
+            'name' => '',
+            'includeName' => $name,
+            'docPath' => '',
+        ];
     }
 
     public static function getDefaultPaths(string $templatePath): array
@@ -53,6 +74,13 @@ class Document
 
     public static function getDocPartsFromTemplate(string $handle): object
     {
+        if (!Common::isHandleInsideLibrary($handle)) {
+            return (object)[
+                'valid' => false,
+                'name' => 'Invalid Document',
+                'docPath' => '',
+            ];
+        }
         $templatePath = Common::resolveHandlePath($handle, 'twig');
         $paths = Document::getDefaultPaths($templatePath);
         foreach ($paths as $path) {

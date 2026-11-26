@@ -136,15 +136,15 @@ class Context
     {
         $parts = Component::parseComponentParts($name);
         $config = [];
-        if (file_exists($parts->configPath)) {
-            if ($parts->configType === 'php') {
+        if ($parts->valid && $parts->configExists) {
+            if ($parts->configType === 'php' && str_ends_with($parts->configPath, '.config.php')) {
                 try {
                     $config = require $parts->configPath;
                     $config = is_array($config) ? $config : [];
                 } catch (\Throwable $e) {
                     $config = [];
                 }
-            } elseif ($parts->configType === 'json') {
+            } elseif ($parts->configType === 'json' && str_ends_with($parts->configPath, '.config.json')) {
                 $json = Json::decode(file_get_contents($parts->configPath));
                 $config = is_array($json) ? $json : [];
             }

@@ -2,6 +2,7 @@
 
 namespace madebyraygun\componentlibrary\helpers;
 
+use Craft;
 use craft\helpers\FileHelper;
 use craft\helpers\StringHelper;
 use craft\helpers\UrlHelper;
@@ -9,6 +10,133 @@ use madebyraygun\componentlibrary\Plugin;
 
 class Common
 {
+    public const MAX_HANDLE_LENGTH = 512;
+
+    /**
+     * Whether a handle can be turned into a path at all.
+     */
+    public static function isUsableHandle(string $handle): bool
+    {
+        return $handle !== '' && strlen($handle) <= self::MAX_HANDLE_LENGTH && !str_contains($handle, "\0");
+    }
+
+    /**
+     * The handle form that the template loader resolves through the library.
+     */
+    public static function libraryHandle(string $handle): string
+    {
+        return str_starts_with($handle, '@') ? $handle : '@' . $handle;
+    }
+
+    /**
+     * Whether a handle points inside the library root or the docs folder. Works on the path as text.
+     */
+    public static function isHandleInsideLibrary(string $handle): bool
+    {
+        if (!self::isUsableHandle($handle)) {
+            return false;
+        }
+        $root = Plugin::$plugin->getSettings()->root;
+        $relPath = str_replace($root . '/', '', self::resolveAliases($handle));
+        return self::isInsideLibrary($root . '/' . $relPath);
+    }
+
+    /**
+     * Whether a path, once `.` and `..` are resolved, is inside the library root or the docs folder.
+     * Works on the path as text and touches no files.
+     */
+    public static function isInsideLibrary(string $path): bool
+    {
+        if ($path === '' || str_contains($path, "\0")) {
+            return false;
+        }
+        return self::startsWithARoot(FileHelper::normalizePath($path), false);
+    }
+
+    /**
+     * Whether a path is an existing file that is still inside the library root or the docs folder
+     * after symlinks are resolved.
+     */
+    public static function isFileInsideLibrary(string $path): bool
+    {
+        if (!self::isInsideLibrary($path)) {
+            return false;
+        }
+        $realPath = realpath($path);
+        return $realPath !== false && is_file($realPath) && self::startsWithARoot($realPath, true);
+    }
+
+    /**
+     * Whether a path is an existing directory that is still inside the library root or the docs
+     * folder after symlinks are resolved.
+     */
+    public static function isDirectoryInsideLibrary(string $path): bool
+    {
+        $realPath = realpath($path);
+        if ($realPath === false || !is_dir($realPath)) {
+            return false;
+        }
+        return in_array($realPath, self::roots(true), true) || self::startsWithARoot($realPath, true);
+    }
+
+    /**
+     * A message with the library root, the docs folder and the project root removed from any path in it.
+     */
+    public static function withRelativePaths(string $message): string
+    {
+        $prefixes = [...self::roots(false), ...self::roots(true), FileHelper::normalizePath((string)Craft::getAlias('@root', false))];
+        usort($prefixes, static fn(string $a, string $b): int => strlen($b) <=> strlen($a));
+        foreach ($prefixes as $prefix) {
+            if (strlen($prefix) > 1) {
+                $message = str_replace([$prefix . DIRECTORY_SEPARATOR, $prefix], '', $message);
+            }
+        }
+        return $message;
+    }
+
+    /**
+     * A path as shown in the browser: relative to the library root or the docs folder.
+     */
+    public static function relativePath(string $path): string
+    {
+        $path = FileHelper::normalizePath($path);
+        foreach (self::roots(false) as $root) {
+            if (str_starts_with($path, $root . DIRECTORY_SEPARATOR)) {
+                return substr($path, strlen($root) + 1);
+            }
+        }
+        return basename($path);
+    }
+
+    private static function startsWithARoot(string $path, bool $real): bool
+    {
+        foreach (self::roots($real) as $root) {
+            if (str_starts_with($path, $root . DIRECTORY_SEPARATOR)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return string[] the library root and the docs folder, as configured or with symlinks resolved
+     */
+    private static function roots(bool $real): array
+    {
+        $settings = Plugin::$plugin->getSettings();
+        $roots = [];
+        foreach ([$settings->root, $settings->docs] as $root) {
+            if ($root === '') {
+                continue;
+            }
+            $root = $real ? realpath($root) : FileHelper::normalizePath($root);
+            if ($root !== false && $root !== '.' && $root !== DIRECTORY_SEPARATOR) {
+                $roots[] = $root;
+            }
+        }
+        return $roots;
+    }
+
     public static function normalizeName(string $name): string
     {
         $name = strtolower($name);
@@ -59,7 +187,7 @@ class Common
      */
     public static function collapseHandlePath(string $handle): string
     {
-        $handle = strtolower($handle);
+        $handle = strtolower(str_replace('\\', '/', $handle));
         // Collapse path into defined aliases
         $alias = Plugin::$plugin->getSettings()->aliases;
         foreach ($alias as $key => $value) {
