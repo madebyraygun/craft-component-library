@@ -1,5 +1,14 @@
 Release Notes for Component Library plugin
 
+## Unreleased
+
+### Changed
+- `browser.enabled` and `browser.requiresLogin` now read strings such as `'false'` and `'$VARIABLE'` references as booleans; before, any non-empty string except `'0'` counted as `true` (#50)
+
+### Fixed
+- `browser.enabled` set to `false` now applies to every route of the library browser (#50)
+- README corrected: `browser.requiresLogin` defaults to `true` (#50)
+
 ## 1.1.0 - 2026-02-26
 
 ### Added

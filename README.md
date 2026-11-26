@@ -22,9 +22,13 @@ Optionally create a `component-library.php` file in your Craft `config` director
 Sample config:
 
 ```php
+use craft\helpers\App;
+
+$isDev = App::env('CRAFT_ENVIRONMENT') === 'dev';
+
 return [
     'browser' => [
-      'enabled' => true,
+      'enabled' => $isDev,
       'requiresLogin' => false,
       'path' => 'component-library',
       'welcome' => '@docs/index',
@@ -39,8 +43,9 @@ return [
 ];
 ```
 
-- **`browser.enabled`** - <default: `true`>. Enables or disables the component library browser. This disables the front-end standalone viewer for components only, template loading is still functional.
-- **`browser.requiresLogin`** <default: `false`> Requires user login to access the component library browser. The browser must be enabled for this setting to take effect.
+- **`browser.enabled`** <default: `true`> Enables or disables the component library browser. When `false`, the browser's routes return 404 however they are requested. Template loading is still functional, so components keep rendering in your site templates. The plugin registers no routes under `browser.path` while the browser is disabled, so a URL there returns 404 unless one of your own templates or entries matches it.
+- **`browser.requiresLogin`** <default: `true`> Requires user login to access the component library browser. Guests are sent to the control panel login unless this is set to `false`. The browser must be enabled for this setting to take effect.
+
 - **`browser.path`** <default: `component-library`> The URL path for accessing the component library browser from the site root.
 - **`browser.welcome`** <default: `''`> The handle of the markdown component to display as the welcome page.
 - **`browser.preview`** <default: `@preview`> Default template to use as the preview on all components that do not have a specific preview template in their settings. See [Previews](#previews) for more information.
@@ -48,6 +53,27 @@ return [
 - **`docs`** <default: `'@root/docs'`> The directory where the markdown files are stored.
 - **`aliases`** <default: `[]`> Custom shorthand aliases for directories inside the component library. See [Aliases and handles](#aliases-and-handles) for more information.
 
+`browser.enabled` and `browser.requiresLogin` take a boolean. A string is read the way Craft reads a boolean environment value, so `'false'`, `'off'` and `'0'` are false, and a reference such as `'$LIBRARY_BROWSER'` is resolved first. A setting that is not set, is `null`, or is a string with no boolean meaning uses its default.
+
+
+### Per-environment settings
+
+The library browser shows your templates, their source and their mock data, so it should not be served on a public site. The sample config above serves it only where `CRAFT_ENVIRONMENT` is `dev`, without a login.
+
+When a setting depends on the environment, compare first and negate the result:
+
+```php
+$isDev = App::env('CRAFT_ENVIRONMENT') === 'dev';
+
+'requiresLogin' => !$isDev,
+```
+
+Do not negate inside the comparison. This is wrong: `!` applies to the string before `===` compares it, so the result is `false` in every environment.
+
+```php
+// Wrong: always false
+'requiresLogin' => !App::env('CRAFT_ENVIRONMENT') === 'dev',
+```
 
 ## Components
 
@@ -487,3 +513,14 @@ class HomepageEntryContext
 ```
 
 More examples are included in the [Component Library Demo](https://github.com/madebyraygun/craft-component-library-demo) repository. We've also included examples using the [Block Loader](https://github.com/madebyraygun/craft-block-loader) plugin to format and populate more complex matrix block data.
+
+## Development
+
+```bash
+composer install
+composer test       # PHPUnit, tests/unit
+composer check-cs   # Easy Coding Standard
+composer phpstan
+```
+
+The unit tests run against a stand-in application, so they need no Craft install or database.

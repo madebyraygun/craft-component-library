@@ -9,6 +9,7 @@ use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\Plugin;
 use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\helpers\Common;
+use yii\base\InvalidRouteException;
 
 class BaseController extends Controller
 {
@@ -18,14 +19,30 @@ class BaseController extends Controller
 
     public function beforeAction($action): bool
     {
-        $userSession = Craft::$app->getUser();
-        $settings = Plugin::getInstance()->getSettings();
-        if ($settings->browserRequiresLogin() && $userSession->getIsGuest()) {
-            Craft::$app->user->returnUrl = UrlHelper::cpUrl($settings->browserPath());
-            Craft::$app->user->loginUrl = UrlHelper::cpUrl('login');
-            $this->requireLogin();
+        $this->requireBrowserEnabled();
+        if (Plugin::getInstance()->getSettings()->browserRequiresLogin() && Craft::$app->getUser()->getIsGuest()) {
+            $this->sendGuestToLogin();
         }
         return parent::beforeAction($action);
+    }
+
+    /**
+     * @throws InvalidRouteException if the library browser is disabled. Craft answers it exactly as
+     * it answers a route that does not exist.
+     */
+    protected function requireBrowserEnabled(): void
+    {
+        if (!Plugin::getInstance()->getSettings()->browserEnabled()) {
+            throw new InvalidRouteException('Unable to resolve the request "' . Craft::$app->requestedRoute . '".');
+        }
+    }
+
+    protected function sendGuestToLogin(): void
+    {
+        $settings = Plugin::getInstance()->getSettings();
+        Craft::$app->user->returnUrl = UrlHelper::cpUrl($settings->browserPath());
+        Craft::$app->user->loginUrl = UrlHelper::cpUrl('login');
+        $this->requireLogin();
     }
 
     public function getCurrentSelection(): array
