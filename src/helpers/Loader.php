@@ -48,7 +48,7 @@ class Loader
                 return false;
             }
         }
-        return file_exists($parts->templatePath);
+        return Common::isFileInsideLibrary($parts->templatePath);
     }
 
     public static function documentExists(string $handle): bool

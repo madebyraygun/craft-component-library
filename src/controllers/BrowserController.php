@@ -24,9 +24,12 @@ class BrowserController extends BaseController
 
     public function actionIndex(): Response
     {
-        $name = Craft::$app->request->getParam('name');
-        $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
-        $toolbarContext = Library::getUiToolbarContext($name ?? '');
+        $name = $this->requestedName();
+        if ($name !== '' && !Loader::handleExists($name)) {
+            Craft::$app->response->setStatusCode(404);
+        }
+        $iframeUrl = Library::getIsolatedPreviewUrl($name);
+        $toolbarContext = Library::getUiToolbarContext($name);
         $componentsTree = Library::getLibraryTree();
         $documentsTree = Library::getDocumentsTree();
         $searchIndex = Library::getSearchIndexFromTrees([$componentsTree, $documentsTree]);
@@ -46,16 +49,16 @@ class BrowserController extends BaseController
 
     public function actionPartialToolbar(): Response
     {
-        $name = Craft::$app->request->getParam('name');
+        $name = $this->requireKnownName();
         return $this->renderPluginTemplate('_partials/toolbar', [
-            'toolbar' => Library::getUiToolbarContext($name ?? ''),
+            'toolbar' => Library::getUiToolbarContext($name),
         ]);
     }
 
     public function actionPartialPreview(): Response
     {
-        $name = Craft::$app->request->getParam('name');
-        $iframeUrl = Library::getIsolatedPreviewUrl($name ?? '');
+        $name = $this->requireKnownName();
+        $iframeUrl = Library::getIsolatedPreviewUrl($name);
         return $this->renderPluginTemplate('_partials/preview', [
             'iframeUrl' => $iframeUrl,
         ]);

@@ -47,6 +47,8 @@ abstract class PluginTestCase extends TestCase
 
             public object $user;
 
+            public ?object $request = null;
+
             public function __construct(Plugin $plugin, bool $guest)
             {
                 $this->loadedModules = [Plugin::class => $plugin];

@@ -8,19 +8,31 @@ class Component
 
     public static function parseComponentParts(string $name): object
     {
+        if (!Common::isUsableHandle($name)) {
+            return self::outsideParts($name);
+        }
         $name = Common::collapseHandlePath($name);
         if (isset(self::$cache[$name])) {
             return self::$cache[$name];
         }
+        if (!Common::isHandleInsideLibrary($name)) {
+            return self::$cache[$name] = self::outsideParts($name);
+        }
         $componentPath = Common::resolveHandlePath($name, 'twig');
-        $isVirtual = !file_exists($componentPath);
         $canonicalPath = preg_replace('/--[^.]+/', '', $componentPath);
+        if (!Common::isInsideLibrary($componentPath) || !Common::isInsideLibrary($canonicalPath)) {
+            return self::$cache[$name] = self::outsideParts($name);
+        }
+        $isVirtual = !file_exists($componentPath);
         $variantName = self::getVariantName($componentPath);
         $defaultName = self::getCanonicalName($componentPath);
         $canonicalInfo = pathinfo($canonicalPath);
         $templateInfo = $isVirtual ? $canonicalInfo : pathinfo($componentPath);
         $isVariant = $componentPath !== $canonicalPath;
         $templatePath = $isVirtual ? $canonicalPath : $componentPath;
+        if (file_exists($templatePath) && !Common::isFileInsideLibrary($templatePath)) {
+            return self::$cache[$name] = self::outsideParts($name);
+        }
         $result = (object)[
             'type' => 'component',
             'icon' => 'deployed_code',
@@ -41,16 +53,43 @@ class Component
         return $result;
     }
 
+    /**
+     * The parts of a handle that does not resolve to a file inside the library.
+     * It carries no paths, so nothing that receives it can read or include a file.
+     */
+    private static function outsideParts(string $name): object
+    {
+        return (object)[
+            'type' => 'component',
+            'icon' => 'deployed_code',
+            'valid' => false,
+            'name' => '',
+            'includeName' => $name,
+            'templateName' => '',
+            'templateDir' => '',
+            'templatePath' => '',
+            'canonicalName' => '',
+            'canonicalPath' => '',
+            'isVariant' => false,
+            'isVirtual' => false,
+            'docPath' => '',
+            'docExists' => false,
+            'configType' => '',
+            'configPath' => '',
+            'configExists' => false,
+        ];
+    }
+
     public static function getConfigParts(string $canonicalPath): array
     {
         $jsonConfigPath = str_replace('.twig', '.config.json', $canonicalPath);
         $phpConfigPath = str_replace('.twig', '.config.php', $canonicalPath);
         $configType = '';
         $configPath = '';
-        if (file_exists($phpConfigPath)) {
+        if (Common::isFileInsideLibrary($phpConfigPath)) {
             $configType = 'php';
             $configPath = $phpConfigPath;
-        } elseif (file_exists($jsonConfigPath)) {
+        } elseif (Common::isFileInsideLibrary($jsonConfigPath)) {
             $configType = 'json';
             $configPath = $jsonConfigPath;
         }

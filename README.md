@@ -178,6 +178,8 @@ You can now call the button component with:
   {% include '@atoms/button' %}
 ```
 
+A handle only ever resolves to a file inside the library `root` or the `docs` folder. Anything else is treated as not found, and that includes a symlink inside the library whose target is outside it. Keep shared components inside the library folder rather than linking to them from elsewhere.
+
 ## Component Configuration and Context
 
 Each component will have its own configuration file to define its settings and context.

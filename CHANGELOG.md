@@ -4,6 +4,9 @@ Release Notes for Component Library plugin
 
 ### Changed
 - `browser.enabled` and `browser.requiresLogin` now read strings such as `'false'` and `'$VARIABLE'` references as booleans; before, any non-empty string except `'0'` counted as `true` (#50)
+- Component and document names are confined to the library root and the docs folder, and a symlink inside the library that points outside it is no longer followed (#51)
+- The library browser returns 404 for a name it does not know (#51)
+- File paths are shown relative to the library root or the docs folder (#51)
 
 ### Fixed
 - `browser.enabled` set to `false` now applies to every route of the library browser (#50)

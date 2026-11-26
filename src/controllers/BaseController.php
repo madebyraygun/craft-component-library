@@ -10,6 +10,7 @@ use madebyraygun\componentlibrary\Plugin;
 use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\helpers\Common;
 use yii\base\InvalidRouteException;
+use yii\web\NotFoundHttpException;
 
 class BaseController extends Controller
 {
@@ -45,9 +46,36 @@ class BaseController extends Controller
         $this->requireLogin();
     }
 
+    /**
+     * The `name` request parameter, or an empty string when it is missing or not a string.
+     */
+    protected function requestedName(): string
+    {
+        $name = Craft::$app->request->getParam('name');
+        return is_string($name) ? $name : '';
+    }
+
+    /**
+     * The requested name as a library handle, or an empty string when no name was given.
+     *
+     * @throws NotFoundHttpException if the name is not a component or document in the library
+     */
+    protected function requireKnownName(): string
+    {
+        $name = $this->requestedName();
+        if ($name === '') {
+            return '';
+        }
+        $handle = Common::libraryHandle($name);
+        if (!Loader::handleExists($handle)) {
+            throw new NotFoundHttpException();
+        }
+        return $handle;
+    }
+
     public function getCurrentSelection(): array
     {
-        $handle = Craft::$app->request->getParam('name') ?? '';
+        $handle = $this->requestedName();
         $exists = Loader::handleExists($handle);
         $parts = Loader::parseHandleParts($handle);
         $result = [

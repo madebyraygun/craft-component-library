@@ -7,6 +7,7 @@ use craft\web\Response;
 use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\helpers\Common;
 use madebyraygun\componentlibrary\Plugin;
+use yii\web\NotFoundHttpException;
 
 class PreviewController extends BaseController
 {
@@ -14,20 +15,15 @@ class PreviewController extends BaseController
 
     public function actionIndex(): Response
     {
-        $name = $this->request->getParam('name');
-        if (!$name) {
-            Plugin::error('No component name provided');
-            return $this->asFailure('No component name provided');
+        $name = $this->requireKnownName();
+        if ($name === '') {
+            throw new NotFoundHttpException();
         }
 
         if (Loader::componentExists($name)) {
             return $this->renderComponentTemplate($name);
-        } elseif (Loader::documentExists($name)) {
-            return $this->renderDocumentTemplate($name);
-        } else {
-            Plugin::error('Component or document not found');
-            return $this->asFailure('Component or document not found');
         }
+        return $this->renderDocumentTemplate($name);
     }
 
     private function renderDocumentTemplate(string $name): Response
