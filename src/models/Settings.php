@@ -10,7 +10,7 @@ class Settings extends Model
     public array $aliases = [];
 
     public array $browser = [
-        'requiresLogin' => false,
+        'requiresLogin' => true,
         'enabled' => true,
         'path' => 'component-library',
         'welcome' => '',
@@ -30,14 +30,22 @@ class Settings extends Model
         $this->browser = [];
     }
 
+    /**
+     * Whether the library browser asks guests to log in. A login is required unless
+     * `browser.requiresLogin` is set to `false`.
+     */
     public function browserRequiresLogin(): bool
     {
-        return $this->browser['requiresLogin'] ?? false === false;
+        return (bool)($this->browser['requiresLogin'] ?? true);
     }
 
+    /**
+     * Whether the library browser is served at all. When this is false every browser and
+     * preview request is a 404, whichever URL it arrives on.
+     */
     public function browserEnabled(): bool
     {
-        return $this->browser['enabled'] ?? true === true;
+        return (bool)($this->browser['enabled'] ?? true);
     }
 
     public function browserPath(): string

@@ -9,6 +9,7 @@ use madebyraygun\componentlibrary\assetbundles\LibraryBrowserAssets;
 use madebyraygun\componentlibrary\Plugin;
 use madebyraygun\componentlibrary\helpers\Loader;
 use madebyraygun\componentlibrary\helpers\Common;
+use yii\web\NotFoundHttpException;
 
 class BaseController extends Controller
 {
@@ -18,6 +19,7 @@ class BaseController extends Controller
 
     public function beforeAction($action): bool
     {
+        $this->requireBrowserEnabled();
         $userSession = Craft::$app->getUser();
         $settings = Plugin::getInstance()->getSettings();
         if ($settings->browserRequiresLogin() && $userSession->getIsGuest()) {
@@ -26,6 +28,19 @@ class BaseController extends Controller
             $this->requireLogin();
         }
         return parent::beforeAction($action);
+    }
+
+    /**
+     * The site URL rules are only registered while the browser is enabled, but Craft also routes
+     * `actions/component-library/...` and `?action=component-library/...` straight to these controllers.
+     *
+     * @throws NotFoundHttpException if the library browser is disabled
+     */
+    protected function requireBrowserEnabled(): void
+    {
+        if (!Plugin::getInstance()->getSettings()->browserEnabled()) {
+            throw new NotFoundHttpException();
+        }
     }
 
     public function getCurrentSelection(): array
